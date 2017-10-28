@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+
+const argv = require('optimist')
+    .usage('Usage: $0 <path> ...')
+    .argv;
+
+const generate = require('..');
+
+argv._.forEach(run);
+
+function run(path) {
+    if (path === '-') {
+        path = '/dev/stdin';
+    }
+
+    try {
+        const code = fs.readFileSync(path, 'utf8');
+        const schemes = generate(code);
+
+        console.dir(schemes, {
+            colors: true,
+            depth: Infinity,
+        });
+    } catch (ex) {
+        console.error(ex.message);
+        console.error(ex.stack);
+    }
+}
