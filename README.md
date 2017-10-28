@@ -7,7 +7,9 @@ Input:
 $ ./bin/flow2avro -
     interface Foo {
         foo: string,
-        bar: ?number,
+        // $avro long
+        bar: number,
+        opt: ?number,
         baz: 'one' | 'two',
         mix: 'one' | 'two' | number,
     }
@@ -20,7 +22,8 @@ Output:
         type: 'record',
         fields: [
             { name: 'foo', type: 'string' },
-            { name: 'bar', type: [ 'null', 'double' ] },
+            { name: 'bar', type: 'long' },
+            { name: 'opt', type: [ 'null', 'double' ] },
             { name: 'baz', type: { type: 'enum', symbols: [ 'one', 'two' ] } },
             { name: 'mix', type: [
                 'double',
@@ -32,9 +35,9 @@ Output:
 }
 ```
 
-## TODO:
+## TODO
 
 * Tests.
 * Generics.
 * Namespaces.
-* Mixed type.
+* Fixed type.
