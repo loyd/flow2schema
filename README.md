@@ -40,4 +40,3 @@ Output:
 * Tests.
 * Generics.
 * Namespaces.
-* Fixed type.
