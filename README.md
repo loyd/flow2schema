@@ -37,6 +37,6 @@ Output:
 
 ## TODO
 
-* Tests.
+* Support `extends` and `implements`.
 * Generics.
 * Namespaces.
