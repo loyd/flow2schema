@@ -3,6 +3,7 @@ type Type = {
     b: number,
     c: boolean,
     d: null,
+    e: Buffer,
 };
 
 interface Interface {
@@ -10,6 +11,7 @@ interface Interface {
     b: number;
     c: boolean;
     d: null;
+    e: Buffer;
 };
 
 class Class {
@@ -17,6 +19,7 @@ class Class {
     b: number;
     c: boolean;
     d: null;
+    e: Buffer;
 }
 
 // ###
@@ -29,6 +32,7 @@ class Class {
             {name: 'b', type: 'double'},
             {name: 'c', type: 'boolean'},
             {name: 'd', type: 'null'},
+            {name: 'e', type: 'bytes'},
         ],
     },
     Interface: {
@@ -39,6 +43,7 @@ class Class {
             {name: 'b', type: 'double'},
             {name: 'c', type: 'boolean'},
             {name: 'd', type: 'null'},
+            {name: 'e', type: 'bytes'},
         ],
     },
     Class: {
@@ -49,6 +54,7 @@ class Class {
             {name: 'b', type: 'double'},
             {name: 'c', type: 'boolean'},
             {name: 'd', type: 'null'},
+            {name: 'e', type: 'bytes'},
         ],
     },
 });
