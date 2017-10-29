@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const jsondiffpatch = require('jsondiffpatch');
+
+const generate = require('..');
+
+const runner = path.basename(__filename);
+
+const list = fs.readdirSync(__dirname)
+    .filter(fname => fname !== runner)
+    .map(fname => path.relative('.', path.join(__dirname, fname)));
+
+for (const fpath of list) {
+    const code = fs.readFileSync(fpath, 'utf8');
+
+    const actual = generate(code);
+    const expected = eval(code.split('// ###')[1]);
+
+    const delta = jsondiffpatch.diff(actual, expected);
+
+    console.log(`${fpath}...`);
+
+    if (delta) {
+        jsondiffpatch.console.log(delta);
+    }
+}
