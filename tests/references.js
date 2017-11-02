@@ -1,30 +1,37 @@
+type A = {};
+
 type Type = {
     a: A,
-    b: B[],
-    c: C<number>,
+    b: A[],
+    c: A<number>,
 };
 
 interface Interface {
     a: A;
-    b: B[];
-    c: C<number>;
+    b: A[];
+    c: A<number>;
 }
 
 class Class {
     a: A;
-    b: B[];
-    c: C<number>;
+    b: A[];
+    c: A<number>;
 }
 
 // ###
 ({
+    A: {
+        type: 'record',
+        name: 'A',
+        fields: [],
+    },
     Type: {
         type: 'record',
         name: 'Type',
         fields: [
             {name: 'a', type: 'A'},
-            {name: 'b', type: {type: 'array', items: 'B'}},
-            {name: 'c', type: 'C'},
+            {name: 'b', type: {type: 'array', items: 'A'}},
+            {name: 'c', type: 'A'},
         ],
     },
     Interface: {
@@ -32,8 +39,8 @@ class Class {
         name: 'Interface',
         fields: [
             {name: 'a', type: 'A'},
-            {name: 'b', type: {type: 'array', items: 'B'}},
-            {name: 'c', type: 'C'},
+            {name: 'b', type: {type: 'array', items: 'A'}},
+            {name: 'c', type: 'A'},
         ],
     },
     Class: {
@@ -41,8 +48,8 @@ class Class {
         name: 'Class',
         fields: [
             {name: 'a', type: 'A'},
-            {name: 'b', type: {type: 'array', items: 'B'}},
-            {name: 'c', type: 'C'},
+            {name: 'b', type: {type: 'array', items: 'A'}},
+            {name: 'c', type: 'A'},
         ],
     },
 });
