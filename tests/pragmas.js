@@ -38,8 +38,8 @@ class Class {
 }
 
 // ###
-({
-    Type: {
+[
+    {
         type: 'record',
         name: 'Type',
         fields: [
@@ -50,7 +50,7 @@ class Class {
             {name: 'e', type: {type: 'fixed', size: 10}},
         ],
     },
-    Interface: {
+    {
         type: 'record',
         name: 'Interface',
         fields: [
@@ -61,7 +61,7 @@ class Class {
             {name: 'e', type: {type: 'fixed', size: 10}},
         ],
     },
-    Class: {
+    {
         type: 'record',
         name: 'Class',
         fields: [
@@ -72,4 +72,4 @@ class Class {
             {name: 'e', type: {type: 'fixed', size: 10}},
         ],
     },
-});
+]

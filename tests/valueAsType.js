@@ -11,20 +11,20 @@ class Class {
 }
 
 // ###
-({
-    Type: {
+[
+    {
         type: 'record',
         name: 'Type',
         fields: [{name: 'a', type: {type: 'enum', symbols: ['one']}}],
     },
-    Interface: {
+    {
         type: 'record',
         name: 'Interface',
         fields: [{name: 'a', type: {type: 'enum', symbols: ['one']}}],
     },
-    Class: {
+    {
         type: 'record',
         name: 'Class',
         fields: [{name: 'a', type: {type: 'enum', symbols: ['one']}}],
     },
-});
+]

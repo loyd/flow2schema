@@ -19,12 +19,12 @@ class Class {
 }
 
 // ###
-({
-    A: {
+[
+    {
         type: 'string',
         name: 'A',
     },
-    Type: {
+    {
         type: 'record',
         name: 'Type',
         fields: [
@@ -33,7 +33,7 @@ class Class {
             {name: 'c', type: 'A'},
         ],
     },
-    Interface: {
+    {
         type: 'record',
         name: 'Interface',
         fields: [
@@ -42,7 +42,7 @@ class Class {
             {name: 'c', type: 'A'},
         ],
     },
-    Class: {
+    {
         type: 'record',
         name: 'Class',
         fields: [
@@ -51,4 +51,4 @@ class Class {
             {name: 'c', type: 'A'},
         ],
     },
-});
+]

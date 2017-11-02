@@ -7,15 +7,15 @@ interface Interface {
 }
 
 // ###
-({
-    Type: {
+[
+     {
         type: 'map',
         name: 'Type',
         values: 'double',
     },
-    Interface: {
+    {
         type: 'map',
         name: 'Interface',
         values: 'double',
     },
-});
+]

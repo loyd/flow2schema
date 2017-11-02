@@ -11,8 +11,8 @@ class Class {
 }
 
 // ###
-({
-    Type: {
+[
+    {
         type: 'record',
         name: 'Type',
         fields: [{
@@ -23,7 +23,7 @@ class Class {
             ],
         }],
     },
-    Interface: {
+    {
         type: 'record',
         name: 'Interface',
         fields: [{
@@ -34,7 +34,7 @@ class Class {
             ],
         }],
     },
-    Class: {
+    {
         type: 'record',
         name: 'Class',
         fields: [{
@@ -45,4 +45,4 @@ class Class {
             ],
         }],
     },
-});
+]

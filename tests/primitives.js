@@ -23,8 +23,8 @@ class Class {
 }
 
 // ###
-({
-    Type: {
+[
+    {
         type: 'record',
         name: 'Type',
         fields: [
@@ -35,7 +35,7 @@ class Class {
             {name: 'e', type: 'bytes'},
         ],
     },
-    Interface: {
+    {
         type: 'record',
         name: 'Interface',
         fields: [
@@ -46,7 +46,7 @@ class Class {
             {name: 'e', type: 'bytes'},
         ],
     },
-    Class: {
+    {
         type: 'record',
         name: 'Class',
         fields: [
@@ -57,4 +57,4 @@ class Class {
             {name: 'e', type: 'bytes'},
         ],
     },
-});
+]
