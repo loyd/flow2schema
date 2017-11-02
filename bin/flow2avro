@@ -8,7 +8,7 @@ const argv = require('optimist')
     .usage('Usage: $0 <path> ...')
     .argv;
 
-const generate = require('..');
+const collect = require('..');
 
 argv._.forEach(run);
 
@@ -18,10 +18,9 @@ function run(path) {
     }
 
     try {
-        const code = fs.readFileSync(path, 'utf8');
-        const schemes = generate(code);
+        const {schemas} = collect(path);
 
-        console.dir(schemes, {
+        console.dir(schemas, {
             colors: true,
             depth: Infinity,
         });
