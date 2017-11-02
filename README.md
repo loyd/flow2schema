@@ -39,4 +39,3 @@ Output:
 
 * Support `extends` and `implements`.
 * Generics.
-* Namespaces.

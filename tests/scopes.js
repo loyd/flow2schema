@@ -21,6 +21,26 @@ type Y = {
             z: Z,
         };
     }
+
+    class Test {
+        static bar() {
+            type X = number;
+
+            type Y = {
+                x: X,
+                z: Z,
+            };
+        }
+
+        baz() {
+            type X = string;
+
+            type Y = {
+                x: X,
+                z: Z,
+            };
+        }
+    }
 })();
 
 // ###
@@ -65,5 +85,39 @@ type Y = {
             {name: 'x', type: 'X'},
             {name: 'z', type: 'scopes._0.Z'},
         ],
+    },
+    {
+        type: 'double',
+        name: 'X',
+        namespace: 'scopes._0._1',
+    },
+    {
+        type: 'record',
+        name: 'Y',
+        namespace: 'scopes._0._1',
+        fields: [
+            {name: 'x', type: 'X'},
+            {name: 'z', type: 'scopes._0.Z'},
+        ],
+    },
+    {
+        type: 'string',
+        name: 'X',
+        namespace: 'scopes._0._2',
+    },
+    {
+        type: 'record',
+        name: 'Y',
+        namespace: 'scopes._0._2',
+        fields: [
+            {name: 'x', type: 'X'},
+            {name: 'z', type: 'scopes._0.Z'},
+        ],
+    },
+    {
+        type: 'record',
+        name: 'Test',
+        namespace: 'scopes._0',
+        fields: [],
     },
 ]
