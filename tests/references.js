@@ -1,4 +1,4 @@
-type A = {};
+type A = string;
 
 type Type = {
     a: A,
@@ -21,9 +21,8 @@ class Class {
 // ###
 ({
     A: {
-        type: 'record',
+        type: 'string',
         name: 'A',
-        fields: [],
     },
     Type: {
         type: 'record',
