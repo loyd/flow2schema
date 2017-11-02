@@ -15,6 +15,7 @@ class Class {
     {
         type: 'record',
         name: 'Type',
+        namespace: 'unionsAndEnums',
         fields: [{
             name: 'a',
             type: [
@@ -26,6 +27,7 @@ class Class {
     {
         type: 'record',
         name: 'Interface',
+        namespace: 'unionsAndEnums',
         fields: [{
             name: 'a',
             type: [
@@ -37,6 +39,7 @@ class Class {
     {
         type: 'record',
         name: 'Class',
+        namespace: 'unionsAndEnums',
         fields: [{
             name: 'a',
             type: [

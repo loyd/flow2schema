@@ -27,6 +27,7 @@ class Class {
     {
         type: 'record',
         name: 'Type',
+        namespace: 'primitives',
         fields: [
             {name: 'a', type: 'string'},
             {name: 'b', type: 'double'},
@@ -38,6 +39,7 @@ class Class {
     {
         type: 'record',
         name: 'Interface',
+        namespace: 'primitives',
         fields: [
             {name: 'a', type: 'string'},
             {name: 'b', type: 'double'},
@@ -49,6 +51,7 @@ class Class {
     {
         type: 'record',
         name: 'Class',
+        namespace: 'primitives',
         fields: [
             {name: 'a', type: 'string'},
             {name: 'b', type: 'double'},

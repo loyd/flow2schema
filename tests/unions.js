@@ -18,6 +18,7 @@ class Class {
     {
         type: 'record',
         name: 'Type',
+        namespace: 'unions',
         fields: [{
             name: 'a',
             type: ['string', 'double'],
@@ -29,6 +30,7 @@ class Class {
     {
         type: 'record',
         name: 'Interface',
+        namespace: 'unions',
         fields: [{
             name: 'a',
             type: ['string', 'double'],
@@ -40,6 +42,7 @@ class Class {
     {
         type: 'record',
         name: 'Class',
+        namespace: 'unions',
         fields: [{
             name: 'a',
             type: ['string', 'double'],

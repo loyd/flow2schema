@@ -15,6 +15,7 @@ class Class {
     {
         type: 'record',
         name: 'Type',
+        namespace: 'enums',
         fields: [{
             name: 'a',
             type: {type: 'enum', symbols: ['one', 'two']},
@@ -23,6 +24,7 @@ class Class {
     {
         type: 'record',
         name: 'Interface',
+        namespace: 'enums',
         fields: [{
             name: 'a',
             type: {type: 'enum', symbols: ['one', 'two']},
@@ -31,6 +33,7 @@ class Class {
     {
         type: 'record',
         name: 'Class',
+        namespace: 'enums',
         fields: [{
             name: 'a',
             type: {type: 'enum', symbols: ['one', 'two']},

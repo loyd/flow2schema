@@ -23,10 +23,12 @@ class Class {
     {
         type: 'string',
         name: 'A',
+        namespace: 'references',
     },
     {
         type: 'record',
         name: 'Type',
+        namespace: 'references',
         fields: [
             {name: 'a', type: 'A'},
             {name: 'b', type: {type: 'array', items: 'A'}},
@@ -36,6 +38,7 @@ class Class {
     {
         type: 'record',
         name: 'Interface',
+        namespace: 'references',
         fields: [
             {name: 'a', type: 'A'},
             {name: 'b', type: {type: 'array', items: 'A'}},
@@ -45,6 +48,7 @@ class Class {
     {
         type: 'record',
         name: 'Class',
+        namespace: 'references',
         fields: [
             {name: 'a', type: 'A'},
             {name: 'b', type: {type: 'array', items: 'A'}},

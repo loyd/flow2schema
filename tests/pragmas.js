@@ -42,6 +42,7 @@ class Class {
     {
         type: 'record',
         name: 'Type',
+        namespace: 'pragmas',
         fields: [
             {name: 'a', type: 'int'},
             {name: 'b', type: 'long'},
@@ -53,6 +54,7 @@ class Class {
     {
         type: 'record',
         name: 'Interface',
+        namespace: 'pragmas',
         fields: [
             {name: 'a', type: 'int'},
             {name: 'b', type: 'long'},
@@ -64,6 +66,7 @@ class Class {
     {
         type: 'record',
         name: 'Class',
+        namespace: 'pragmas',
         fields: [
             {name: 'a', type: 'int'},
             {name: 'b', type: 'long'},
