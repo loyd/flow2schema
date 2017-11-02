@@ -14,7 +14,19 @@ const list = fs.readdirSync(__dirname)
     .filter(fname => fname !== runner)
     .map(fname => path.relative('.', path.join(__dirname, fname)));
 
+function filter(fpath) {
+    if (process.argv.length > 2) {
+        return process.argv.slice(2).every(part => fpath.indexOf(part) >= 0);
+    }
+
+    return true;
+}
+
 for (const fpath of list) {
+    if (!filter(fpath)) {
+        continue;
+    }
+
     console.log(`${fpath}...`);
 
     const code = fs.readFileSync(fpath, 'utf8');
