@@ -16,11 +16,15 @@ const list = fs.readdirSync(__dirname)
     .filter(fname => fname !== runner);
 
 function filter(name) {
-    if (process.argv.length > 2) {
-        return process.argv.slice(2).every(part => name.indexOf(part) >= 0);
+    if (process.argv.length <= 2) {
+        return true;
     }
 
-    return true;
+    const match = part => name.indexOf(part) >= 0;
+    const negate = process.argv[2] === '!';
+    const argv = process.argv.slice(negate ? 3 : 2);
+
+    return negate ? !argv.some(match) : argv.some(match);
 }
 
 for (const name of list) {
