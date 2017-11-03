@@ -37,5 +37,7 @@ Output:
 
 ## TODO
 
-* Support `extends` and `implements`.
+* External types (`import` and `require`).
 * Generics.
+* Errors and warnings.
+* Documentation.
