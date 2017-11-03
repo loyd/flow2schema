@@ -4,6 +4,8 @@ type Type = {
     foo(): void,
 
     b: number,
+
+    bar: () => void,
 };
 
 interface Interface {
@@ -12,6 +14,8 @@ interface Interface {
     foo(): void;
 
     b: number;
+
+    bar: () => void;
 }
 
 class Class {
@@ -22,6 +26,8 @@ class Class {
     set bar(a) {}
 
     b: number;
+
+    baz: () => void;
 }
 
 // ###
