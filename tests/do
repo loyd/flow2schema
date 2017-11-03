@@ -28,6 +28,10 @@ for (const name of list) {
         continue;
     }
 
+    if (fs.lstatSync(name).isDirectory()) {
+        continue;
+    }
+
     console.log(`${name}...`);
 
     const code = fs.readFileSync(name, 'utf8');
