@@ -1,5 +1,7 @@
 # flow2avro
 
+[![Build Status](https://travis-ci.org/loyd/flow2avro.svg?branch=master)](https://travis-ci.org/loyd/flow2avro)
+
 ## Example
 
 Input:
