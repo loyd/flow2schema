@@ -37,7 +37,7 @@ Output:
 
 ## TODO
 
-* External types (`import` and `require`).
 * Generics.
 * Errors and warnings.
+* Support commonjs modules.
 * Documentation.

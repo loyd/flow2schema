@@ -59,65 +59,65 @@ type Y = {
     {
         type: 'double',
         name: 'X',
-        namespace: 'scopes._0',
+        namespace: 'scopes._1',
     },
     {
         type: 'record',
         name: 'Y',
-        namespace: 'scopes._0',
+        namespace: 'scopes._1',
         fields: [{name: 'x', type: 'X'}],
     },
     {
         type: 'string',
         name: 'Z',
-        namespace: 'scopes._0',
+        namespace: 'scopes._1',
+    },
+    {
+        type: 'record',
+        name: 'Test',
+        namespace: 'scopes._1',
+        fields: [],
     },
     {
         type: 'boolean',
         name: 'X',
-        namespace: 'scopes._0._0',
+        namespace: 'scopes._2',
     },
     {
         type: 'record',
         name: 'Y',
-        namespace: 'scopes._0._0',
+        namespace: 'scopes._2',
         fields: [
             {name: 'x', type: 'X'},
-            {name: 'z', type: 'scopes._0.Z'},
+            {name: 'z', type: 'scopes._1.Z'},
         ],
     },
     {
         type: 'double',
         name: 'X',
-        namespace: 'scopes._0._1',
+        namespace: 'scopes._3',
     },
     {
         type: 'record',
         name: 'Y',
-        namespace: 'scopes._0._1',
+        namespace: 'scopes._3',
         fields: [
             {name: 'x', type: 'X'},
-            {name: 'z', type: 'scopes._0.Z'},
+            {name: 'z', type: 'scopes._1.Z'},
         ],
     },
     {
         type: 'string',
         name: 'X',
-        namespace: 'scopes._0._2',
+        namespace: 'scopes._4',
     },
     {
         type: 'record',
         name: 'Y',
-        namespace: 'scopes._0._2',
+        namespace: 'scopes._4',
         fields: [
             {name: 'x', type: 'X'},
-            {name: 'z', type: 'scopes._0.Z'},
+            {name: 'z', type: 'scopes._1.Z'},
         ],
-    },
-    {
-        type: 'record',
-        name: 'Test',
-        namespace: 'scopes._0',
-        fields: [],
     },
 ]
