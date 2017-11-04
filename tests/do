@@ -8,13 +8,6 @@ const jsondiffpatch = require('jsondiffpatch');
 
 const collect = require('..');
 
-process.chdir(__dirname);
-
-const runner = path.basename(__filename);
-
-const list = fs.readdirSync(__dirname)
-    .filter(fname => fname !== runner);
-
 function filter(name) {
     if (process.argv.length <= 2) {
         return true;
@@ -27,24 +20,54 @@ function filter(name) {
     return negate ? !argv.some(match) : argv.some(match);
 }
 
-for (const name of list) {
-    if (!filter(name)) {
-        continue;
-    }
+function run(name) {
+    try {
+        const title = path.basename(name, 'js');
+        console.log(`${title}...`);
 
-    if (fs.lstatSync(name).isDirectory()) {
-        continue;
-    }
+        const code = fs.readFileSync(name, 'utf8');
+        const {schemas: actual} = collect(name);
+        const expected = eval(code.split('// ###')[1]);
 
-    console.log(`${name}...`);
+        const delta = jsondiffpatch.diff(actual, expected);
 
-    const code = fs.readFileSync(name, 'utf8');
-    const {schemas: actual} = collect(name);
-    const expected = eval(code.split('// ###')[1]);
+        if (delta) {
+            jsondiffpatch.console.log(delta);
+        }
 
-    const delta = jsondiffpatch.diff(actual, expected);
+        return !delta;
+    } catch (ex) {
+        console.log(ex.message);
 
-    if (delta) {
-        jsondiffpatch.console.log(delta);
+        return false;
     }
 }
+
+function main() {
+    process.chdir(__dirname);
+
+    const runner = path.basename(__filename);
+
+    const list = fs.readdirSync(__dirname)
+        .filter(fname => fname !== runner);
+
+    let success = true;
+
+    for (const name of list) {
+        if (!filter(name)) {
+            continue;
+        }
+
+        if (fs.lstatSync(name).isDirectory()) {
+            continue;
+        }
+
+        const ok = run(name);
+
+        success = success && ok;
+    }
+
+    process.exit(success ? 0 : 1);
+}
+
+main();
