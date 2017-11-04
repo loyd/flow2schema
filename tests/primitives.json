@@ -1,0 +1,40 @@
+{
+    "schemas": [
+        {
+            "type": "record",
+            "name": "Type",
+            "namespace": "primitives",
+            "fields": [
+                {"name": "a", "type": "string"},
+                {"name": "b", "type": "double"},
+                {"name": "c", "type": "boolean"},
+                {"name": "d", "type": "null"},
+                {"name": "e", "type": "bytes"}
+            ]
+        },
+        {
+            "type": "record",
+            "name": "Interface",
+            "namespace": "primitives",
+            "fields": [
+                {"name": "a", "type": "string"},
+                {"name": "b", "type": "double"},
+                {"name": "c", "type": "boolean"},
+                {"name": "d", "type": "null"},
+                {"name": "e", "type": "bytes"}
+            ]
+        },
+        {
+            "type": "record",
+            "name": "Class",
+            "namespace": "primitives",
+            "fields": [
+                {"name": "a", "type": "string"},
+                {"name": "b", "type": "double"},
+                {"name": "c", "type": "boolean"},
+                {"name": "d", "type": "null"},
+                {"name": "e", "type": "bytes"}
+            ]
+        }
+    ]
+}

@@ -1,0 +1,40 @@
+{
+    "schemas": [
+        {
+            "type": "record",
+            "name": "Type",
+            "namespace": "pragmas",
+            "fields": [
+                {"name": "a", "type": "int"},
+                {"name": "b", "type": "long"},
+                {"name": "c", "type": "float"},
+                {"name": "d", "type": "double"},
+                {"name": "e", "type": {"type": "fixed", "size": 10}}
+            ]
+        },
+        {
+            "type": "record",
+            "name": "Interface",
+            "namespace": "pragmas",
+            "fields": [
+                {"name": "a", "type": "int"},
+                {"name": "b", "type": "long"},
+                {"name": "c", "type": "float"},
+                {"name": "d", "type": "double"},
+                {"name": "e", "type": {"type": "fixed", "size": 10}}
+            ]
+        },
+        {
+            "type": "record",
+            "name": "Class",
+            "namespace": "pragmas",
+            "fields": [
+                {"name": "a", "type": "int"},
+                {"name": "b", "type": "long"},
+                {"name": "c", "type": "float"},
+                {"name": "d", "type": "double"},
+                {"name": "e", "type": {"type": "fixed", "size": 10}}
+            ]
+        }
+    ]
+}

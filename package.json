@@ -1,7 +1,7 @@
 {
   "name": "flow2avro",
   "version": "0.1.0",
-  "description": "Generate avro schemes for flowtype definitions",
+  "description": "Generate avro schemas for flowtype definitions",
   "author": "Paul Loyd <pavelko95@gmail.com>",
   "license": "MIT",
   "repository": {

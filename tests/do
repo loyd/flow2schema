@@ -13,7 +13,7 @@ function filter(name) {
         return true;
     }
 
-    const match = part => name.indexOf(part) >= 0;
+    const match = part => name.includes(part);
     const negate = process.argv[2] === '!';
     const argv = process.argv.slice(negate ? 3 : 2);
 
@@ -26,10 +26,10 @@ function run(name) {
         console.log(`${title}...`);
 
         const code = fs.readFileSync(name, 'utf8');
-        const {schemas: actual} = collect(name);
-        const expected = eval(code.split('// ###')[1]);
+        const actual = collect(name);
+        const expected = JSON.parse(fs.readFileSync(name + 'on', 'utf8'));
 
-        const delta = jsondiffpatch.diff(actual, expected);
+        const delta = jsondiffpatch.diff(actual.schemas, expected.schemas);
 
         if (delta) {
             jsondiffpatch.console.log(delta);
@@ -46,26 +46,14 @@ function run(name) {
 function main() {
     process.chdir(__dirname);
 
-    const runner = path.basename(__filename);
+    const success = fs.readdirSync(__dirname)
+        .filter(name => path.extname(name) === '.js')
+        .filter(filter)
+        .reduce((success, name) => {
+            const ok = run(name);
 
-    const list = fs.readdirSync(__dirname)
-        .filter(fname => fname !== runner);
-
-    let success = true;
-
-    for (const name of list) {
-        if (!filter(name)) {
-            continue;
-        }
-
-        if (fs.lstatSync(name).isDirectory()) {
-            continue;
-        }
-
-        const ok = run(name);
-
-        success = success && ok;
-    }
+            return success && ok;
+        }, true);
 
     process.exit(success ? 0 : 1);
 }
