@@ -30,6 +30,6 @@
     "jsondiffpatch": "^0.2.5"
   },
   "scripts": {
-    "test": "tests/do"
+    "test": "node tests/do"
   }
 }
