@@ -17,22 +17,21 @@ $ ./bin/flow2avro -
 
 Output:
 ```javascript
-{
-    Foo: {
-        type: 'record',
-        fields: [
-            { name: 'foo', type: 'string' },
-            { name: 'bar', type: 'long' },
-            { name: 'opt', type: [ 'null', 'double' ] },
-            { name: 'baz', type: { type: 'enum', symbols: [ 'one', 'two' ] } },
-            { name: 'mix', type: [
-                'double',
-                { type: 'enum', symbols: [ 'one', 'two' ] }
-            ] }
-        ],
-        name: 'Foo'
-    }
-}
+[
+    type: 'record',
+    name: 'Foo',
+    namespace: 'example',
+    fields: [
+        { name: 'foo', type: 'string' },
+        { name: 'bar', type: 'long' },
+        { name: 'opt', type: [ 'null', 'double' ] },
+        { name: 'baz', type: { type: 'enum', symbols: [ 'one', 'two' ] } },
+        { name: 'mix', type: [
+            'double',
+            { type: 'enum', symbols: [ 'one', 'two' ] }
+        ] }
+    ],
+]
 ```
 
 ## TODO
