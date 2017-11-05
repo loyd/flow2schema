@@ -22,7 +22,7 @@ $ ./bin/flow2avro -
 
 Output:
 ```javascript
-[
+[{
     type: 'record',
     name: 'Foo',
     namespace: 'example',
@@ -36,7 +36,7 @@ Output:
             { type: 'enum', symbols: [ 'one', 'two' ] },
         ] },
     ],
-]
+}]
 ```
 
 ## TODO

@@ -32,6 +32,6 @@
     "nyc": "^11.3.0"
   },
   "scripts": {
-    "test": "nyc --reporter=text mocha tests/do"
+    "test": "nyc mocha tests/do"
   }
 }
