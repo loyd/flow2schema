@@ -9,8 +9,13 @@ const path = require('path');
 const collect = require('..');
 
 function run(title) {
-    const actual = collect(title + '.js');
-    const expected = JSON.parse(fs.readFileSync(title + '.json', 'utf8'));
+    let actual, expected;
+
+    // Run the collector only if the suite will be checked.
+    before(() => {
+        actual = collect(title + '.js');
+        expected = JSON.parse(fs.readFileSync(title + '.json', 'utf8'));
+    });
 
     it('should provide expected schemas', () => {
         assert.deepEqual(actual.schemas, expected.schemas);
