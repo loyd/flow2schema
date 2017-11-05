@@ -1,0 +1,27 @@
+{
+    "schemas": [
+        {
+            "type": "record",
+            "name": "X",
+            "namespace": "shadowing",
+            "fields": [
+                {"name": "x", "type": "bytes"}
+            ]
+        },
+        {
+            "type": "record",
+            "name": "Buffer",
+            "namespace": "shadowing._1",
+            "fields": []
+        },
+        {
+            "type": "record",
+            "name": "Y",
+            "namespace": "shadowing._1",
+            "fields": [
+                {"name": "y", "type": "Buffer"}
+            ]
+        }
+    ],
+    "taskCount": 2
+}
