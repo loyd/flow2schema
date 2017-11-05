@@ -26,6 +26,17 @@
         },
         {
             "type": "record",
+            "name": "X",
+            "namespace": "externals",
+            "fields": [
+                {"name": "a", "type": "externals.first.A"},
+                {"name": "b", "type": "externals.first.B"},
+                {"name": "c", "type": "externals.first.CC"},
+                {"name": "d", "type": "externals.first.D"}
+            ]
+        },
+        {
+            "type": "record",
             "name": "N",
             "namespace": "externals.second",
             "fields": [{"name": "n", "type": "boolean"}]
@@ -47,17 +58,6 @@
             "name": "P",
             "namespace": "externals.second",
             "fields": [{"name": "p", "type": "double"}]
-        },
-        {
-            "type": "record",
-            "name": "X",
-            "namespace": "externals",
-            "fields": [
-                {"name": "a", "type": "externals.first.A"},
-                {"name": "b", "type": "externals.first.B"},
-                {"name": "c", "type": "externals.first.CC"},
-                {"name": "d", "type": "externals.first.D"}
-            ]
         },
         {
             "type": "record",
