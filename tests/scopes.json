@@ -75,5 +75,6 @@
                 {"name": "z", "type": "scopes._1.Z"}
             ]
         }
-    ]
+    ],
+    "taskCount": 7
 }

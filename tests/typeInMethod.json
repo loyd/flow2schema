@@ -12,5 +12,6 @@
             "namespace": "typeInMethod._1",
             "fields": [{"name": "t", "type": "typeInMethod.Test"}]
         }
-    ]
+    ],
+    "taskCount": 2
 }

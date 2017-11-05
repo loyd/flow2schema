@@ -35,5 +35,6 @@
                 {"name": "c", "type": "A"}
             ]
         }
-    ]
+    ],
+    "taskCount": 4
 }

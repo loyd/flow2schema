@@ -27,10 +27,11 @@
     "resolve": "^1.5.0"
   },
   "devDependencies": {
-    "jsondiffpatch": "^0.2.5",
+    "jasmine": "^2.8.0",
+    "mocha": "^4.0.1",
     "nyc": "^11.3.0"
   },
   "scripts": {
-    "test": "nyc --reporter=text node tests/do"
+    "test": "nyc --reporter=text mocha tests/do"
   }
 }

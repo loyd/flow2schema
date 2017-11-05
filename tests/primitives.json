@@ -36,5 +36,6 @@
                 {"name": "e", "type": "bytes"}
             ]
         }
-    ]
+    ],
+    "taskCount": 3
 }

@@ -17,5 +17,6 @@
             "namespace": "disorder",
             "fields": [{"name": "y", "type": "Y"}]
         }
-    ]
+    ],
+    "taskCount": 3
 }

@@ -50,5 +50,6 @@
                 {"name": "z", "type": "boolean"}
             ]
         }
-    ]
+    ],
+    "taskCount": 6
 }

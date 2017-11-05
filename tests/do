@@ -2,60 +2,35 @@
 
 'use strict';
 
+const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const jsondiffpatch = require('jsondiffpatch');
 
 const collect = require('..');
 
-function filter(name) {
-    if (process.argv.length <= 2) {
-        return true;
-    }
+function run(title) {
+    const actual = collect(title + '.js');
+    const expected = JSON.parse(fs.readFileSync(title + '.json', 'utf8'));
 
-    const match = part => name.includes(part);
-    const negate = process.argv[2] === '!';
-    const argv = process.argv.slice(negate ? 3 : 2);
+    it('should provide expected schemas', () => {
+        assert.deepEqual(actual.schemas, expected.schemas);
+    });
 
-    return negate ? !argv.some(match) : argv.some(match);
-}
-
-function run(name) {
-    try {
-        const title = path.basename(name, 'js');
-        console.log(`${title}...`);
-
-        const code = fs.readFileSync(name, 'utf8');
-        const actual = collect(name);
-        const expected = JSON.parse(fs.readFileSync(name + 'on', 'utf8'));
-
-        const delta = jsondiffpatch.diff(actual.schemas, expected.schemas);
-
-        if (delta) {
-            jsondiffpatch.console.log(delta);
-        }
-
-        return !delta;
-    } catch (ex) {
-        console.log(ex.message);
-
-        return false;
-    }
+    it('should run expected tasks', () => {
+        assert.equal(actual.taskCount, expected.taskCount);
+    });
 }
 
 function main() {
     process.chdir(__dirname);
 
-    const success = fs.readdirSync(__dirname)
+    fs.readdirSync('.')
         .filter(name => path.extname(name) === '.js')
-        .filter(filter)
-        .reduce((success, name) => {
-            const ok = run(name);
+        .forEach(name => {
+            const title = path.basename(name, '.js');
 
-            return success && ok;
-        }, true);
-
-    process.exit(success ? 0 : 1);
+            describe(title, () => run(title));
+        });
 }
 
 main();

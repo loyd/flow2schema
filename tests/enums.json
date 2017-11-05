@@ -27,5 +27,6 @@
                 "type": {"type": "enum", "symbols": ["one", "two"]}
             }]
         }
-    ]
+    ],
+    "taskCount": 3
 }
