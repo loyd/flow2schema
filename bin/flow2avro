@@ -4,6 +4,7 @@
 
 const fs = require('fs');
 
+const stringify = require('json-stringify-pretty-compact');
 const argv = require('optimist')
     .usage('Usage: $0 <path> ...')
     .argv;
@@ -20,10 +21,7 @@ function run(path) {
     try {
         const {schemas} = collect(path);
 
-        console.dir(schemas, {
-            colors: true,
-            depth: Infinity,
-        });
+        console.log(stringify(schemas));
     } catch (ex) {
         console.error(ex.message);
         console.error(ex.stack);

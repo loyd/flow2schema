@@ -1,37 +1,38 @@
 {
-  "name": "flow2avro",
-  "version": "0.1.0",
-  "description": "Generate avro schemas for flowtype definitions",
-  "author": "Paul Loyd <pavelko95@gmail.com>",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/loyd/flow2avro.git"
-  },
-  "bugs": {
-    "url": "https://github.com/loyd/flow2avro/issues"
-  },
-  "keywords": [
-    "flow",
-    "flowtype",
-    "avro",
-    "avsc"
-  ],
-  "main": "lib/index.js",
-  "bin": {
-    "babylon": "./bin/babylon.js"
-  },
-  "dependencies": {
-    "babylon": "^6.18.0",
-    "optimist": "^0.6.1",
-    "resolve": "^1.5.0"
-  },
-  "devDependencies": {
-    "jasmine": "^2.8.0",
-    "mocha": "^4.0.1",
-    "nyc": "^11.3.0"
-  },
-  "scripts": {
-    "test": "nyc mocha tests/do"
-  }
+    "name": "flow2avro",
+    "version": "0.2.0",
+    "description": "Generate avro schemas for flowtype definitions",
+    "author": "Paul Loyd <pavelko95@gmail.com>",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/loyd/flow2avro.git"
+    },
+    "bugs": {
+        "url": "https://github.com/loyd/flow2avro/issues"
+    },
+    "keywords": [
+        "flow",
+        "flowtype",
+        "avro",
+        "avsc"
+    ],
+    "main": "lib/index.js",
+    "bin": {
+        "babylon": "./bin/babylon.js"
+    },
+    "dependencies": {
+        "babylon": "^6.18.0",
+        "json-stringify-pretty-compact": "^1.0.4",
+        "optimist": "^0.6.1",
+        "resolve": "^1.5.0"
+    },
+    "devDependencies": {
+        "jasmine": "^2.8.0",
+        "mocha": "^4.0.1",
+        "nyc": "^11.3.0"
+    },
+    "scripts": {
+        "test": "nyc mocha tests/do"
+    }
 }

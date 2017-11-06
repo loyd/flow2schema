@@ -7,40 +7,40 @@
 
 ## Example
 
-Input:
+Input (`example.js`):
 ```javascript
-$ ./bin/flow2avro -
-    interface Foo {
-        foo: string,
-        // $avro long
-        bar: number,
-        opt: ?number,
-        baz: 'one' | 'two',
-        mix: 'one' | 'two' | number,
-    }
+interface Foo {
+    foo: string,
+    // $avro long
+    bar: number,
+    opt: ?number,
+    baz: 'one' | 'two',
+    mix: 'one' | 'two' | number,
+}
 ```
 
-Output:
-```javascript
-[{
-    type: 'record',
-    name: 'Foo',
-    namespace: 'example',
-    fields: [
-        { name: 'foo', type: 'string' },
-        { name: 'bar', type: 'long' },
-        { name: 'opt', type: [ 'null', 'double' ] },
-        { name: 'baz', type: { type: 'enum', symbols: [ 'one', 'two' ] } },
-        { name: 'mix', type: [
-            'double',
-            { type: 'enum', symbols: [ 'one', 'two' ] },
-        ] },
+Output (`$ ./bin/flow2avro example.js`):
+```json
+[
+  {
+    "type": "record",
+    "fields": [
+      {"name": "foo", "type": "string"},
+      {"name": "bar", "type": "double"},
+      {"name": "opt", "type": ["null", "double"]},
+      {"name": "baz", "type": {"type": "enum", "symbols": ["one", "two"]}},
+      {
+          "name": "mix",
+          "type": ["double", {"type": "enum", "symbols": ["one", "two"]}]
+      }
     ],
-}]
+    "name": "Foo",
+    "namespace": "example"
+  }
+]
 ```
 
 ## TODO
-
 * Generics.
 * Errors and warnings.
 * Support commonjs modules.
