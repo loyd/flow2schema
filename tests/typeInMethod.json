@@ -13,5 +13,5 @@
             "fields": [{"name": "t", "type": "typeInMethod.Test"}]
         }
     ],
-    "taskCount": 2
+    "taskCount": 3
 }
