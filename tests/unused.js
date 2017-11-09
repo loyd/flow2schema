@@ -1,0 +1,3 @@
+interface X {
+    foo: string;
+}
