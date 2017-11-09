@@ -11,8 +11,7 @@
             "namespace": "references",
             "fields": [
                 {"name": "a", "type": "A"},
-                {"name": "b", "type": {"type": "array", "items": "A"}},
-                {"name": "c", "type": "A"}
+                {"name": "b", "type": {"type": "array", "items": "A"}}
             ]
         },
         {
@@ -21,8 +20,7 @@
             "namespace": "references",
             "fields": [
                 {"name": "a", "type": "A"},
-                {"name": "b", "type": {"type": "array", "items": "A"}},
-                {"name": "c", "type": "A"}
+                {"name": "b", "type": {"type": "array", "items": "A"}}
             ]
         },
         {
@@ -31,8 +29,7 @@
             "namespace": "references",
             "fields": [
                 {"name": "a", "type": "A"},
-                {"name": "b", "type": {"type": "array", "items": "A"}},
-                {"name": "c", "type": "A"}
+                {"name": "b", "type": {"type": "array", "items": "A"}}
             ]
         }
     ],
