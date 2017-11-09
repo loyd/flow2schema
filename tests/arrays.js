@@ -9,3 +9,5 @@ interface Interface {
 class Class {
     a: number[];
 }
+
+export {Type, Interface, Class};

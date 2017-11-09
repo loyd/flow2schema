@@ -20,6 +20,9 @@ type Y = {
             x: X,
             z: Z,
         };
+
+        // TODO: replace with commonjs.
+        export {Y as Y2};
     }
 
     class Test {
@@ -30,6 +33,8 @@ type Y = {
                 x: X,
                 z: Z,
             };
+
+            export {Y as Y3};
         }
 
         baz() {
@@ -39,6 +44,12 @@ type Y = {
                 x: X,
                 z: Z,
             };
+
+            export {Y as Y4};
         }
     }
+
+    export {Y as Y1};
 })();
+
+export {Y as Y0};

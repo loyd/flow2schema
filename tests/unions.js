@@ -12,3 +12,5 @@ class Class {
     a: string | number;
     b: ?string;
 }
+
+export {Type, Interface, Class};

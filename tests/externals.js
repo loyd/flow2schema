@@ -21,3 +21,5 @@ type Y = {
     k: T,
     p: P,
 };
+
+export {X, Y};

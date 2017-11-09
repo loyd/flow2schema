@@ -21,3 +21,5 @@ interface Y extends X {
 interface Z extends Y {
     z: boolean;
 }
+
+export {C, Z};

@@ -23,20 +23,14 @@
             "fields": [{"name": "x", "type": "X"}]
         },
         {
-            "type": "string",
-            "name": "Z",
-            "namespace": "scopes._1"
-        },
-        {
-            "type": "record",
-            "name": "Test",
-            "namespace": "scopes._1",
-            "fields": []
-        },
-        {
             "type": "boolean",
             "name": "X",
             "namespace": "scopes._2"
+        },
+        {
+            "type": "string",
+            "name": "Z",
+            "namespace": "scopes._1"
         },
         {
             "type": "record",
@@ -76,5 +70,5 @@
             ]
         }
     ],
-    "taskCount": 16
+    "taskCount": 17
 }

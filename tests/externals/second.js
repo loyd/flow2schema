@@ -1,8 +1,8 @@
-export type N = {
+type N = {
     n: boolean,
 };
 
-class M {
+export class M {
     m: string;
 }
 
@@ -10,8 +10,8 @@ interface KK {
     k: number;
 }
 
-class P {
+export default class P {
     p: number;
 }
 
-export {M, KK as K, P as default};
+export {N, KK as K};

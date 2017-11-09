@@ -9,3 +9,5 @@ interface Interface {
 class Class {
     a: 'one' | 'two';
 }
+
+export {Type, Interface, Class};

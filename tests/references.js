@@ -17,3 +17,5 @@ class Class {
     b: A[];
     c: A<number>;
 }
+
+export {Type, Interface, Class};

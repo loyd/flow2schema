@@ -36,3 +36,5 @@ class Class {
     /*   $avro   fixed       10   */
     e: Buffer;
 }
+
+export {Type, Interface, Class};

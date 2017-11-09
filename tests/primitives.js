@@ -21,3 +21,5 @@ class Class {
     d: null;
     e: Buffer;
 }
+
+export {Type, Interface, Class};

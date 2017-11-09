@@ -5,3 +5,5 @@ type Type = {
 interface Interface {
     [string]: number;
 }
+
+export {Type, Interface};

@@ -11,3 +11,5 @@ type Y = {
 class Z {
     z: A & C;
 }
+
+export {X, Y, Z};

@@ -7,3 +7,5 @@ type Y = {
 };
 
 type Z = string;
+
+export {X};

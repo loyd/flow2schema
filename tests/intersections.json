@@ -14,18 +14,18 @@
         },
         {
             "type": "record",
-            "name": "C",
-            "namespace": "intersections",
-            "fields": [{"name": "c", "type": "boolean"}]
-        },
-        {
-            "type": "record",
             "name": "X",
             "namespace": "intersections",
             "fields": [
                 {"name": "a", "type": "double"},
                 {"name": "b", "type": "string"}
             ]
+        },
+        {
+            "type": "record",
+            "name": "C",
+            "namespace": "intersections",
+            "fields": [{"name": "c", "type": "boolean"}]
         },
         {
             "type": "record",
@@ -63,5 +63,5 @@
             ]
         }
     ],
-    "taskCount": 6
+    "taskCount": 8
 }

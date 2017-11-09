@@ -29,3 +29,5 @@ class Class {
 
     baz: () => void;
 }
+
+export {Type, Interface, Class};

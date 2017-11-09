@@ -8,4 +8,9 @@ type X = {
     type Y = {
         y: Buffer,
     };
+
+    // TODO: replace with commonjs.
+    export {Y};
 })();
+
+export {X};
