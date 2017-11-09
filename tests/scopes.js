@@ -5,21 +5,21 @@ type Y = {
 };
 
 (function () {
-    type X = number;
-
     type Y = {
         x: X,
     };
 
     type Z = string;
 
-    function foo() {
-        type X = boolean;
+    type X = number;
 
+    function foo() {
         type Y = {
             x: X,
             z: Z,
         };
+
+        type X = boolean;
 
         // TODO: replace with commonjs.
         export {Y as Y2};
@@ -27,12 +27,12 @@ type Y = {
 
     class Test {
         static bar() {
-            type X = number;
-
             type Y = {
                 x: X,
                 z: Z,
             };
+
+            type X = number;
 
             export {Y as Y3};
         }
