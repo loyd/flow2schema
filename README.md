@@ -7,9 +7,9 @@
 
 ## Example
 
-Input (`example.js`):
+Input (`$ cat example.js`):
 ```javascript
-interface Foo {
+export interface Foo {
     foo: string,
     // $avro long
     bar: number,
