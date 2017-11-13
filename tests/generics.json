@@ -1,0 +1,20 @@
+{
+    "schemas": [
+        {
+            "type": "record",
+            "name": "A__string_double",
+            "namespace": "generics",
+            "fields": [
+                {"name": "t", "type": "string"},
+                {"name": "k", "type": "double"}
+            ]
+        },
+        {
+            "type": "record",
+            "name": "X",
+            "namespace": "generics",
+            "fields": [{"name": "a", "type": "A__string_double"}]
+        }
+    ],
+    "taskCount": 4
+}
