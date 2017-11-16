@@ -39,6 +39,6 @@
     "scripts": {
         "prepare": "npm run build",
         "build": "babel src/ -d lib/",
-        "test": "nyc mocha --require @babel/register tests/run.js"
+        "test": "nyc mocha -r @babel/register -R list tests/run.js"
     }
 }
