@@ -1,9 +1,11 @@
-# flow2avro
+# flow2schema
 
-[![Version npm](https://img.shields.io/npm/v/flow2avro.svg)](https://www.npmjs.com/package/flow2avro)
-[![Linux Build](https://travis-ci.org/loyd/flow2avro.svg?branch=master)](https://travis-ci.org/loyd/flow2avro)
-[![Windows Build](https://ci.appveyor.com/api/projects/status/github/loyd/flow2avro?branch=master&svg=true)](https://ci.appveyor.com/project/loyd/flow2avro)
-[![Coverage Status](https://coveralls.io/repos/github/loyd/flow2avro/badge.svg?branch=master)](https://coveralls.io/r/loyd/flow2avro?branch=master)
+[![Version npm](https://img.shields.io/npm/v/flow2schema.svg)](https://www.npmjs.com/package/flow2schema)
+[![Linux Build](https://travis-ci.org/loyd/flow2schema.svg?branch=master)](https://travis-ci.org/loyd/flow2schema)
+[![Windows Build](https://ci.appveyor.com/api/projects/status/github/loyd/flow2schema?branch=master&svg=true)](https://ci.appveyor.com/project/loyd/flow2schema)
+[![Coverage Status](https://coveralls.io/repos/github/loyd/flow2schema/badge.svg?branch=master)](https://coveralls.io/r/loyd/flow2schema?branch=master)
+
+Currently avro is the only supported target.
 
 ## Example
 
@@ -19,7 +21,7 @@ export interface Foo {
 }
 ```
 
-Output (`$ ./bin/flow2avro example.js`):
+Output (`$ ./bin/flow2schema example.js`):
 ```json
 [
   {
@@ -41,7 +43,7 @@ Output (`$ ./bin/flow2avro example.js`):
 ```
 
 ## TODO
-* Generics.
+* Complete generics support.
 * Errors and warnings.
 * Support commonjs modules.
 * Documentation.

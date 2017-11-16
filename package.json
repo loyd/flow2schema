@@ -1,25 +1,26 @@
 {
-    "name": "flow2avro",
+    "name": "flow2schema",
     "version": "0.2.0",
-    "description": "Generate avro schemas for flowtype definitions",
+    "description": "Generate schemas for flowtype definitions",
     "author": "Paul Loyd <pavelko95@gmail.com>",
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/loyd/flow2avro.git"
+        "url": "https://github.com/loyd/flow2schema.git"
     },
     "bugs": {
-        "url": "https://github.com/loyd/flow2avro/issues"
+        "url": "https://github.com/loyd/flow2schema/issues"
     },
     "keywords": [
         "flow",
         "flowtype",
         "avro",
-        "avsc"
+        "avsc",
+        "json-schema"
     ],
     "main": "lib/index.js",
     "bin": {
-        "flow2avro": "./bin/flow2avro"
+        "flow2schema": "./bin/flow2schema"
     },
     "dependencies": {
         "babylon": "^7.0.0-beta.32",
