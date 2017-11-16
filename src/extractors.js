@@ -1,11 +1,9 @@
-'use strict';
+import * as assert from 'assert';
 
-const assert = require('assert');
+import {declare, define, external, provide, query, enter, exit, namespace} from './commands';
+import {partition, isNode} from './utils';
 
-const {declare, define, external, provide, query, enter, exit, namespace} = require('./commands');
-const {partition, isNode} = require('./utils');
-
-const definition = {
+export const definition = {
     entries: [
         'TypeAlias',
         'InterfaceDeclaration',
@@ -245,7 +243,7 @@ const definition = {
     },
 };
 
-const declaration = {
+export const declaration = {
     entries: [
         // Blocks.
         'Program',
@@ -533,7 +531,7 @@ function extractPragma(text) {
 
     const pair = parsePragma(pragma);
 
-    assert(pair);
+    assert.ok(pair);
 
     const [type, arg] = pair;
 
@@ -572,7 +570,7 @@ function unwrapEnumSymbol(node) {
 }
 
 function makeFullname(schema) {
-    assert(schema.namespace);
+    assert.ok(schema.namespace);
 
     return `${schema.namespace}.${schema.name}`;
 }
@@ -614,8 +612,3 @@ function mergeSchemas(schemas) {
 function is(type) {
     return node => Boolean(node) && node.type === type;
 }
-
-module.exports = {
-    definition,
-    declaration,
-};

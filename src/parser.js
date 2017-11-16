@@ -1,8 +1,6 @@
-'use strict';
+import * as babylon from 'babylon';
 
-const babylon = require('babylon');
-
-class Parser {
+export default class Parser {
     parse(code) {
         // This parse configuration is intended to be as permissive as possible.
         return babylon.parse(code, {
@@ -14,5 +12,3 @@ class Parser {
         });
     }
 }
-
-module.exports = Parser;

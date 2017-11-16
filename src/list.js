@@ -1,8 +1,6 @@
-'use strict';
+import * as assert from 'assert';
 
-const assert = require('assert');
-
-class CircularList {
+export default class CircularList {
     constructor() {
         this.mark = Symbol();
         this.prev = null;
@@ -14,25 +12,25 @@ class CircularList {
     }
 
     add(entry) {
-        assert(!entry[this.mark]);
+        assert.ok(!entry[this.mark]);
 
         if (this.prev) {
-            assert(this.walk);
+            assert.ok(this.walk);
 
             this.prev = this.prev[this.mark] = entry;
         } else {
-            assert(!this.walk);
+            assert.ok(!this.walk);
 
             this.walk = this.prev = entry;
         }
 
         entry[this.mark] = this.walk;
 
-        assert(!this.prev || this.prev[this.mark] === this.walk);
+        assert.ok(!this.prev || this.prev[this.mark] === this.walk);
     }
 
     remove() {
-        assert(this.walk);
+        assert.ok(this.walk);
 
         const removed = this.walk;
 
@@ -47,5 +45,3 @@ class CircularList {
         return removed;
     }
 }
-
-module.exports = CircularList;

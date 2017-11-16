@@ -19,20 +19,26 @@
     ],
     "main": "lib/index.js",
     "bin": {
-        "babylon": "./bin/babylon.js"
+        "flow2avro": "./bin/flow2avro"
     },
     "dependencies": {
-        "babylon": "^6.18.0",
+        "babylon": "^7.0.0-beta.32",
         "json-stringify-pretty-compact": "^1.0.4",
         "optimist": "^0.6.1",
         "resolve": "^1.5.0"
     },
     "devDependencies": {
+        "@babel/cli": "^7.0.0-beta.32",
+        "@babel/core": "^7.0.0-beta.32",
+        "@babel/preset-env": "^7.0.0-beta.32",
+        "@babel/register": "^7.0.0-beta.32",
         "jasmine": "^2.8.0",
         "mocha": "^4.0.1",
         "nyc": "^11.3.0"
     },
     "scripts": {
-        "test": "nyc mocha tests/do"
+        "prepare": "npm run build",
+        "build": "babel src/ -d lib/",
+        "test": "nyc mocha --require @babel/register tests/run.js"
     }
 }

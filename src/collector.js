@@ -1,18 +1,16 @@
-'use strict';
+import * as assert from 'assert';
+import * as fs from 'fs';
+import * as pathlib from 'path';
 
-const assert = require('assert');
-const fs = require('fs');
-const pathlib = require('path');
+import globals from './globals';
+import * as extractors from './extractors';
+import Command from './commands';
+import Module from './module';
+import Scope from './scope';
+import CircularList from './list';
+import {isNode} from './utils';
 
-const globals = require('./globals');
-const extractors = require('./extractors');
-const Command = require('./commands');
-const Module = require('./module');
-const Scope = require('./scope');
-const CircularList = require('./list');
-const {isNode} = require('./utils');
-
-class Collector {
+export default class Collector {
     constructor(parser, root = '.') {
         this.root = root;
         this.parser = parser;
@@ -130,7 +128,7 @@ class Collector {
                 return value;
             }
 
-            assert(value);
+            assert.ok(value);
 
             if (value instanceof Command) {
                 switch (value.name) {
@@ -180,7 +178,7 @@ class Collector {
 
                         break;
                     case 'exit':
-                        assert(scope.parent);
+                        assert.ok(scope.parent);
                         scope = scope.parent;
 
                         break;
@@ -196,7 +194,7 @@ class Collector {
                     result.push(yield* this._collect(group, val, scope, params));
                 }
             } else {
-                assert(isNode(value));
+                assert.ok(isNode(value));
                 result = yield* this._collect(group, value, scope, params);
             }
         }
@@ -232,7 +230,7 @@ class Collector {
                 }
 
                 // TODO: reexports.
-                assert(result.type === 'declaration' || result.type === 'template');
+                assert.ok(result.type === 'declaration' || result.type === 'template');
 
                 scope = result.scope;
                 name = result.name;
@@ -329,5 +327,3 @@ function generateGenericName(base, params) {
 
     return name;
 }
-
-module.exports = Collector;

@@ -1,8 +1,6 @@
-'use strict';
+import * as assert from 'assert';
 
-const assert = require('assert');
-
-class Scope {
+export default class Scope {
     static global(schemas) {
         const global = new Scope(null, null);
 
@@ -21,7 +19,7 @@ class Scope {
     }
 
     get namespace() {
-        assert(this.module);
+        assert.ok(this.module);
 
         let namespace = this.module.namespace;
 
@@ -38,7 +36,7 @@ class Scope {
     }
 
     addDeclaration(name, node, params) {
-        assert(!this.entries.has(name));
+        assert.ok(!this.entries.has(name));
 
         const isTemplate = Boolean(params);
 
@@ -60,7 +58,7 @@ class Scope {
     addInstance(name, schema, params) {
         const template = this.entries.get(name);
 
-        assert(template);
+        assert.ok(template);
         assert.equal(template.type, 'template');
 
         template.instances.push({params, schema});
@@ -70,10 +68,10 @@ class Scope {
         const decl = this.entries.get(schema.name);
 
         if (declared) {
-            assert(decl);
+            assert.ok(decl);
             assert.equal(decl.type, 'declaration');
         } else {
-            assert(!decl);
+            assert.ok(!decl);
         }
 
         this.entries.set(schema.name, {
@@ -84,7 +82,7 @@ class Scope {
     }
 
     addImport(info) {
-        assert(!this.entries.has(info.local));
+        assert.ok(!this.entries.has(info.local));
 
         this.entries.set(info.local, {
             type: 'external',
@@ -94,13 +92,13 @@ class Scope {
     }
 
     addExport(name, reference) {
-        assert(this.module);
+        assert.ok(this.module);
 
         this.module.addExport(name, this, reference);
     }
 
     resolve(path) {
-        assert(this.module);
+        assert.ok(this.module);
 
         return this.module.resolve(path);
     }
@@ -109,7 +107,7 @@ class Scope {
         const entry = this.entries.get(name);
 
         if (entry && entry.type === 'template') {
-            assert(params);
+            assert.ok(params);
 
             const augmented = entry.params.map((p, i) => params[i] || p.default);
             const schema = findInstance(entry, augmented);
@@ -149,5 +147,3 @@ function findInstance(template, queried) {
 
     return null;
 }
-
-module.exports = Scope;

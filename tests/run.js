@@ -1,12 +1,8 @@
-#!/usr/bin/env node
+import * as assert from 'assert';
+import * as fs from 'fs';
+import * as path from 'path';
 
-'use strict';
-
-const assert = require('assert');
-const fs = require('fs');
-const path = require('path');
-
-const collect = require('..');
+import collect from '../src';
 
 function run(title) {
     let actual, expected;
@@ -27,7 +23,7 @@ function run(title) {
 }
 
 function main() {
-    process.chdir(__dirname);
+    process.chdir(path.join(__dirname, 'samples'));
 
     fs.readdirSync('.')
         .filter(name => path.extname(name) === '.js')

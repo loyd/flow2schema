@@ -1,6 +1,4 @@
-'use strict';
-
-function partition(iter, predicate) {
+export function partition(iter, predicate) {
     const left = [];
     const right = [];
 
@@ -11,11 +9,6 @@ function partition(iter, predicate) {
     return [left, right];
 }
 
-function isNode(it) {
+export function isNode(it) {
     return it && typeof it === 'object' && it.type;
 }
-
-module.exports = {
-    partition,
-    isNode,
-};

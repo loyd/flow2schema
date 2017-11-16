@@ -1,10 +1,7 @@
-'use strict';
+import * as pathlib from 'path';
+import * as resolve from 'resolve';
 
-const pathlib = require('path');
-
-const resolve = require('resolve');
-
-class Module {
+export default class Module {
     constructor(path, namespace) {
         this.path = path;
         this.namespace = namespace;
@@ -45,5 +42,3 @@ class Module {
         return this._exports.values();
     }
 }
-
-module.exports = Module;
