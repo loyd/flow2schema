@@ -42,8 +42,9 @@
     },
     "scripts": {
         "prepare": "npm run build",
+        "test": "npm run flow && npm run mocha",
         "build": "babel src/ -d lib/",
-        "test": "flow && nyc mocha -r @babel/register -R list tests/run.js",
+        "mocha": "nyc mocha -r @babel/register -R list tests/run.js",
         "flow": "flow"
     }
 }

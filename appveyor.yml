@@ -11,7 +11,7 @@ install:
 test_script:
     - node --version
     - npm --version
-    - npm test
+    - npm run mocha
 cache:
     - node_modules
 build: off
