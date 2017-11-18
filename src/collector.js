@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as pathlib from 'path';
 import type {Node} from '@babel/types';
 
+import traverse from './traverse';
 import globals from './globals';
 // $FlowFixMe
 import definitionGroup from './definitions';
@@ -95,45 +96,23 @@ export default class Collector {
         }
     }
 
-    // Given the AST output of babylon parse, walk through in a depth-first order.
     _freestyle(group: Group, root: Node, scope: Scope, params: InstanceParam[]) {
-        let stack;
-        let parent;
-        let keys = [];
-        let index = -1;
+        // $FlowFixMe
+        const iter = traverse(root);
+        let result = iter.next();
 
-        do {
-            ++index;
+        while (!result.done) {
+            const node = result.value;
+            const detain = isAcceptableGroup(group, node);
 
-            if (stack && index === keys.length) {
-                parent = stack.parent;
-                keys = stack.keys;
-                index = stack.index;
-                stack = stack.prev;
-
-                continue;
+            if (detain && !this._roots.has(node)) {
+                const task = this._collect(group, node, scope, params);
+                this._roots.add(node);
+                this._spawn(task);
             }
 
-            // $FlowFixMe
-            const node = parent ? parent[keys[index]] : root;
-
-            if (isNode(node) && isAcceptableGroup(group, node)) {
-                if (!this._roots.has(node)) {
-                    const task = this._collect(group, node, scope, params);
-                    this._roots.add(node);
-                    this._spawn(task);
-                }
-
-                continue;
-            }
-
-            if (isNode(node) || node instanceof Array) {
-                stack = { parent, keys, index, prev: stack };
-                parent = node;
-                keys = Object.keys(node);
-                index = -1;
-            }
-        } while (stack);
+            result = iter.next(detain);
+        }
     }
 
     * _collect(group: Group, node: Node, scope: Scope, params: InstanceParam[]): Task {
@@ -162,7 +141,7 @@ export default class Collector {
 
             if (isNode(value)) {
                 result = yield* this._collect(group, value, scope, params);
-            } else if (Array.isArray(value)) {
+            } else if (value instanceof Array) {
                 result = [];
 
                 for (const val of value) {
