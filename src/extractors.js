@@ -1,7 +1,10 @@
-import * as assert from 'assert';
+import * as t from '@babel/types';
 
 import {declare, define, external, provide, query, enter, exit, namespace} from './commands';
-import {partition, isNode} from './utils';
+import {invariant, partition} from './utils';
+import type {Schema} from './schema';
+
+type E = Generator<any, any, any>;
 
 export const definition = {
     entries: [
@@ -10,7 +13,7 @@ export const definition = {
         'ClassDeclaration',
     ],
 
-    * TypeAlias(node) {
+    * TypeAlias(node: t.TypeAlias): E {
         let schema = yield node.right;
 
         if (typeof schema === 'string') {
@@ -25,7 +28,7 @@ export const definition = {
         return schema;
     },
 
-    * InterfaceDeclaration(node) {
+    * InterfaceDeclaration(node: t.InterfaceDeclaration): E {
         let schema = yield node.body;
 
         if (node.extends.length > 0) {
@@ -51,7 +54,7 @@ export const definition = {
         return schema;
     },
 
-    * ClassDeclaration(node) {
+    * ClassDeclaration(node: t.ClassDeclaration): E {
         let schema = yield node.body;
 
         if (node.superClass) {
@@ -69,14 +72,14 @@ export const definition = {
         return schema;
     },
 
-    * ClassBody(node) {
+    * ClassBody(node: t.ClassBody): E {
         return {
             type: 'record',
             fields: (yield node.body).filter(Boolean),
         };
     },
 
-    * ClassProperty(node) {
+    * ClassProperty(node: t.ClassProperty): E {
         if (node.static) {
             return null;
         }
@@ -84,17 +87,17 @@ export const definition = {
         return yield* extractProperty(node, node.typeAnnotation);
     },
 
-    * ClassMethod(node) {
+    * ClassMethod(node: t.ClassMethod): E {
         return null;
     },
 
-    * ObjectTypeAnnotation(node) {
+    * ObjectTypeAnnotation(node: t.ObjectTypeAnnotation): E {
         if (node.indexers.length > 0) {
             // Allow functions, getters and setters.
             const properties = (yield node.properties).filter(Boolean);
 
-            assert.equal(properties.length, 0);
-            assert.equal(node.indexers.length, 1);
+            invariant(properties.length === 0);
+            invariant(node.indexers.length === 1);
 
             return {
                 type: 'map',
@@ -108,42 +111,42 @@ export const definition = {
         };
     },
 
-    * ObjectTypeProperty(node) {
+    * ObjectTypeProperty(node: t.ObjectTypeProperty): E {
         return yield* extractProperty(node, node.value);
     },
 
-    * ObjectTypeIndexer(node) {
+    * ObjectTypeIndexer(node: t.ObjectTypeIndexer): E {
         const key = yield node.key;
 
-        assert.equal(key, 'string');
+        invariant(key === 'string');
 
         return yield node.value;
     },
 
-    * TypeAnnotation(node) {
+    * TypeAnnotation(node: t.TypeAnnotation): E {
         return yield node.typeAnnotation;
     },
 
-    * NumberTypeAnnotation(node) {
+    * NumberTypeAnnotation(node: t.NumberTypeAnnotation): E {
         return 'double';
     },
 
-    * StringTypeAnnotation(node) {
+    * StringTypeAnnotation(node: t.StringTypeAnnotation): E {
         return 'string';
     },
 
-    * BooleanTypeAnnotation(node) {
+    * BooleanTypeAnnotation(node: t.BooleanTypeAnnotation): E {
         return 'boolean';
     },
 
-    * ArrayTypeAnnotation(node) {
+    * ArrayTypeAnnotation(node: t.ArrayTypeAnnotation): E {
         return {
             type: 'array',
             items: yield node.elementType,
         };
     },
 
-    * UnionTypeAnnotation(node) {
+    * UnionTypeAnnotation(node: t.UnionTypeAnnotation): E {
         // TODO: flatten variants.
 
         let [symbols, variants] = partition(node.types, isEnumSymbol);
@@ -167,10 +170,11 @@ export const definition = {
         return variants;
     },
 
-    * IntersectionTypeAnnotation(node) {
+    * IntersectionTypeAnnotation(node: t.IntersectionTypeAnnotation): E {
         const schemas = [];
 
         for (const type of node.types) {
+            // TODO: support arbitrary types, not only references.
             const name = yield type;
             const schema = yield query(name);
 
@@ -180,22 +184,22 @@ export const definition = {
         return mergeSchemas(schemas);
     },
 
-    * NullableTypeAnnotation(node) {
+    * NullableTypeAnnotation(node: t.NullableTypeAnnotation): E {
         return ['null', yield node.typeAnnotation];
     },
 
-    * NullLiteralTypeAnnotation(node) {
+    * NullLiteralTypeAnnotation(node: t.NullLiteralTypeAnnotation): E {
         return 'null';
     },
 
-    * StringLiteralTypeAnnotation(node) {
+    * StringLiteralTypeAnnotation(node: t.StringLiteralTypeAnnotation): E {
         return {
             type: 'enum',
             symbols: [node.value],
         };
     },
 
-    * GenericTypeAnnotation(node) {
+    * GenericTypeAnnotation(node: t.GenericTypeAnnotation): E {
         const name = yield node.id;
         const params = node.typeParameters && (yield node.typeParameters);
 
@@ -218,27 +222,27 @@ export const definition = {
         return makeFullname(schema);
     },
 
-    * TypeParameterInstantiation(node) {
+    * TypeParameterInstantiation(node: t.TypeParameterInstantiation): E {
         return yield node.params;
     },
 
-    * FunctionTypeAnnotation(node) {
+    * FunctionTypeAnnotation(node: t.FunctionTypeAnnotation): E {
         return null;
     },
 
-    * InterfaceExtends(node) {
+    * InterfaceExtends(node: t.InterfaceExtends): E {
         return yield node.id;
     },
 
-    * Identifier(node) {
+    * Identifier(node: t.Identifier): E {
         return node.name;
     },
 
-    * CommentLine(node) {
+    * CommentLine(node: t.CommentLine): E {
         return extractPragma(node.value);
     },
 
-    * CommentBlock(node) {
+    * CommentBlock(node: t.CommentBlock): E {
         return extractPragma(node.value);
     },
 };
@@ -260,11 +264,11 @@ export const declaration = {
      * Blocks.
      */
 
-    * Program(node) {
+    * Program(node: t.Program): E {
         yield node.body;
     },
 
-    * BlockStatement(node) {
+    * BlockStatement(node: t.BlockStatement): E {
         yield enter();
         yield node.body;
         yield exit();
@@ -277,7 +281,7 @@ export const declaration = {
      * TODO: support form "import *".
      */
 
-    * ImportDeclaration(node) {
+    * ImportDeclaration(node: t.ImportDeclaration): E {
         const specifiers = yield node.specifiers;
         const path = yield node.source;
 
@@ -288,21 +292,21 @@ export const declaration = {
         }
     },
 
-    * ImportDefaultSpecifier(node) {
+    * ImportDefaultSpecifier(node: t.ImportDefaultSpecifier): E {
         return {
             local: yield node.local,
             imported: null,
         };
     },
 
-    * ImportSpecifier(node) {
+    * ImportSpecifier(node: t.ImportSpecifier): E {
         return {
             local: yield node.local,
             imported: yield node.imported,
         };
     },
 
-    * VariableDeclarator(node) {
+    * VariableDeclarator(node: t.VariableDeclarator): E {
         const path = extractRequire(node.init);
 
         if (!path) {
@@ -325,11 +329,11 @@ export const declaration = {
         }
     },
 
-    * ObjectPattern(node) {
+    * ObjectPattern(node: t.ObjectPattern): E {
         return yield node.properties;
     },
 
-    * ObjectProperty(node) {
+    * ObjectProperty(node: t.ObjectProperty): E {
         const key = yield node.key;
 
         // TODO: different roots.
@@ -337,7 +341,7 @@ export const declaration = {
             return null;
         }
 
-        //assert.equal(node.value.type, 'Identifier');
+        //invariant(node.value.type === 'Identifier');
 
         const value = yield node.value;
 
@@ -354,7 +358,7 @@ export const declaration = {
      * TODO: support commonjs.
      */
 
-    * ExportDefaultDeclaration(node) {
+    * ExportDefaultDeclaration(node: t.ExportDefaultDeclaration): E {
         const reference = yield node.declaration;
 
         if (reference) {
@@ -362,7 +366,7 @@ export const declaration = {
         }
     },
 
-    * ExportNamedDeclaration(node) {
+    * ExportNamedDeclaration(node: t.ExportNamedDeclaration): E {
         if (!node.declaration) {
             yield node.specifiers;
             return;
@@ -375,7 +379,7 @@ export const declaration = {
         }
     },
 
-    * ExportSpecifier(node) {
+    * ExportSpecifier(node: t.ExportSpecifier): E {
         const reference = yield node.local;
         let name = yield node.exported;
 
@@ -390,7 +394,7 @@ export const declaration = {
      * Declarations.
      */
 
-    * TypeAlias(node) {
+    * TypeAlias(node: t.TypeAlias): E {
         const name = yield node.id;
         const params = node.typeParameters && (yield node.typeParameters);
 
@@ -399,7 +403,7 @@ export const declaration = {
         return name;
     },
 
-    * InterfaceDeclaration(node) {
+    * InterfaceDeclaration(node: t.InterfaceDeclaration): E {
         const name = yield node.id;
         const params = node.typeParameters && (yield node.typeParameters);
 
@@ -408,24 +412,24 @@ export const declaration = {
         return name;
     },
 
-    * ClassDeclaration(node) {
+    * ClassDeclaration(node: t.ClassDeclaration): E {
         const name = yield node.id;
         const params = node.typeParameters && (yield node.typeParameters);
 
         // TODO: do it only for "all"-mode.
         const body = node.body;
-        yield body.body.filter(is('ClassMethod'));
+        yield body.body.filter(n => t.isClassMethod(n));
 
         yield declare(name, node, params);
 
         return name;
     },
 
-    * TypeParameterDeclaration(node) {
+    * TypeParameterDeclaration(node: t.TypeParameterDeclaration): E {
         return yield node.params;
     },
 
-    * TypeParameter(node) {
+    * TypeParameter(node: t.TypeParameter): E {
         return {
             name: node.name,
             default: node.default ? yield node.default : null,
@@ -436,16 +440,16 @@ export const declaration = {
      * Utility.
      */
 
-    * StringLiteral(node) {
+    * StringLiteral(node: t.StringLiteral): E {
         return node.value;
     },
 
-    * Identifier(node) {
+    * Identifier(node: t.Identifier): E {
         return node.name;
     },
 };
 
-function* extractLastPragma(comments) {
+function* extractLastPragma(comments: t.Comment[]): ?string {
     const pragmas = (yield comments).filter(Boolean);
 
     return pragmas.length > 0 ? pragmas[pragmas.length - 1] : null;
@@ -481,6 +485,7 @@ function* extractProperty(prop, value) {
 function extractRequire(node) {
     // XXX: refactor it!
 
+    // TODO: use `t.*` helpers.
     const ok = node &&
                node.type === 'CallExpression' &&
                node.callee.type === 'Identifier' &&
@@ -493,7 +498,7 @@ function extractRequire(node) {
     const argument = node.arguments[0];
 
     // TODO: warning about dynamic imports.
-    assert.equal(argument.type, 'StringLiteral');
+    invariant(t.isStringLiteral(argument));
 
     return argument.value;
 }
@@ -531,7 +536,7 @@ function extractPragma(text) {
 
     const pair = parsePragma(pragma);
 
-    assert.ok(pair);
+    invariant(pair);
 
     const [type, arg] = pair;
 
@@ -570,12 +575,12 @@ function unwrapEnumSymbol(node) {
 }
 
 function makeFullname(schema) {
-    assert.ok(schema.namespace);
+    invariant(schema.namespace);
 
     return `${schema.namespace}.${schema.name}`;
 }
 
-function mergeSchemas(schemas) {
+function mergeSchemas(schemas: Schemas): Schema {
     const map = new Map;
 
     // TODO: overriding?
@@ -584,7 +589,7 @@ function mergeSchemas(schemas) {
 
     for (const schema of schemas) {
         // TODO: enums?
-        assert.equal(schema.type, 'record');
+        invariant(schema.type === 'record');
 
         for (const field of schema.fields) {
             const stored = map.get(field.name);
@@ -592,7 +597,7 @@ function mergeSchemas(schemas) {
             if (stored) {
                 // TODO: what about enums?
                 // TODO: improve checking.
-                assert.equal(stored.type, field.type);
+                invariant(stored.type === field.type);
                 continue;
             }
 
@@ -607,8 +612,4 @@ function mergeSchemas(schemas) {
         name,
         fields: Array.from(map.values()),
     };
-}
-
-function is(type) {
-    return node => Boolean(node) && node.type === type;
 }

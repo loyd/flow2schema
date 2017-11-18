@@ -1,7 +1,8 @@
 import * as babylon from 'babylon';
+import type {File} from '@babel/types';
 
 export default class Parser {
-    parse(code) {
+    parse(code: string): File {
         // This parse configuration is intended to be as permissive as possible.
         return babylon.parse(code, {
             allowImportExportEverywhere: true,

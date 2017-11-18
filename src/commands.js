@@ -1,38 +1,66 @@
-export default class Command {
-    constructor(name, data) {
-        this.name = name;
-        this.data = data;
-    }
+import type {Node} from '@babel/types';
+
+import type {Schema} from './schema';
+import type {TemplateParam, ExternalInfo} from './query';
+
+export type Command =
+    | {kind: 'declare', name: string, node: Node, params: TemplateParam[]}
+    | {kind: 'define', schema: Schema, declared: boolean}
+    | {kind: 'external', external: ExternalInfo}
+    | {kind: 'provide', name: string, reference: string}
+    | {kind: 'query', name: string, params: Schema[]}
+    | {kind: 'enter'}
+    | {kind: 'exit'}
+    | {kind: 'namespace'};
+
+export function declare(name: string, node: Node, params: ?TemplateParam[]): Command {
+    return {
+        kind: 'declare',
+        name,
+        node,
+        params: params || [],
+    };
 }
 
-export function declare(name, node, params) {
-    return new Command('declare', [name, node, params]);
+export function define(schema: Schema, declared: boolean = true): Command {
+    return {
+        kind: 'define',
+        schema,
+        declared,
+    };
 }
 
-export function define(schema, declared = true) {
-    return new Command('define', [schema, declared]);
+export function external(external: ExternalInfo): Command {
+    return {
+        kind: 'external',
+        external,
+    };
 }
 
-export function external(external) {
-    return new Command('external', external);
+export function provide(name: string, reference: string = name): Command {
+    return {
+        kind: 'provide',
+        name,
+        reference,
+    };
 }
 
-export function provide(name, reference = name) {
-    return new Command('provide', [name, reference]);
+export function query(name: string, params: ?Schema[]): Command {
+    return {
+        kind: 'query',
+        name,
+        params: params || [],
+    };
 }
 
-export function query(name, params = null) {
-    return new Command('query', [name, params]);
+export function enter(): Command {
+    return {kind: 'enter'};
 }
 
-export function enter() {
-    return new Command('enter');
+export function exit(): Command {
+    return {kind: 'exit'};
 }
 
-export function exit() {
-    return new Command('exit');
-}
-
-export function namespace() {
-    return new Command('namespace');
+export function namespace(): Command {
+    return {kind: 'namespace'};
 }

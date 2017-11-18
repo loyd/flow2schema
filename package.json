@@ -23,6 +23,7 @@
         "flow2schema": "./bin/flow2schema"
     },
     "dependencies": {
+        "@babel/types": "^7.0.0-beta.32",
         "babylon": "^7.0.0-beta.32",
         "json-stringify-pretty-compact": "^1.0.4",
         "optimist": "^0.6.1",
@@ -32,7 +33,9 @@
         "@babel/cli": "^7.0.0-beta.32",
         "@babel/core": "^7.0.0-beta.32",
         "@babel/preset-env": "^7.0.0-beta.32",
+        "@babel/preset-flow": "^7.0.0-beta.32",
         "@babel/register": "^7.0.0-beta.32",
+        "flow-bin": "^0.59.0",
         "jasmine": "^2.8.0",
         "mocha": "^4.0.1",
         "nyc": "^11.3.0"
@@ -40,6 +43,7 @@
     "scripts": {
         "prepare": "npm run build",
         "build": "babel src/ -d lib/",
-        "test": "nyc mocha -r @babel/register -R list tests/run.js"
+        "test": "flow && nyc mocha -r @babel/register -R list tests/run.js",
+        "flow": "flow"
     }
 }

@@ -1,7 +1,17 @@
-import * as assert from 'assert';
+import type {Node} from '@babel/types';
+
+import {invariant} from './utils';
+import type Module from './module';
+import type {Schema} from './schema';
+import type {Query, Template, TemplateParam, ExternalInfo} from './query';
 
 export default class Scope {
-    static global(schemas) {
+    +parent: ?Scope;
+    +module: ?Module;
+    +scopeId: ?number;
+    _entries: Map<string, Query>;
+
+    static global(schemas: Schema[]) {
         const global = new Scope(null, null);
 
         for (const schema of schemas) {
@@ -11,104 +21,102 @@ export default class Scope {
         return global;
     }
 
-    constructor(parent, module) {
+    constructor(parent: ?Scope, module: ?Module) {
         this.parent = parent;
         this.module = module;
         this.scopeId = module && module.generateScopeId();
-        this.entries = new Map;
+        this._entries = new Map;
     }
 
-    get namespace() {
-        assert.ok(this.module);
+    get namespace(): string {
+        invariant(this.module);
 
         let namespace = this.module.namespace;
 
         // Nested scopes.
-        if (this.scopeId > 0) {
+        if (this.scopeId != null && this.scopeId > 0) {
             namespace += '._' + this.scopeId;
         }
 
         return namespace;
     }
 
-    extend(module = null) {
+    extend(module: ?Module = null): Scope {
         return new Scope(this, module || this.module);
     }
 
-    addDeclaration(name, node, params) {
-        assert.ok(!this.entries.has(name));
+    addDeclaration(name: string, node: Node, params: TemplateParam[]) {
+        invariant(!this._entries.has(name));
 
-        const isTemplate = Boolean(params);
-
-        const entry = {
-            type: isTemplate ? 'template' : 'declaration',
+        const entry = params.length > 0 ? {
+            type: 'template',
+            name,
+            params,
+            instances: [],
+            node,
+            scope: this,
+        } : {
+            type: 'declaration',
             name,
             node,
             scope: this,
         };
 
-        if (isTemplate) {
-            entry.params = params;
-            entry.instances = [];
-        }
-
-        this.entries.set(name, entry);
+        this._entries.set(name, entry);
     }
 
-    addInstance(name, schema, params) {
-        const template = this.entries.get(name);
+    addInstance(name: string, schema: Schema, params: Schema[]) {
+        const template = this._entries.get(name);
 
-        assert.ok(template);
-        assert.equal(template.type, 'template');
+        invariant(template);
+        invariant(template.type === 'template');
 
         template.instances.push({params, schema});
     }
 
-    addDefinition(schema, declared) {
-        const decl = this.entries.get(schema.name);
+    addDefinition(schema: Schema, declared: boolean) {
+        const decl = this._entries.get(schema.name);
 
         if (declared) {
-            assert.ok(decl);
-            assert.equal(decl.type, 'declaration');
+            invariant(decl);
+            invariant(decl.type === 'declaration');
         } else {
-            assert.ok(!decl);
+            invariant(!decl);
         }
 
-        this.entries.set(schema.name, {
+        this._entries.set(schema.name, {
             type: 'definition',
             schema,
             scope: this,
         });
     }
 
-    addImport(info) {
-        assert.ok(!this.entries.has(info.local));
+    addImport(info: ExternalInfo) {
+        invariant(!this._entries.has(info.local));
 
-        this.entries.set(info.local, {
+        this._entries.set(info.local, {
             type: 'external',
             info,
             scope: this,
         });
     }
 
-    addExport(name, reference) {
-        assert.ok(this.module);
+    addExport(name: string, reference: string) {
+        invariant(this.module);
 
         this.module.addExport(name, this, reference);
     }
 
-    resolve(path) {
-        assert.ok(this.module);
+    resolve(path: string): string {
+        invariant(this.module);
 
         return this.module.resolve(path);
     }
 
-    query(name, params) {
-        const entry = this.entries.get(name);
+    query(name: string, params: Schema[]): Query {
+        const entry = this._entries.get(name);
 
         if (entry && entry.type === 'template') {
-            assert.ok(params);
-
             const augmented = entry.params.map((p, i) => params[i] || p.default);
             const schema = findInstance(entry, augmented);
 
@@ -126,7 +134,7 @@ export default class Scope {
         }
 
         if (this.parent) {
-            return this.parent.query(name);
+            return this.parent.query(name, params);
         }
 
         return {
@@ -135,7 +143,7 @@ export default class Scope {
     }
 }
 
-function findInstance(template, queried) {
+function findInstance(template: Template, queried: Schema[]): ?Schema {
     for (const {schema, params} of template.instances) {
         // TODO: compare complex structures.
         const same = params.every((p, i) => p === queried[i]);

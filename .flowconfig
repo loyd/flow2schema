@@ -1,0 +1,17 @@
+[ignore]
+.*/node_modules/.*
+.*/tests/samples/.*
+.*/src/extractors.js
+
+[libs]
+declarations/
+
+[lints]
+all=warn
+
+[options]
+all=true
+module.use_strict=true
+munge_underscores=true
+include_warnings=true
+unsafe.enable_getters_and_setters=true

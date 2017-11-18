@@ -1,46 +1,51 @@
-import * as assert from 'assert';
+import {invariant} from './utils';
 
-export default class CircularList {
+export default class CircularList<T: Object> {
+    _mark: Symbol;
+    _prev: ?T;
+    _walk: ?T;
+
     constructor() {
-        this.mark = Symbol();
-        this.prev = null;
-        this.walk = null;
+        this._mark = Symbol();
+        this._prev = null;
+        this._walk = null;
     }
 
-    get isEmpty() {
-        return !this.walk;
+    get isEmpty(): boolean {
+        return !this._walk;
     }
 
-    add(entry) {
-        assert.ok(!entry[this.mark]);
+    add(entry: T) {
+        invariant(!entry[this._mark]);
 
-        if (this.prev) {
-            assert.ok(this.walk);
+        if (this._prev) {
+            invariant(this._walk);
 
-            this.prev = this.prev[this.mark] = entry;
+            this._prev = this._prev[this._mark] = entry;
         } else {
-            assert.ok(!this.walk);
+            invariant(!this._walk);
 
-            this.walk = this.prev = entry;
+            this._walk = this._prev = entry;
         }
 
-        entry[this.mark] = this.walk;
+        entry[this._mark] = this._walk;
 
-        assert.ok(!this.prev || this.prev[this.mark] === this.walk);
+        invariant(!this._prev || this._prev[this._mark] === this._walk);
     }
 
-    remove() {
-        assert.ok(this.walk);
+    remove(): T {
+        invariant(this._walk);
 
-        const removed = this.walk;
+        const removed = this._walk;
 
-        if (removed === this.prev) {
-            this.walk = this.prev = null;
+        if (removed === this._prev) {
+            this._walk = this._prev = null;
         } else {
-            this.walk = this.prev[this.mark] = removed[this.mark];
+            invariant(this._prev);
+            this._walk = this._prev[this._mark] = removed[this._mark];
         }
 
-        removed[this.mark] = null;
+        removed[this._mark] = null;
 
         return removed;
     }

@@ -1,23 +1,32 @@
 import * as pathlib from 'path';
 import * as resolve from 'resolve';
 
+import type Scope from './scope';
+import type {Schema} from './schema';
+import type {Query} from './query';
+
 export default class Module {
-    constructor(path, namespace) {
+    +path: string;
+    +namespace: string;
+    _scopeCount: number;
+    _exports: Map<?string, [Scope, string]>;
+
+    constructor(path: string, namespace: string) {
         this.path = path;
         this.namespace = namespace;
-        this.scopeCount = 0;
+        this._scopeCount = 0;
         this._exports = new Map;
     }
 
-    generateScopeId() {
-        return this.scopeCount++;
+    generateScopeId(): number {
+        return this._scopeCount++;
     }
 
-    addExport(name, scope, reference) {
+    addExport(name: ?string, scope: Scope, reference: string) {
         this._exports.set(name, [scope, reference]);
     }
 
-    query(name, params) {
+    query(name: ?string, params: Schema[]): Query {
         const result = this._exports.get(name);
 
         if (!result) {
@@ -31,14 +40,14 @@ export default class Module {
         return scope.query(reference, params);
     }
 
-    resolve(path) {
+    resolve(path: string): string {
         const basedir = pathlib.dirname(this.path);
 
         // TODO: follow symlinks.
         return resolve.sync(path, {basedir});
     }
 
-    exports() {
+    exports(): Iterator<[Scope, string]> {
         return this._exports.values();
     }
 }

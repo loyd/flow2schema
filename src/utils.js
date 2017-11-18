@@ -1,4 +1,6 @@
-export function partition(iter, predicate) {
+import * as assert from 'assert';
+
+export function partition<T>(iter: Iterable<T>, predicate: T => boolean): [T[], T[]] {
     const left = [];
     const right = [];
 
@@ -9,6 +11,11 @@ export function partition(iter, predicate) {
     return [left, right];
 }
 
-export function isNode(it) {
+// TODO: avoid it?
+export function isNode(it: any): boolean %checks {
     return it && typeof it === 'object' && it.type;
 }
+
+// I so much dream about the user guards...
+// @see flow#112.
+export const invariant = assert.ok;

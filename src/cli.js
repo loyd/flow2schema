@@ -9,7 +9,7 @@ const argv = optimist
 
 argv._.forEach(run);
 
-function run(path) {
+function run(path: string) {
     if (path === '-') {
         path = '/dev/stdin';
     }

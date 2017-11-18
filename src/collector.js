@@ -1,34 +1,60 @@
-import * as assert from 'assert';
 import * as fs from 'fs';
 import * as pathlib from 'path';
+import type {Node} from '@babel/types';
 
 import globals from './globals';
+// $FlowFixMe
 import * as extractors from './extractors';
-import Command from './commands';
 import Module from './module';
 import Scope from './scope';
 import CircularList from './list';
-import {isNode} from './utils';
+import {invariant, isNode} from './utils';
+import type Parser from './parser';
+import type {Schema} from './schema';
+
+type Task = Generator<void, ?Schema, void>;
+
+type Group = {
+    entries: string[],
+
+    [string]: Node => Generator<any, any, any>,
+};
+
+type InstanceParam = {
+    name: string,
+    value: Schema,
+};
 
 export default class Collector {
-    constructor(parser, root = '.') {
+    +root: string;
+    +parser: Parser;
+    +schemas: Schema[];
+    taskCount: number;
+    _tasks: CircularList<Task>;
+    _active: boolean;
+    _modules: Map<string, Module>;
+    _roots: Set<Node>;
+    _global: Scope;
+    _running: boolean;
+
+    constructor(parser: Parser, root: string = '.') {
         this.root = root;
         this.parser = parser;
         this.schemas = [];
-        this.tasks = new CircularList;
         this.taskCount = 0;
-        this.active = true;
-        this.modules = new Map;
-        this.roots = new Set;
-        this.global = Scope.global(globals);
-        this.running = false;
+        this._tasks = new CircularList;
+        this._active = true;
+        this._modules = new Map;
+        this._roots = new Set;
+        this._global = Scope.global(globals);
+        this._running = false;
     }
 
-    collect(path, internal = false) {
+    collect(path: string, internal: boolean = false) {
         // TODO: follow symlinks.
         path = pathlib.resolve(path);
 
-        let module = this.modules.get(path);
+        let module = this._modules.get(path);
 
         if (module) {
             return;
@@ -43,18 +69,18 @@ export default class Collector {
 
         module = new Module(path, namespace);
 
-        const scope = this.global.extend(module);
+        const scope = this._global.extend(module);
 
-        this._freestyle(extractors.declaration, ast.program, scope, null);
+        this._freestyle(extractors.declaration, ast.program, scope, []);
 
-        this.modules.set(path, module);
+        this._modules.set(path, module);
 
-        if (this.running) {
+        if (this._running) {
             return;
         }
 
         try {
-            this.running = true;
+            this._running = true;
             this._schedule();
 
             if (!internal) {
@@ -63,12 +89,12 @@ export default class Collector {
                 this._schedule();
             }
         } finally {
-            this.running = false;
+            this._running = false;
         }
     }
 
     // Given the AST output of babylon parse, walk through in a depth-first order.
-    _freestyle(group, root, scope, params) {
+    _freestyle(group: Group, root: Node, scope: Scope, params: InstanceParam[]) {
         let stack;
         let parent;
         let keys = [];
@@ -86,12 +112,13 @@ export default class Collector {
                 continue;
             }
 
+            // $FlowFixMe
             const node = parent ? parent[keys[index]] : root;
 
             if (isNode(node) && isAcceptableGroup(group, node)) {
-                if (!this.roots.has(node)) {
+                if (!this._roots.has(node)) {
                     const task = this._collect(group, node, scope, params);
-                    this.roots.add(node);
+                    this._roots.add(node);
                     this._spawn(task);
                 }
 
@@ -107,11 +134,12 @@ export default class Collector {
         } while (stack);
     }
 
-    * _collect(group, node, scope, params) {
+    * _collect(group: Group, node: Node, scope: Scope, params: InstanceParam[]): Task {
+        // $FlowFixMe
         const extractor = group[node.type];
 
         if (!extractor) {
-            this._freestyle(group, node, scope, null);
+            this._freestyle(group, node, scope, []);
             return null;
         }
 
@@ -120,7 +148,7 @@ export default class Collector {
         let result = null;
 
         while (true) {
-            this.active = true;
+            this._active = true;
 
             const {done, value} = iter.next(result);
 
@@ -128,83 +156,78 @@ export default class Collector {
                 return value;
             }
 
-            assert.ok(value);
+            invariant(value);
 
-            if (value instanceof Command) {
-                switch (value.name) {
-                    case 'declare':
-                        scope.addDeclaration(...value.data);
-
-                        break;
-                    case 'define':
-                        const [schema, declared] = value.data;
-
-                        if (declared && params) {
-                            const name = schema.name;
-
-                            schema.name = generateGenericName(name, params);
-
-                            scope.addInstance(name, schema, params.map(p => p.value));
-                        } else {
-                            scope.addDefinition(...value.data);
-                        }
-
-                        this.schemas.push(schema);
-
-                        break;
-                    case 'external':
-                        scope.addImport(value.data);
-
-                        break;
-                    case 'provide':
-                        scope.addExport(...value.data);
-
-                        break;
-                    case 'query':
-                        if (params) {
-                            const param = params.find(p => p.name === value.data[0]);
-
-                            if (param) {
-                                result = param.value;
-                                break;
-                            }
-                        }
-
-                        result = yield* this._query(scope, ...value.data);
-
-                        break;
-                    case 'enter':
-                        scope = scope.extend();
-
-                        break;
-                    case 'exit':
-                        assert.ok(scope.parent);
-                        scope = scope.parent;
-
-                        break;
-                    case 'namespace':
-                        result = scope.namespace;
-
-                        break;
-                }
+            if (isNode(value)) {
+                result = yield* this._collect(group, value, scope, params);
             } else if (Array.isArray(value)) {
                 result = [];
 
                 for (const val of value) {
                     result.push(yield* this._collect(group, val, scope, params));
                 }
-            } else {
-                assert.ok(isNode(value));
-                result = yield* this._collect(group, value, scope, params);
+            } else switch (value.kind) {
+                case 'declare':
+                    scope.addDeclaration(value.name, value.node, value.params);
+
+                    break;
+                case 'define':
+                    const {schema, declared} = value;
+
+                    if (declared && params.length > 0) {
+                        const name = schema.name;
+
+                        schema.name = generateGenericName(name, params);
+
+                        scope.addInstance(name, schema, params.map(p => p.value));
+                    } else {
+                        scope.addDefinition(schema, declared);
+                    }
+
+                    this.schemas.push(schema);
+
+                    break;
+                case 'external':
+                    scope.addImport(value.external);
+
+                    break;
+                case 'provide':
+                    scope.addExport(value.name, value.reference);
+
+                    break;
+                case 'query':
+                    const param = params.find(p => p.name === value.name);
+
+                    if (param) {
+                        // TODO: warning about missing param.
+                        result = param.value;
+                    } else {
+                        result = yield* this._query(scope, value.name, value.params);
+                    }
+
+                    break;
+                case 'enter':
+                    scope = scope.extend();
+
+                    break;
+                case 'exit':
+                    invariant(scope.parent);
+                    scope = scope.parent;
+
+                    break;
+                case 'namespace':
+                    result = scope.namespace;
+
+                    break;
             }
         }
     }
 
-    * _query(scope, name, params) {
+    * _query(scope: Scope, name: string, params: Schema[]): Task {
         let result = scope.query(name, params);
 
         // TODO: warning.
-        assert.notEqual(result.type, 'unknown');
+        invariant(result.type !== 'unknown');
 
         // Resulting scope is always the best choice for waiting.
         scope = result.scope;
@@ -218,7 +241,10 @@ export default class Collector {
 
                 this.collect(modulePath, true);
 
-                const module = this.modules.get(modulePath);
+                const module = this._modules.get(modulePath);
+
+                invariant(module);
+
                 const {imported} = result.info;
 
                 while ((result = module.query(imported, params)).type === 'unknown') {
@@ -230,7 +256,7 @@ export default class Collector {
                 }
 
                 // TODO: reexports.
-                assert.ok(result.type === 'declaration' || result.type === 'template');
+                invariant(result.type === 'declaration' || result.type === 'template');
 
                 scope = result.scope;
                 name = result.name;
@@ -238,23 +264,27 @@ export default class Collector {
                 // Fallthrough.
             case 'declaration':
             case 'template':
-                let tmplParams = null;
+                const tmplParams = [];
 
                 if (result.type === 'template') {
-                    tmplParams = result.params.map((p, i) => ({
-                        name: p.name,
-                        value: params[i] || p.default,
-                    }));
+                    for (const [i, p] of result.params.entries()) {
+                        tmplParams.push({
+                            name: p.name,
+                            value: params[i] || p.default,
+                        });
+                    }
                 }
+
+                invariant(result.type === 'declaration' || result.type === 'template');
 
                 this._freestyle(extractors.definition, result.node, scope, tmplParams);
 
                 while ((result = scope.query(name, params)).type !== 'definition') {
-                    assert.notEqual(result.type, 'external');
+                    invariant(result.type !== 'external');
                     yield;
                 }
 
-                assert.equal(result.type, 'definition');
+                invariant(result.type === 'definition');
 
                 // Fallthrough.
             case 'definition':
@@ -262,19 +292,19 @@ export default class Collector {
         }
     }
 
-    * _grabExports(module) {
+    * _grabExports(module: Module): Task {
         for (const [scope, name] of module.exports()) {
-            yield* this._query(scope, name, null);
+            yield* this._query(scope, name, []);
         }
     }
 
-    _spawn(task) {
-        this.tasks.add(task);
+    _spawn(task: Task) {
+        this._tasks.add(task);
         ++this.taskCount;
     }
 
     _schedule() {
-        const {tasks} = this;
+        const tasks = this._tasks;
 
         let marker = null;
 
@@ -290,9 +320,9 @@ export default class Collector {
 
             tasks.add(task);
 
-            if (this.active) {
+            if (this._active) {
                 marker = task;
-                this.active = false;
+                this._active = false;
             } else if (task === marker) {
                 // TODO: warning.
                 return;
@@ -301,7 +331,7 @@ export default class Collector {
     }
 }
 
-function pathToNamespace(path) {
+function pathToNamespace(path: string): string {
     const pathObj = pathlib.parse(path);
 
     return pathlib.format({
@@ -313,15 +343,16 @@ function pathToNamespace(path) {
         .join('.');
 }
 
-function isAcceptableGroup(group, node) {
+function isAcceptableGroup(group: Group, node: Node): boolean {
+    // $FlowFixMe
     return group.entries.includes(node.type);
 }
 
-function generateGenericName(base, params) {
+function generateGenericName(base: string, params: InstanceParam[]): string {
     let name = base + '_';
 
     for (const {value} of params) {
-        assert.equal(typeof value, 'string');
+        invariant(typeof value === 'string');
         name += '_' + value;
     }
 
