@@ -2,7 +2,8 @@
 .*/node_modules/.*
 .*/tests/samples/.*
 .*/lib/.*
-.*/src/extractors.js
+.*/src/definitions.js
+.*/src/declarations.js
 
 [libs]
 declarations/

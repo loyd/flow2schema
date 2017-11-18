@@ -4,7 +4,9 @@ import type {Node} from '@babel/types';
 
 import globals from './globals';
 // $FlowFixMe
-import * as extractors from './extractors';
+import definitionGroup from './definitions';
+// $FlowFixMe
+import declarationGroup from './declarations';
 import Module from './module';
 import Scope from './scope';
 import CircularList from './list';
@@ -71,7 +73,7 @@ export default class Collector {
 
         const scope = this._global.extend(module);
 
-        this._freestyle(extractors.declaration, ast.program, scope, []);
+        this._freestyle(declarationGroup, ast.program, scope, []);
 
         this._modules.set(path, module);
 
@@ -277,7 +279,7 @@ export default class Collector {
 
                 invariant(result.type === 'declaration' || result.type === 'template');
 
-                this._freestyle(extractors.definition, result.node, scope, tmplParams);
+                this._freestyle(definitionGroup, result.node, scope, tmplParams);
 
                 while ((result = scope.query(name, params)).type !== 'definition') {
                     invariant(result.type !== 'external');
