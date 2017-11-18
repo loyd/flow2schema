@@ -12,8 +12,8 @@ export function partition<T>(iter: Iterable<T>, predicate: T => boolean): [T[], 
 }
 
 // TODO: avoid it?
-export function isNode(it: any): boolean %checks {
-    return it && typeof it === 'object' && it.type;
+export function isNode(it: mixed): boolean %checks {
+    return it != null && typeof it === 'object' && it.type != null;
 }
 
 // I so much dream about the user guards...

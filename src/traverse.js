@@ -2,7 +2,7 @@ import type {Node} from '@babel/types';
 import {VISITOR_KEYS} from '@babel/types';
 
 // Given the AST output of babylon parse, walk through in a depth-first order.
-export default function* traverse(node: Node & {type: string}): Generator<Node, void, boolean> {
+export default function* traverse(node: Node): Generator<Node, void, boolean> {
     const keys = VISITOR_KEYS[node.type];
 
     if (!keys) {

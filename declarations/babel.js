@@ -32,7 +32,9 @@ declare module '@babel/types' {
         };
     }
 
-    declare class Node {
+    declare type Node = BaseNode & {+type: string};
+
+    declare class BaseNode {
         leadingComments: ?Array<Comment>;
         innerComments: ?Array<Comment>;
         trailingComments: ?Array<Comment>;
@@ -41,47 +43,47 @@ declare module '@babel/types' {
         loc: ?SourceLocation;
     }
 
-    declare class ArrayExpression extends Node {
+    declare class ArrayExpression extends BaseNode {
         type: 'ArrayExpression';
         elements?: any;
     }
 
-    declare class AssignmentExpression extends Node {
+    declare class AssignmentExpression extends BaseNode {
         type: 'AssignmentExpression';
         operator: string;
         left: LVal;
         right: Expression;
     }
 
-    declare class BinaryExpression extends Node {
+    declare class BinaryExpression extends BaseNode {
         type: 'BinaryExpression';
         operator: '+' | '-' | '/' | '%' | '*' | '**' | '&' | '|' | '>>' | '>>>' | '<<' | '^' | '==' | '===' | '!=' | '!==' | 'in' | 'instanceof' | '>' | '<' | '>=' | '<=';
         left: Expression;
         right: Expression;
     }
 
-    declare class Directive extends Node {
+    declare class Directive extends BaseNode {
         type: 'Directive';
         value: DirectiveLiteral;
     }
 
-    declare class DirectiveLiteral extends Node {
+    declare class DirectiveLiteral extends BaseNode {
         type: 'DirectiveLiteral';
         value: string;
     }
 
-    declare class BlockStatement extends Node {
+    declare class BlockStatement extends BaseNode {
         type: 'BlockStatement';
         body: any;
         directives?: any;
     }
 
-    declare class BreakStatement extends Node {
+    declare class BreakStatement extends BaseNode {
         type: 'BreakStatement';
         label?: ?Identifier;
     }
 
-    declare class CallExpression extends Node {
+    declare class CallExpression extends BaseNode {
         type: 'CallExpression';
         callee: Expression;
         arguments: any;
@@ -89,58 +91,58 @@ declare module '@babel/types' {
         typeParameters?: ?TypeParameterInstantiation;
     }
 
-    declare class CatchClause extends Node {
+    declare class CatchClause extends BaseNode {
         type: 'CatchClause';
         param?: ?Identifier;
         body: BlockStatement;
     }
 
-    declare class ConditionalExpression extends Node {
+    declare class ConditionalExpression extends BaseNode {
         type: 'ConditionalExpression';
         test: Expression;
         consequent: Expression;
         alternate: Expression;
     }
 
-    declare class ContinueStatement extends Node {
+    declare class ContinueStatement extends BaseNode {
         type: 'ContinueStatement';
         label?: ?Identifier;
     }
 
-    declare class DebuggerStatement extends Node {
+    declare class DebuggerStatement extends BaseNode {
         type: 'DebuggerStatement';
     }
 
-    declare class DoWhileStatement extends Node {
+    declare class DoWhileStatement extends BaseNode {
         type: 'DoWhileStatement';
         test: Expression;
         body: Statement;
     }
 
-    declare class EmptyStatement extends Node {
+    declare class EmptyStatement extends BaseNode {
         type: 'EmptyStatement';
     }
 
-    declare class ExpressionStatement extends Node {
+    declare class ExpressionStatement extends BaseNode {
         type: 'ExpressionStatement';
         expression: Expression;
     }
 
-    declare class File extends Node {
+    declare class File extends BaseNode {
         type: 'File';
         program: Program;
         comments: any;
         tokens: any;
     }
 
-    declare class ForInStatement extends Node {
+    declare class ForInStatement extends BaseNode {
         type: 'ForInStatement';
         left: VariableDeclaration | LVal;
         right: Expression;
         body: Statement;
     }
 
-    declare class ForStatement extends Node {
+    declare class ForStatement extends BaseNode {
         type: 'ForStatement';
         init?: ?VariableDeclaration | Expression;
         test?: ?Expression;
@@ -148,7 +150,7 @@ declare module '@babel/types' {
         body: Statement;
     }
 
-    declare class FunctionDeclaration extends Node {
+    declare class FunctionDeclaration extends BaseNode {
         type: 'FunctionDeclaration';
         id?: ?Identifier;
         params: any;
@@ -160,7 +162,7 @@ declare module '@babel/types' {
         typeParameters?: ?TypeParameterDeclaration | Noop;
     }
 
-    declare class FunctionExpression extends Node {
+    declare class FunctionExpression extends BaseNode {
         type: 'FunctionExpression';
         id?: ?Identifier;
         params: any;
@@ -171,7 +173,7 @@ declare module '@babel/types' {
         typeParameters?: ?TypeParameterDeclaration | Noop;
     }
 
-    declare class Identifier extends Node {
+    declare class Identifier extends BaseNode {
         type: 'Identifier';
         name: any;
         decorators?: any;
@@ -179,52 +181,52 @@ declare module '@babel/types' {
         typeAnnotation?: ?TypeAnnotation | TSTypeAnnotation | Noop;
     }
 
-    declare class IfStatement extends Node {
+    declare class IfStatement extends BaseNode {
         type: 'IfStatement';
         test: Expression;
         consequent: Statement;
         alternate?: ?Statement;
     }
 
-    declare class LabeledStatement extends Node {
+    declare class LabeledStatement extends BaseNode {
         type: 'LabeledStatement';
         label: Identifier;
         body: Statement;
     }
 
-    declare class StringLiteral extends Node {
+    declare class StringLiteral extends BaseNode {
         type: 'StringLiteral';
         value: string;
     }
 
-    declare class NumericLiteral extends Node {
+    declare class NumericLiteral extends BaseNode {
         type: 'NumericLiteral';
         value: number;
     }
 
-    declare class NullLiteral extends Node {
+    declare class NullLiteral extends BaseNode {
         type: 'NullLiteral';
     }
 
-    declare class BooleanLiteral extends Node {
+    declare class BooleanLiteral extends BaseNode {
         type: 'BooleanLiteral';
         value: boolean;
     }
 
-    declare class RegExpLiteral extends Node {
+    declare class RegExpLiteral extends BaseNode {
         type: 'RegExpLiteral';
         pattern: string;
         flags?: string;
     }
 
-    declare class LogicalExpression extends Node {
+    declare class LogicalExpression extends BaseNode {
         type: 'LogicalExpression';
         operator: '||' | '&&' | '??';
         left: Expression;
         right: Expression;
     }
 
-    declare class MemberExpression extends Node {
+    declare class MemberExpression extends BaseNode {
         type: 'MemberExpression';
         object: Expression;
         property: any;
@@ -232,7 +234,7 @@ declare module '@babel/types' {
         optional?: true | false;
     }
 
-    declare class NewExpression extends Node {
+    declare class NewExpression extends BaseNode {
         type: 'NewExpression';
         callee: Expression;
         arguments: any;
@@ -240,7 +242,7 @@ declare module '@babel/types' {
         typeParameters?: ?TypeParameterInstantiation;
     }
 
-    declare class Program extends Node {
+    declare class Program extends BaseNode {
         type: 'Program';
         body: any;
         directives?: any;
@@ -248,12 +250,12 @@ declare module '@babel/types' {
         sourceFile?: string;
     }
 
-    declare class ObjectExpression extends Node {
+    declare class ObjectExpression extends BaseNode {
         type: 'ObjectExpression';
         properties: any;
     }
 
-    declare class ObjectMethod extends Node {
+    declare class ObjectMethod extends BaseNode {
         type: 'ObjectMethod';
         kind?: any;
         key: any;
@@ -267,7 +269,7 @@ declare module '@babel/types' {
         typeParameters?: ?TypeParameterDeclaration | Noop;
     }
 
-    declare class ObjectProperty extends Node {
+    declare class ObjectProperty extends BaseNode {
         type: 'ObjectProperty';
         key: any;
         value: Expression | PatternLike;
@@ -276,91 +278,91 @@ declare module '@babel/types' {
         decorators?: any;
     }
 
-    declare class RestElement extends Node {
+    declare class RestElement extends BaseNode {
         type: 'RestElement';
         argument: LVal;
         decorators?: any;
         typeAnnotation?: ?TypeAnnotation | TSTypeAnnotation | Noop;
     }
 
-    declare class ReturnStatement extends Node {
+    declare class ReturnStatement extends BaseNode {
         type: 'ReturnStatement';
         argument?: ?Expression;
     }
 
-    declare class SequenceExpression extends Node {
+    declare class SequenceExpression extends BaseNode {
         type: 'SequenceExpression';
         expressions: any;
     }
 
-    declare class SwitchCase extends Node {
+    declare class SwitchCase extends BaseNode {
         type: 'SwitchCase';
         test?: ?Expression;
         consequent: any;
     }
 
-    declare class SwitchStatement extends Node {
+    declare class SwitchStatement extends BaseNode {
         type: 'SwitchStatement';
         discriminant: Expression;
         cases: any;
     }
 
-    declare class ThisExpression extends Node {
+    declare class ThisExpression extends BaseNode {
         type: 'ThisExpression';
     }
 
-    declare class ThrowStatement extends Node {
+    declare class ThrowStatement extends BaseNode {
         type: 'ThrowStatement';
         argument: Expression;
     }
 
-    declare class TryStatement extends Node {
+    declare class TryStatement extends BaseNode {
         type: 'TryStatement';
         block: BlockStatement;
         handler?: ?CatchClause;
         finalizer?: ?BlockStatement;
     }
 
-    declare class UnaryExpression extends Node {
+    declare class UnaryExpression extends BaseNode {
         type: 'UnaryExpression';
         operator: 'void' | 'throw' | 'delete' | '!' | '+' | '-' | '~' | 'typeof';
         argument: Expression;
         prefix?: boolean;
     }
 
-    declare class UpdateExpression extends Node {
+    declare class UpdateExpression extends BaseNode {
         type: 'UpdateExpression';
         operator: '++' | '--';
         argument: Expression;
         prefix?: boolean;
     }
 
-    declare class VariableDeclaration extends Node {
+    declare class VariableDeclaration extends BaseNode {
         type: 'VariableDeclaration';
         kind: any;
         declarations: any;
         declare?: boolean;
     }
 
-    declare class VariableDeclarator extends Node {
+    declare class VariableDeclarator extends BaseNode {
         type: 'VariableDeclarator';
         id: LVal;
         init?: ?Expression;
     }
 
-    declare class WhileStatement extends Node {
+    declare class WhileStatement extends BaseNode {
         type: 'WhileStatement';
         test: Expression;
         body: BlockStatement | Statement;
     }
 
-    declare class WithStatement extends Node {
+    declare class WithStatement extends BaseNode {
         type: 'WithStatement';
         object: any;
         body: BlockStatement | Statement;
     }
 
-    declare class AssignmentPattern extends Node {
+    declare class AssignmentPattern extends BaseNode {
         type: 'AssignmentPattern';
         left: Identifier | ObjectPattern | ArrayPattern;
         right: Expression;
@@ -368,14 +370,14 @@ declare module '@babel/types' {
         typeAnnotation?: ?TypeAnnotation | TSTypeAnnotation | Noop;
     }
 
-    declare class ArrayPattern extends Node {
+    declare class ArrayPattern extends BaseNode {
         type: 'ArrayPattern';
         elements: any;
         decorators?: any;
         typeAnnotation?: ?TypeAnnotation | TSTypeAnnotation | Noop;
     }
 
-    declare class ArrowFunctionExpression extends Node {
+    declare class ArrowFunctionExpression extends BaseNode {
         type: 'ArrowFunctionExpression';
         params: any;
         body: BlockStatement | Expression;
@@ -386,12 +388,12 @@ declare module '@babel/types' {
         typeParameters?: ?TypeParameterDeclaration | Noop;
     }
 
-    declare class ClassBody extends Node {
+    declare class ClassBody extends BaseNode {
         type: 'ClassBody';
         body: any;
     }
 
-    declare class ClassDeclaration extends Node {
+    declare class ClassDeclaration extends BaseNode {
         type: 'ClassDeclaration';
         id?: ?Identifier;
         superClass?: ?Expression;
@@ -404,7 +406,7 @@ declare module '@babel/types' {
         typeParameters?: ?TypeParameterDeclaration | Noop;
     }
 
-    declare class ClassExpression extends Node {
+    declare class ClassExpression extends BaseNode {
         type: 'ClassExpression';
         id?: ?Identifier;
         superClass?: ?Expression;
@@ -415,66 +417,66 @@ declare module '@babel/types' {
         typeParameters?: ?TypeParameterDeclaration | Noop;
     }
 
-    declare class ExportAllDeclaration extends Node {
+    declare class ExportAllDeclaration extends BaseNode {
         type: 'ExportAllDeclaration';
         source: StringLiteral;
     }
 
-    declare class ExportDefaultDeclaration extends Node {
+    declare class ExportDefaultDeclaration extends BaseNode {
         type: 'ExportDefaultDeclaration';
         declaration: FunctionDeclaration | TSDeclareFunction | ClassDeclaration | Expression;
     }
 
-    declare class ExportNamedDeclaration extends Node {
+    declare class ExportNamedDeclaration extends BaseNode {
         type: 'ExportNamedDeclaration';
         declaration?: ?Declaration;
         specifiers: any;
         source?: ?StringLiteral;
     }
 
-    declare class ExportSpecifier extends Node {
+    declare class ExportSpecifier extends BaseNode {
         type: 'ExportSpecifier';
         local: Identifier;
         exported: Identifier;
     }
 
-    declare class ForOfStatement extends Node {
+    declare class ForOfStatement extends BaseNode {
         type: 'ForOfStatement';
         left: VariableDeclaration | LVal;
         right: Expression;
         body: Statement;
     }
 
-    declare class ImportDeclaration extends Node {
+    declare class ImportDeclaration extends BaseNode {
         type: 'ImportDeclaration';
         specifiers: any;
         source: StringLiteral;
     }
 
-    declare class ImportDefaultSpecifier extends Node {
+    declare class ImportDefaultSpecifier extends BaseNode {
         type: 'ImportDefaultSpecifier';
         local: Identifier;
     }
 
-    declare class ImportNamespaceSpecifier extends Node {
+    declare class ImportNamespaceSpecifier extends BaseNode {
         type: 'ImportNamespaceSpecifier';
         local: Identifier;
     }
 
-    declare class ImportSpecifier extends Node {
+    declare class ImportSpecifier extends BaseNode {
         type: 'ImportSpecifier';
         local: Identifier;
         imported: Identifier;
         importKind?: null | 'type' | 'typeof';
     }
 
-    declare class MetaProperty extends Node {
+    declare class MetaProperty extends BaseNode {
         type: 'MetaProperty';
         meta: Identifier;
         property: Identifier;
     }
 
-    declare class ClassMethod extends Node {
+    declare class ClassMethod extends BaseNode {
         type: 'ClassMethod';
         kind?: any;
         key: any;
@@ -492,144 +494,144 @@ declare module '@babel/types' {
         typeParameters?: ?TypeParameterDeclaration | Noop;
     }
 
-    declare class ObjectPattern extends Node {
+    declare class ObjectPattern extends BaseNode {
         type: 'ObjectPattern';
         properties: any;
         decorators?: any;
         typeAnnotation?: ?TypeAnnotation | TSTypeAnnotation | Noop;
     }
 
-    declare class SpreadElement extends Node {
+    declare class SpreadElement extends BaseNode {
         type: 'SpreadElement';
         argument: Expression;
     }
 
-    declare class Super extends Node {
+    declare class Super extends BaseNode {
         type: 'Super';
     }
 
-    declare class TaggedTemplateExpression extends Node {
+    declare class TaggedTemplateExpression extends BaseNode {
         type: 'TaggedTemplateExpression';
         tag: Expression;
         quasi: TemplateLiteral;
     }
 
-    declare class TemplateElement extends Node {
+    declare class TemplateElement extends BaseNode {
         type: 'TemplateElement';
         value: any;
         tail?: boolean;
     }
 
-    declare class TemplateLiteral extends Node {
+    declare class TemplateLiteral extends BaseNode {
         type: 'TemplateLiteral';
         quasis: any;
         expressions: any;
     }
 
-    declare class YieldExpression extends Node {
+    declare class YieldExpression extends BaseNode {
         type: 'YieldExpression';
         argument?: ?Expression;
         delegate?: boolean;
     }
 
-    declare class AnyTypeAnnotation extends Node {
+    declare class AnyTypeAnnotation extends BaseNode {
         type: 'AnyTypeAnnotation';
     }
 
-    declare class ArrayTypeAnnotation extends Node {
+    declare class ArrayTypeAnnotation extends BaseNode {
         type: 'ArrayTypeAnnotation';
         elementType: any;
     }
 
-    declare class BooleanTypeAnnotation extends Node {
+    declare class BooleanTypeAnnotation extends BaseNode {
         type: 'BooleanTypeAnnotation';
     }
 
-    declare class BooleanLiteralTypeAnnotation extends Node {
+    declare class BooleanLiteralTypeAnnotation extends BaseNode {
         type: 'BooleanLiteralTypeAnnotation';
     }
 
-    declare class NullLiteralTypeAnnotation extends Node {
+    declare class NullLiteralTypeAnnotation extends BaseNode {
         type: 'NullLiteralTypeAnnotation';
     }
 
-    declare class ClassImplements extends Node {
+    declare class ClassImplements extends BaseNode {
         type: 'ClassImplements';
         id: any;
         typeParameters: any;
     }
 
-    declare class DeclareClass extends Node {
+    declare class DeclareClass extends BaseNode {
         type: 'DeclareClass';
         id: any;
         typeParameters: any;
         body: any;
     }
 
-    declare class DeclareFunction extends Node {
+    declare class DeclareFunction extends BaseNode {
         type: 'DeclareFunction';
         id: any;
     }
 
-    declare class DeclareInterface extends Node {
+    declare class DeclareInterface extends BaseNode {
         type: 'DeclareInterface';
         id: any;
         typeParameters: any;
         body: any;
     }
 
-    declare class DeclareModule extends Node {
+    declare class DeclareModule extends BaseNode {
         type: 'DeclareModule';
         id: any;
         body: any;
     }
 
-    declare class DeclareModuleExports extends Node {
+    declare class DeclareModuleExports extends BaseNode {
         type: 'DeclareModuleExports';
         typeAnnotation: any;
     }
 
-    declare class DeclareTypeAlias extends Node {
+    declare class DeclareTypeAlias extends BaseNode {
         type: 'DeclareTypeAlias';
         id: any;
         typeParameters: any;
         right: any;
     }
 
-    declare class DeclareOpaqueType extends Node {
+    declare class DeclareOpaqueType extends BaseNode {
         type: 'DeclareOpaqueType';
         id: any;
         typeParameters: any;
         supertype: any;
     }
 
-    declare class DeclareVariable extends Node {
+    declare class DeclareVariable extends BaseNode {
         type: 'DeclareVariable';
         id: any;
     }
 
-    declare class DeclareExportDeclaration extends Node {
+    declare class DeclareExportDeclaration extends BaseNode {
         type: 'DeclareExportDeclaration';
         declaration: any;
         specifiers: any;
         source: any;
     }
 
-    declare class DeclareExportAllDeclaration extends Node {
+    declare class DeclareExportAllDeclaration extends BaseNode {
         type: 'DeclareExportAllDeclaration';
         source: any;
     }
 
-    declare class DeclaredPredicate extends Node {
+    declare class DeclaredPredicate extends BaseNode {
         type: 'DeclaredPredicate';
         value: any;
     }
 
-    declare class ExistsTypeAnnotation extends Node {
+    declare class ExistsTypeAnnotation extends BaseNode {
         type: 'ExistsTypeAnnotation';
     }
 
-    declare class FunctionTypeAnnotation extends Node {
+    declare class FunctionTypeAnnotation extends BaseNode {
         type: 'FunctionTypeAnnotation';
         typeParameters: any;
         params: any;
@@ -637,92 +639,92 @@ declare module '@babel/types' {
         returnType: any;
     }
 
-    declare class FunctionTypeParam extends Node {
+    declare class FunctionTypeParam extends BaseNode {
         type: 'FunctionTypeParam';
         name: any;
         typeAnnotation: any;
     }
 
-    declare class GenericTypeAnnotation extends Node {
+    declare class GenericTypeAnnotation extends BaseNode {
         type: 'GenericTypeAnnotation';
         id: any;
         typeParameters: any;
     }
 
-    declare class InferredPredicate extends Node {
+    declare class InferredPredicate extends BaseNode {
         type: 'InferredPredicate';
     }
 
-    declare class InterfaceExtends extends Node {
+    declare class InterfaceExtends extends BaseNode {
         type: 'InterfaceExtends';
         id: any;
         typeParameters: any;
     }
 
-    declare class InterfaceDeclaration extends Node {
+    declare class InterfaceDeclaration extends BaseNode {
         type: 'InterfaceDeclaration';
         id: any;
         typeParameters: any;
         body: any;
     }
 
-    declare class IntersectionTypeAnnotation extends Node {
+    declare class IntersectionTypeAnnotation extends BaseNode {
         type: 'IntersectionTypeAnnotation';
         types: any;
     }
 
-    declare class MixedTypeAnnotation extends Node {
+    declare class MixedTypeAnnotation extends BaseNode {
         type: 'MixedTypeAnnotation';
     }
 
-    declare class EmptyTypeAnnotation extends Node {
+    declare class EmptyTypeAnnotation extends BaseNode {
         type: 'EmptyTypeAnnotation';
     }
 
-    declare class NullableTypeAnnotation extends Node {
+    declare class NullableTypeAnnotation extends BaseNode {
         type: 'NullableTypeAnnotation';
         typeAnnotation: any;
     }
 
-    declare class NumberLiteralTypeAnnotation extends Node {
+    declare class NumberLiteralTypeAnnotation extends BaseNode {
         type: 'NumberLiteralTypeAnnotation';
     }
 
-    declare class NumberTypeAnnotation extends Node {
+    declare class NumberTypeAnnotation extends BaseNode {
         type: 'NumberTypeAnnotation';
     }
 
-    declare class ObjectTypeAnnotation extends Node {
+    declare class ObjectTypeAnnotation extends BaseNode {
         type: 'ObjectTypeAnnotation';
         properties: any;
         indexers: any;
         callProperties: any;
     }
 
-    declare class ObjectTypeCallProperty extends Node {
+    declare class ObjectTypeCallProperty extends BaseNode {
         type: 'ObjectTypeCallProperty';
         value: any;
     }
 
-    declare class ObjectTypeIndexer extends Node {
+    declare class ObjectTypeIndexer extends BaseNode {
         type: 'ObjectTypeIndexer';
         id: any;
         key: any;
         value: any;
     }
 
-    declare class ObjectTypeProperty extends Node {
+    declare class ObjectTypeProperty extends BaseNode {
         type: 'ObjectTypeProperty';
         key: any;
         value: any;
     }
 
-    declare class ObjectTypeSpreadProperty extends Node {
+    declare class ObjectTypeSpreadProperty extends BaseNode {
         type: 'ObjectTypeSpreadProperty';
         argument: any;
     }
 
-    declare class OpaqueType extends Node {
+    declare class OpaqueType extends BaseNode {
         type: 'OpaqueType';
         id: any;
         typeParameters: any;
@@ -730,89 +732,89 @@ declare module '@babel/types' {
         impltype: any;
     }
 
-    declare class QualifiedTypeIdentifier extends Node {
+    declare class QualifiedTypeIdentifier extends BaseNode {
         type: 'QualifiedTypeIdentifier';
         id: any;
         qualification: any;
     }
 
-    declare class StringLiteralTypeAnnotation extends Node {
+    declare class StringLiteralTypeAnnotation extends BaseNode {
         type: 'StringLiteralTypeAnnotation';
     }
 
-    declare class StringTypeAnnotation extends Node {
+    declare class StringTypeAnnotation extends BaseNode {
         type: 'StringTypeAnnotation';
     }
 
-    declare class ThisTypeAnnotation extends Node {
+    declare class ThisTypeAnnotation extends BaseNode {
         type: 'ThisTypeAnnotation';
     }
 
-    declare class TupleTypeAnnotation extends Node {
+    declare class TupleTypeAnnotation extends BaseNode {
         type: 'TupleTypeAnnotation';
         types: any;
     }
 
-    declare class TypeofTypeAnnotation extends Node {
+    declare class TypeofTypeAnnotation extends BaseNode {
         type: 'TypeofTypeAnnotation';
         argument: any;
     }
 
-    declare class TypeAlias extends Node {
+    declare class TypeAlias extends BaseNode {
         type: 'TypeAlias';
         id: any;
         typeParameters: any;
         right: any;
     }
 
-    declare class TypeAnnotation extends Node {
+    declare class TypeAnnotation extends BaseNode {
         type: 'TypeAnnotation';
         typeAnnotation: Flow;
     }
 
-    declare class TypeCastExpression extends Node {
+    declare class TypeCastExpression extends BaseNode {
         type: 'TypeCastExpression';
         expression: any;
         typeAnnotation: any;
     }
 
-    declare class TypeParameter extends Node {
+    declare class TypeParameter extends BaseNode {
         type: 'TypeParameter';
         bound?: ?TypeAnnotation;
         name?: string;
     }
 
-    declare class TypeParameterDeclaration extends Node {
+    declare class TypeParameterDeclaration extends BaseNode {
         type: 'TypeParameterDeclaration';
         params: any;
     }
 
-    declare class TypeParameterInstantiation extends Node {
+    declare class TypeParameterInstantiation extends BaseNode {
         type: 'TypeParameterInstantiation';
         params: any;
     }
 
-    declare class UnionTypeAnnotation extends Node {
+    declare class UnionTypeAnnotation extends BaseNode {
         type: 'UnionTypeAnnotation';
         types: any;
     }
 
-    declare class VoidTypeAnnotation extends Node {
+    declare class VoidTypeAnnotation extends BaseNode {
         type: 'VoidTypeAnnotation';
     }
 
-    declare class JSXAttribute extends Node {
+    declare class JSXAttribute extends BaseNode {
         type: 'JSXAttribute';
         name: JSXIdentifier | JSXNamespacedName;
         value?: ?JSXElement | StringLiteral | JSXExpressionContainer;
     }
 
-    declare class JSXClosingElement extends Node {
+    declare class JSXClosingElement extends BaseNode {
         type: 'JSXClosingElement';
         name: JSXIdentifier | JSXMemberExpression;
     }
 
-    declare class JSXElement extends Node {
+    declare class JSXElement extends BaseNode {
         type: 'JSXElement';
         openingElement: JSXOpeningElement;
         closingElement?: ?JSXClosingElement;
@@ -820,75 +822,75 @@ declare module '@babel/types' {
         selfClosing: any;
     }
 
-    declare class JSXEmptyExpression extends Node {
+    declare class JSXEmptyExpression extends BaseNode {
         type: 'JSXEmptyExpression';
     }
 
-    declare class JSXExpressionContainer extends Node {
+    declare class JSXExpressionContainer extends BaseNode {
         type: 'JSXExpressionContainer';
         expression: Expression;
     }
 
-    declare class JSXSpreadChild extends Node {
+    declare class JSXSpreadChild extends BaseNode {
         type: 'JSXSpreadChild';
         expression: Expression;
     }
 
-    declare class JSXIdentifier extends Node {
+    declare class JSXIdentifier extends BaseNode {
         type: 'JSXIdentifier';
         name: string;
     }
 
-    declare class JSXMemberExpression extends Node {
+    declare class JSXMemberExpression extends BaseNode {
         type: 'JSXMemberExpression';
         object: JSXMemberExpression | JSXIdentifier;
         property: JSXIdentifier;
     }
 
-    declare class JSXNamespacedName extends Node {
+    declare class JSXNamespacedName extends BaseNode {
         type: 'JSXNamespacedName';
         namespace: JSXIdentifier;
         name: JSXIdentifier;
     }
 
-    declare class JSXOpeningElement extends Node {
+    declare class JSXOpeningElement extends BaseNode {
         type: 'JSXOpeningElement';
         name: JSXIdentifier | JSXMemberExpression;
         attributes: any;
         selfClosing?: boolean;
     }
 
-    declare class JSXSpreadAttribute extends Node {
+    declare class JSXSpreadAttribute extends BaseNode {
         type: 'JSXSpreadAttribute';
         argument: Expression;
     }
 
-    declare class JSXText extends Node {
+    declare class JSXText extends BaseNode {
         type: 'JSXText';
         value: string;
     }
 
-    declare class Noop extends Node {
+    declare class Noop extends BaseNode {
         type: 'Noop';
     }
 
-    declare class ParenthesizedExpression extends Node {
+    declare class ParenthesizedExpression extends BaseNode {
         type: 'ParenthesizedExpression';
         expression: Expression;
     }
 
-    declare class AwaitExpression extends Node {
+    declare class AwaitExpression extends BaseNode {
         type: 'AwaitExpression';
         argument: Expression;
     }
 
-    declare class BindExpression extends Node {
+    declare class BindExpression extends BaseNode {
         type: 'BindExpression';
         object: any;
         callee: any;
     }
 
-    declare class ClassProperty extends Node {
+    declare class ClassProperty extends BaseNode {
         type: 'ClassProperty';
         key: any;
         value?: ?Expression;
@@ -901,38 +903,38 @@ declare module '@babel/types' {
         readonly?: boolean;
     }
 
-    declare class Import extends Node {
+    declare class Import extends BaseNode {
         type: 'Import';
     }
 
-    declare class Decorator extends Node {
+    declare class Decorator extends BaseNode {
         type: 'Decorator';
         expression: Expression;
     }
 
-    declare class DoExpression extends Node {
+    declare class DoExpression extends BaseNode {
         type: 'DoExpression';
         body: BlockStatement;
     }
 
-    declare class ExportDefaultSpecifier extends Node {
+    declare class ExportDefaultSpecifier extends BaseNode {
         type: 'ExportDefaultSpecifier';
         exported: Identifier;
     }
 
-    declare class ExportNamespaceSpecifier extends Node {
+    declare class ExportNamespaceSpecifier extends BaseNode {
         type: 'ExportNamespaceSpecifier';
         exported: Identifier;
     }
 
-    declare class TSParameterProperty extends Node {
+    declare class TSParameterProperty extends BaseNode {
         type: 'TSParameterProperty';
         parameter: Identifier | AssignmentPattern;
         accessibility?: 'public' | 'private' | 'protected';
         readonly?: boolean;
     }
 
-    declare class TSDeclareFunction extends Node {
+    declare class TSDeclareFunction extends BaseNode {
         type: 'TSDeclareFunction';
         id?: ?Identifier;
         typeParameters?: ?TypeParameterDeclaration | Noop;
@@ -943,7 +945,7 @@ declare module '@babel/types' {
         generator?: boolean;
     }
 
-    declare class TSDeclareMethod extends Node {
+    declare class TSDeclareMethod extends BaseNode {
         type: 'TSDeclareMethod';
         decorators?: any;
         key: any;
@@ -960,27 +962,27 @@ declare module '@babel/types' {
         optional?: boolean;
     }
 
-    declare class TSQualifiedName extends Node {
+    declare class TSQualifiedName extends BaseNode {
         type: 'TSQualifiedName';
         left: TSEntityName;
         right: Identifier;
     }
 
-    declare class TSCallSignatureDeclaration extends Node {
+    declare class TSCallSignatureDeclaration extends BaseNode {
         type: 'TSCallSignatureDeclaration';
         typeParameters?: ?TypeParameterDeclaration;
         parameters?: any;
         typeAnnotation?: ?TSTypeAnnotation;
     }
 
-    declare class TSConstructSignatureDeclaration extends Node {
+    declare class TSConstructSignatureDeclaration extends BaseNode {
         type: 'TSConstructSignatureDeclaration';
         typeParameters?: ?TypeParameterDeclaration;
         parameters?: any;
         typeAnnotation?: ?TSTypeAnnotation;
     }
 
-    declare class TSPropertySignature extends Node {
+    declare class TSPropertySignature extends BaseNode {
         type: 'TSPropertySignature';
         key: Expression;
         typeAnnotation?: ?TSTypeAnnotation;
@@ -990,7 +992,7 @@ declare module '@babel/types' {
         readonly?: boolean;
     }
 
-    declare class TSMethodSignature extends Node {
+    declare class TSMethodSignature extends BaseNode {
         type: 'TSMethodSignature';
         key: Expression;
         typeParameters?: ?TypeParameterDeclaration;
@@ -1000,131 +1002,131 @@ declare module '@babel/types' {
         optional?: boolean;
     }
 
-    declare class TSIndexSignature extends Node {
+    declare class TSIndexSignature extends BaseNode {
         type: 'TSIndexSignature';
         parameters: any;
         typeAnnotation?: ?TSTypeAnnotation;
         readonly?: boolean;
     }
 
-    declare class TSAnyKeyword extends Node {
+    declare class TSAnyKeyword extends BaseNode {
         type: 'TSAnyKeyword';
     }
 
-    declare class TSNumberKeyword extends Node {
+    declare class TSNumberKeyword extends BaseNode {
         type: 'TSNumberKeyword';
     }
 
-    declare class TSObjectKeyword extends Node {
+    declare class TSObjectKeyword extends BaseNode {
         type: 'TSObjectKeyword';
     }
 
-    declare class TSBooleanKeyword extends Node {
+    declare class TSBooleanKeyword extends BaseNode {
         type: 'TSBooleanKeyword';
     }
 
-    declare class TSStringKeyword extends Node {
+    declare class TSStringKeyword extends BaseNode {
         type: 'TSStringKeyword';
     }
 
-    declare class TSSymbolKeyword extends Node {
+    declare class TSSymbolKeyword extends BaseNode {
         type: 'TSSymbolKeyword';
     }
 
-    declare class TSVoidKeyword extends Node {
+    declare class TSVoidKeyword extends BaseNode {
         type: 'TSVoidKeyword';
     }
 
-    declare class TSUndefinedKeyword extends Node {
+    declare class TSUndefinedKeyword extends BaseNode {
         type: 'TSUndefinedKeyword';
     }
 
-    declare class TSNullKeyword extends Node {
+    declare class TSNullKeyword extends BaseNode {
         type: 'TSNullKeyword';
     }
 
-    declare class TSNeverKeyword extends Node {
+    declare class TSNeverKeyword extends BaseNode {
         type: 'TSNeverKeyword';
     }
 
-    declare class TSThisType extends Node {
+    declare class TSThisType extends BaseNode {
         type: 'TSThisType';
     }
 
-    declare class TSFunctionType extends Node {
+    declare class TSFunctionType extends BaseNode {
         type: 'TSFunctionType';
         typeParameters?: ?TypeParameterDeclaration;
         typeAnnotation?: ?TSTypeAnnotation;
         parameters?: any;
     }
 
-    declare class TSConstructorType extends Node {
+    declare class TSConstructorType extends BaseNode {
         type: 'TSConstructorType';
         typeParameters?: ?TypeParameterDeclaration;
         typeAnnotation?: ?TSTypeAnnotation;
         parameters?: any;
     }
 
-    declare class TSTypeReference extends Node {
+    declare class TSTypeReference extends BaseNode {
         type: 'TSTypeReference';
         typeName: TSEntityName;
         typeParameters?: ?TypeParameterInstantiation;
     }
 
-    declare class TSTypePredicate extends Node {
+    declare class TSTypePredicate extends BaseNode {
         type: 'TSTypePredicate';
         parameterName: Identifier | TSThisType;
         typeAnnotation: TSTypeAnnotation;
     }
 
-    declare class TSTypeQuery extends Node {
+    declare class TSTypeQuery extends BaseNode {
         type: 'TSTypeQuery';
         exprName: TSEntityName;
     }
 
-    declare class TSTypeLiteral extends Node {
+    declare class TSTypeLiteral extends BaseNode {
         type: 'TSTypeLiteral';
         members: any;
     }
 
-    declare class TSArrayType extends Node {
+    declare class TSArrayType extends BaseNode {
         type: 'TSArrayType';
         elementType: TSType;
     }
 
-    declare class TSTupleType extends Node {
+    declare class TSTupleType extends BaseNode {
         type: 'TSTupleType';
         elementTypes: any;
     }
 
-    declare class TSUnionType extends Node {
+    declare class TSUnionType extends BaseNode {
         type: 'TSUnionType';
         types: any;
     }
 
-    declare class TSIntersectionType extends Node {
+    declare class TSIntersectionType extends BaseNode {
         type: 'TSIntersectionType';
         types: any;
     }
 
-    declare class TSParenthesizedType extends Node {
+    declare class TSParenthesizedType extends BaseNode {
         type: 'TSParenthesizedType';
         typeAnnotation: TSType;
     }
 
-    declare class TSTypeOperator extends Node {
+    declare class TSTypeOperator extends BaseNode {
         type: 'TSTypeOperator';
         typeAnnotation: TSType;
         operator?: string;
     }
 
-    declare class TSIndexedAccessType extends Node {
+    declare class TSIndexedAccessType extends BaseNode {
         type: 'TSIndexedAccessType';
         objectType: TSType;
         indexType: TSType;
     }
 
-    declare class TSMappedType extends Node {
+    declare class TSMappedType extends BaseNode {
         type: 'TSMappedType';
         typeParameter: TypeParameter;
         typeAnnotation?: ?TSType;
@@ -1132,18 +1134,18 @@ declare module '@babel/types' {
         readonly?: boolean;
     }
 
-    declare class TSLiteralType extends Node {
+    declare class TSLiteralType extends BaseNode {
         type: 'TSLiteralType';
         literal: NumericLiteral | StringLiteral | BooleanLiteral;
     }
 
-    declare class TSExpressionWithTypeArguments extends Node {
+    declare class TSExpressionWithTypeArguments extends BaseNode {
         type: 'TSExpressionWithTypeArguments';
         expression: TSEntityName;
         typeParameters?: ?TypeParameterInstantiation;
     }
 
-    declare class TSInterfaceDeclaration extends Node {
+    declare class TSInterfaceDeclaration extends BaseNode {
         type: 'TSInterfaceDeclaration';
         id: Identifier;
         typeParameters?: ?TypeParameterDeclaration;
@@ -1151,12 +1153,12 @@ declare module '@babel/types' {
         declare?: boolean;
     }
 
-    declare class TSInterfaceBody extends Node {
+    declare class TSInterfaceBody extends BaseNode {
         type: 'TSInterfaceBody';
         body: any;
     }
 
-    declare class TSTypeAliasDeclaration extends Node {
+    declare class TSTypeAliasDeclaration extends BaseNode {
         type: 'TSTypeAliasDeclaration';
         id: Identifier;
         typeParameters?: ?TypeParameterDeclaration;
@@ -1164,19 +1166,19 @@ declare module '@babel/types' {
         declare?: boolean;
     }
 
-    declare class TSAsExpression extends Node {
+    declare class TSAsExpression extends BaseNode {
         type: 'TSAsExpression';
         expression: Expression;
         typeAnnotation: TSType;
     }
 
-    declare class TSTypeAssertion extends Node {
+    declare class TSTypeAssertion extends BaseNode {
         type: 'TSTypeAssertion';
         typeAnnotation: TSType;
         expression: Expression;
     }
 
-    declare class TSEnumDeclaration extends Node {
+    declare class TSEnumDeclaration extends BaseNode {
         type: 'TSEnumDeclaration';
         id: Identifier;
         members: any;
@@ -1184,13 +1186,13 @@ declare module '@babel/types' {
         initializer?: ?Expression;
     }
 
-    declare class TSEnumMember extends Node {
+    declare class TSEnumMember extends BaseNode {
         type: 'TSEnumMember';
         id: Identifier | StringLiteral;
         initializer?: ?Expression;
     }
 
-    declare class TSModuleDeclaration extends Node {
+    declare class TSModuleDeclaration extends BaseNode {
         type: 'TSModuleDeclaration';
         id: Identifier | StringLiteral;
         body: TSModuleBlock | TSModuleDeclaration;
@@ -1198,54 +1200,54 @@ declare module '@babel/types' {
         global?: boolean;
     }
 
-    declare class TSModuleBlock extends Node {
+    declare class TSModuleBlock extends BaseNode {
         type: 'TSModuleBlock';
         body: any;
     }
 
-    declare class TSImportEqualsDeclaration extends Node {
+    declare class TSImportEqualsDeclaration extends BaseNode {
         type: 'TSImportEqualsDeclaration';
         id: Identifier;
         moduleReference: TSEntityName | TSExternalModuleReference;
         isExport?: boolean;
     }
 
-    declare class TSExternalModuleReference extends Node {
+    declare class TSExternalModuleReference extends BaseNode {
         type: 'TSExternalModuleReference';
         expression: StringLiteral;
     }
 
-    declare class TSNonNullExpression extends Node {
+    declare class TSNonNullExpression extends BaseNode {
         type: 'TSNonNullExpression';
         expression: Expression;
     }
 
-    declare class TSExportAssignment extends Node {
+    declare class TSExportAssignment extends BaseNode {
         type: 'TSExportAssignment';
         expression: Expression;
     }
 
-    declare class TSNamespaceExportDeclaration extends Node {
+    declare class TSNamespaceExportDeclaration extends BaseNode {
         type: 'TSNamespaceExportDeclaration';
         id: Identifier;
     }
 
-    declare class TSTypeAnnotation extends Node {
+    declare class TSTypeAnnotation extends BaseNode {
         type: 'TSTypeAnnotation';
         typeAnnotation: TSType;
     }
 
-    declare class TSTypeParameterInstantiation extends Node {
+    declare class TSTypeParameterInstantiation extends BaseNode {
         type: 'TSTypeParameterInstantiation';
         params: any;
     }
 
-    declare class TSTypeParameterDeclaration extends Node {
+    declare class TSTypeParameterDeclaration extends BaseNode {
         type: 'TSTypeParameterDeclaration';
         params: any;
     }
 
-    declare class TSTypeParameter extends Node {
+    declare class TSTypeParameter extends BaseNode {
         type: 'TSTypeParameter';
         constraint?: ?TSType;
         name?: string;
@@ -1731,24 +1733,24 @@ declare module '@babel/types' {
     declare function isTSType(node: Object, opts?: ?Object): boolean;
     declare function isNumberLiteral(node: Object, opts?: ?Object): boolean;
     declare function isRegexLiteral(node: Object, opts?: ?Object): boolean;
-    declare function validate(n: Node, key: string, value: mixed): void;
+    declare function validate(n: BaseNode, key: string, value: mixed): void;
     declare function clone<T>(n: T): T;
     declare function cloneDeep<T>(n: T): T;
     declare function removeProperties<T>(n: T, opts: ?{}): void;
     declare function removePropertiesDeep<T>(n: T, opts: ?{}): T;
     declare type TraversalAncestors = Array<{
-        node: Node,
+        node: BaseNode,
         key: string,
         index?: number,
     }>;
-    declare type TraversalHandler<T> = (Node, TraversalAncestors, T) => void;
+    declare type TraversalHandler<T> = (BaseNode, TraversalAncestors, T) => void;
     declare type TraversalHandlers<T> = {
         enter?: TraversalHandler<T>,
         exit?: TraversalHandler<T>,
     };
 
-    declare function traverse<T>(n: Node, TraversalHandler<T> | TraversalHandlers<T>, state?: T): void;
-    declare function traverseFast(n: Node, enter: (Node) => void, opts?: Object): void;
+    declare function traverse<T>(n: BaseNode, TraversalHandler<T> | TraversalHandlers<T>, state?: T): void;
+    declare function traverseFast(n: BaseNode, enter: (BaseNode) => void, opts?: Object): void;
 
     declare var VISITOR_KEYS: {[string]: string[]};
 }

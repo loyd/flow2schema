@@ -97,7 +97,6 @@ export default class Collector {
     }
 
     _freestyle(group: Group, root: Node, scope: Scope, params: InstanceParam[]) {
-        // $FlowFixMe
         const iter = traverse(root);
         let result = iter.next();
 
@@ -116,7 +115,6 @@ export default class Collector {
     }
 
     * _collect(group: Group, node: Node, scope: Scope, params: InstanceParam[]): Task {
-        // $FlowFixMe
         const extractor = group[node.type];
 
         if (!extractor) {
@@ -325,7 +323,6 @@ function pathToNamespace(path: string): string {
 }
 
 function isAcceptableGroup(group: Group, node: Node): boolean {
-    // $FlowFixMe
     return group.entries.includes(node.type);
 }
 
