@@ -2,14 +2,6 @@
     "schemas": [
         {
             "type": "record",
-            "name": "X",
-            "namespace": "shadowing",
-            "fields": [
-                {"name": "x", "type": "bytes"}
-            ]
-        },
-        {
-            "type": "record",
             "name": "Buffer",
             "namespace": "shadowing._1",
             "fields": []
@@ -20,6 +12,14 @@
             "namespace": "shadowing._1",
             "fields": [
                 {"name": "y", "type": "Buffer"}
+            ]
+        },
+        {
+            "type": "record",
+            "name": "X",
+            "namespace": "shadowing",
+            "fields": [
+                {"name": "x", "type": "bytes"}
             ]
         }
     ],

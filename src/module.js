@@ -2,7 +2,7 @@ import * as pathlib from 'path';
 import * as resolve from 'resolve';
 
 import type Scope from './scope';
-import type {Schema} from './schema';
+import type {Schema, Type} from './schema';
 import type {Query} from './query';
 
 export default class Module {
@@ -26,7 +26,7 @@ export default class Module {
         this._exports.set(name, [scope, reference]);
     }
 
-    query(name: ?string, params: Schema[]): Query {
+    query(name: ?string, params: (?Type)[]): Query {
         const result = this._exports.get(name);
 
         if (!result) {

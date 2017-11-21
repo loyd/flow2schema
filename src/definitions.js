@@ -1,306 +1,329 @@
-import * as t from '@babel/types';
-
-import {define, query, namespace} from './commands';
-import {invariant, partition} from './utils';
-import type {Schema} from './schema';
-
-type E = Generator<any, any, any>;
-
-export default {
-    entries: [
-        'TypeAlias',
-        'InterfaceDeclaration',
-        'ClassDeclaration',
-    ],
-
-    * TypeAlias(node: t.TypeAlias): E {
-        let schema = yield node.right;
-
-        if (typeof schema === 'string') {
-            schema = {type: schema};
-        }
-
-        schema.name = yield node.id;
-        schema.namespace = yield namespace();
-
-        yield define(schema);
-
-        return schema;
-    },
-
-    * InterfaceDeclaration(node: t.InterfaceDeclaration): E {
-        let schema = yield node.body;
-
-        if (node.extends.length > 0) {
-            const schemas = [];
-
-            for (const extend of node.extends) {
-                const name = yield extend;
-                const schema = yield query(name);
-
-                schemas.push(schema);
-            }
-
-            schemas.push(schema);
-
-            schema = mergeSchemas(schemas);
-        }
-
-        schema.name = yield node.id;
-        schema.namespace = yield namespace();
-
-        yield define(schema);
-
-        return schema;
-    },
-
-    * ClassDeclaration(node: t.ClassDeclaration): E {
-        let schema = yield node.body;
-
-        if (node.superClass) {
-            const name = yield node.superClass;
-            const superSchema = yield query(name);
-
-            schema = mergeSchemas([superSchema, schema]);
-        }
-
-        schema.name = yield node.id;
-        schema.namespace = yield namespace();
-
-        yield define(schema);
-
-        return schema;
-    },
-
-    * ClassBody(node: t.ClassBody): E {
-        return {
-            type: 'record',
-            fields: (yield node.body).filter(Boolean),
-        };
-    },
-
-    * ClassProperty(node: t.ClassProperty): E {
-        if (node.static) {
-            return null;
-        }
-
-        return yield* extractProperty(node, node.typeAnnotation);
-    },
-
-    * ClassMethod(node: t.ClassMethod): E {
-        return null;
-    },
-
-    * ObjectTypeAnnotation(node: t.ObjectTypeAnnotation): E {
-        if (node.indexers.length > 0) {
-            // Allow functions, getters and setters.
-            const properties = (yield node.properties).filter(Boolean);
-
-            invariant(properties.length === 0);
-            invariant(node.indexers.length === 1);
-
-            return {
-                type: 'map',
-                values: yield node.indexers[0],
-            };
-        }
-
-        return {
-            type: 'record',
-            fields: (yield node.properties).filter(Boolean),
-        };
-    },
-
-    * ObjectTypeProperty(node: t.ObjectTypeProperty): E {
-        return yield* extractProperty(node, node.value);
-    },
-
-    * ObjectTypeIndexer(node: t.ObjectTypeIndexer): E {
-        const key = yield node.key;
-
-        invariant(key === 'string');
-
-        return yield node.value;
-    },
-
-    * TypeAnnotation(node: t.TypeAnnotation): E {
-        return yield node.typeAnnotation;
-    },
-
-    * NumberTypeAnnotation(node: t.NumberTypeAnnotation): E {
-        return 'double';
-    },
-
-    * StringTypeAnnotation(node: t.StringTypeAnnotation): E {
-        return 'string';
-    },
-
-    * BooleanTypeAnnotation(node: t.BooleanTypeAnnotation): E {
-        return 'boolean';
-    },
-
-    * ArrayTypeAnnotation(node: t.ArrayTypeAnnotation): E {
-        return {
-            type: 'array',
-            items: yield node.elementType,
-        };
-    },
-
-    * UnionTypeAnnotation(node: t.UnionTypeAnnotation): E {
-        // TODO: flatten variants.
-
-        let [symbols, variants] = partition(node.types, isEnumSymbol);
-
-        symbols = symbols.map(unwrapEnumSymbol);
-        variants = yield variants;
-
-        if (symbols.length > 0) {
-            const enumeration = {
-                type: 'enum',
-                symbols,
-            };
-
-            if (variants.length === 0) {
-                return enumeration;
-            }
-
-            variants.push(enumeration);
-        }
-
-        return variants;
-    },
-
-    * IntersectionTypeAnnotation(node: t.IntersectionTypeAnnotation): E {
-        const schemas = [];
-
-        for (const type of node.types) {
-            // TODO: support arbitrary types, not only references.
-            const name = yield type;
-            const schema = yield query(name);
-
-            schemas.push(schema);
-        }
-
-        return mergeSchemas(schemas);
-    },
-
-    * NullableTypeAnnotation(node: t.NullableTypeAnnotation): E {
-        return ['null', yield node.typeAnnotation];
-    },
-
-    * NullLiteralTypeAnnotation(node: t.NullLiteralTypeAnnotation): E {
-        return 'null';
-    },
-
-    * StringLiteralTypeAnnotation(node: t.StringLiteralTypeAnnotation): E {
-        return {
-            type: 'enum',
-            symbols: [node.value],
-        };
-    },
-
-    * GenericTypeAnnotation(node: t.GenericTypeAnnotation): E {
-        const name = yield node.id;
-        const params = node.typeParameters && (yield node.typeParameters);
-
-        const schema = yield query(name, params);
-
-        if (typeof schema === 'string') {
-            return schema;
-        }
-
-        if (schema.$unwrap) {
-            return schema.type;
-        }
-
-        const enclosing = yield namespace();
-
-        if (schema.namespace === enclosing) {
-            return schema.name;
-        }
-
-        return makeFullname(schema);
-    },
-
-    * TypeParameterInstantiation(node: t.TypeParameterInstantiation): E {
-        return yield node.params;
-    },
-
-    * FunctionTypeAnnotation(node: t.FunctionTypeAnnotation): E {
-        return null;
-    },
-
-    * InterfaceExtends(node: t.InterfaceExtends): E {
-        return yield node.id;
-    },
-
-    * Identifier(node: t.Identifier): E {
-        return node.name;
-    },
-
-    * CommentLine(node: t.CommentLine): E {
-        return extractPragma(node.value);
-    },
-
-    * CommentBlock(node: t.CommentBlock): E {
-        return extractPragma(node.value);
-    },
-};
-
-function* extractLastPragma(comments: t.Comment[]): ?string {
-    const pragmas = (yield comments).filter(Boolean);
-
-    return pragmas.length > 0 ? pragmas[pragmas.length - 1] : null;
+// flow#5376.
+import type {
+    ArrayTypeAnnotation, ClassDeclaration, ClassProperty, Comment, FlowTypeAnnotation,
+    GenericTypeAnnotation, InterfaceDeclaration, IntersectionTypeAnnotation, TypeAlias,
+    UnionTypeAnnotation, NullableTypeAnnotation, ObjectTypeIndexer, ObjectTypeProperty,
+    StringLiteralTypeAnnotation,
+} from '@babel/types';
+
+import {
+    isIdentifier, isObjectTypeProperty, isStringLiteralTypeAnnotation, isClassProperty,
+} from '@babel/types';
+
+import Context from './context';
+
+import type {
+    Schema, Type, ReferenceType, ComplexType, RecordType, FixedType,
+    FieldType, ArrayType, MapType, UnionType, EnumType,
+} from './schema';
+
+import {isPrimitiveType, isComplexType, makeFullname, mergeTypes} from './schema';
+import {invariant, compose, last, get, negate, partition, map, filter, filterMap, compact} from './utils';
+
+function processTypeAlias(ctx: Context, node: TypeAlias) {
+    let type = makeType(ctx, node.right);
+
+    // TODO: support function aliases.
+    invariant(type != null);
+    // TODO: support top-level unions.
+    invariant(!(type instanceof Array));
+
+    if (typeof type === 'string') {
+        type = {type: type};
+    }
+
+    ctx.define(node.id.name, type);
 }
 
-function* extractProperty(prop, value) {
-    let type = null;
+// TODO: type params.
+function processInterfaceDeclaration(ctx: Context, node: InterfaceDeclaration) {
+    let type = makeType(ctx, node.body);
 
-    if (prop.leadingComments) {
-        type = yield* extractLastPragma(prop.leadingComments);
+    invariant(type != null)
+    invariant(isComplexType(type));
+
+    if (node.extends.length > 0) {
+        const types = [];
+
+        for (const extend of node.extends) {
+            const name = extend.id.name;
+            const type = ctx.query(name);
+
+            invariant(isComplexType(type));
+
+            types.push((type: $FlowFixMe));
+        }
+
+        types.push((type: $FlowFixMe));
+
+        [, type] = mergeTypes(types);
     }
 
-    if (!type) {
-        type = yield value;
+    ctx.define(node.id.name, type);
+}
+
+// TODO: type params.
+function processClassDeclaration(ctx: Context, node: ClassDeclaration) {
+    const props: $FlowFixMe = filter(node.body.body, isClassProperty);
+
+    let type = makeRecord(ctx, props);
+
+    if (node.superClass) {
+        // TODO: warning about expressions here.
+        invariant(isIdentifier(node.superClass));
+
+        const {name} = node.superClass;
+        const superSchema = ctx.query(name);
+
+        invariant(isComplexType(superSchema));
+
+        [, type] = mergeTypes([(superSchema: $FlowFixMe), (type: $FlowFixMe)]);
     }
 
-    if (!type) {
+    ctx.define(node.id.name, type);
+}
+
+function makeType(ctx: Context, node: FlowTypeAnnotation): ?Type {
+    switch (node.type) {
+        case 'NullLiteralTypeAnnotation':
+            return 'null';
+        case 'BooleanTypeAnnotation':
+            return 'boolean';
+        case 'NumberTypeAnnotation':
+            return 'double';
+        case 'StringTypeAnnotation':
+            return 'string';
+        case 'TypeAnnotation':
+            return makeType(ctx, node.typeAnnotation);
+        case 'NullableTypeAnnotation':
+            return makeNullable(ctx, node);
+        case 'ObjectTypeAnnotation':
+            const map = makeMap(ctx, node.indexers);
+            const record = makeRecord(ctx, node.properties);
+
+            // TODO: warning about this.
+            invariant(!map || record.fields.length === 0);
+
+            return map || record;
+        case 'ArrayTypeAnnotation':
+            return makeArrayType(ctx, node);
+        case 'UnionTypeAnnotation':
+            return makeUnionType(ctx, node);
+        case 'IntersectionTypeAnnotation':
+            return makeIntersection(ctx, node);
+        case 'StringLiteralTypeAnnotation':
+            return makeEnum(node);
+        case 'GenericTypeAnnotation':
+            return makeReference(ctx, node);
+        case 'FunctionTypeAnnotation':
+            return null;
+        default:
+            invariant(false, `Unknown type: ${node.type}`);
+    }
+}
+
+function makeNullable(ctx: Context, node: NullableTypeAnnotation): ?UnionType {
+    const type = makeType(ctx, node.typeAnnotation);
+
+    if (type == null) {
         return null;
     }
 
-    if (type.type === 'record') {
-        type.namespace = yield namespace();
-        yield define(type, false);
-        type = type.name;
-    }
+    return ['null', type];
+}
+
+function makeRecord<T: ObjectTypeProperty | ClassProperty>(ctx: Context, nodes: T[]): RecordType {
+    const fields = compact(map(nodes, node => makeField(ctx, node)));
 
     return {
-        name: yield prop.key,
+        type: 'record',
+        fields,
+    };
+}
+
+function makeField(ctx: Context, node: ObjectTypeProperty | ClassProperty): ?FieldType {
+    // $FlowFixMe
+    if (node.static) {
+        return null;
+    }
+
+    let type = null;
+
+    if (node.leadingComments) {
+        const pragmas = extractPragmas(node.leadingComments);
+
+        type = last(pragmas);
+    }
+
+    if (type == null) {
+        const value = isObjectTypeProperty(node) ? node.value : node.typeAnnotation;
+
+        // TODO: no type annotation for the class property.
+        invariant(value);
+
+        type = makeType(ctx, value);
+    }
+
+    if (type == null) {
+        return null;
+    }
+
+    if (isComplexType(type) && type.type === 'record') {
+        const name = (type: $FlowFixMe).name;
+        ctx.define(name, type, false);
+        type = name;
+    }
+
+    // TODO: support optional fields.
+    // TODO: warning about computed properties.
+
+    invariant(isObjectTypeProperty(node) || !node.computed);
+    invariant(isIdentifier(node.key));
+
+    return {
+        name: node.key.name,
         type,
     };
 }
 
-function parsePragma(pragma) {
-    let [type, arg] = pragma.split(/\s+/);
-
-    if (isPrimitive(type)) {
-        if (arg != null) {
-            return null;
-        }
-    } else if (type === 'fixed') {
-        arg = Number(arg);
-
-        if (!Number.isInteger(arg)) {
-            return null;
-        }
-    } else {
+function makeMap(ctx: Context, nodes: ObjectTypeIndexer[]): ?MapType {
+    if (nodes.length === 0) {
         return null;
     }
 
-    return [type, arg];
+    // TODO: what to do in this case?
+    invariant(nodes.length === 1);
+
+    const node = nodes[0];
+
+    invariant(makeType(ctx, node.key) === 'string');
+
+    const values = makeType(ctx, node.value);
+
+    if (values == null) {
+        return null;
+    }
+
+    return {
+        type: 'map',
+        values,
+    };
 }
 
-function extractPragma(text) {
+function makeArrayType(ctx: Context, node: ArrayTypeAnnotation): ?ArrayType {
+    const items = makeType(ctx, node.elementType);
+
+    if (items == null) {
+        return null;
+    }
+
+    return {
+        type: 'array',
+        items,
+    };
+}
+
+function makeUnionType(ctx: Context, node: UnionTypeAnnotation): ?(UnionType | EnumType) {
+    // TODO: flatten variants.
+    // TODO: refactor it.
+
+    let [symbols, variants] = partition(node.types, isStringLiteralTypeAnnotation);
+
+    // $FlowFixMe
+    symbols = map(symbols, get('value'));
+    variants = compact(map(variants, node => makeType(ctx, node)));
+
+    if (symbols.length > 0) {
+        const enumeration: EnumType = {
+            type: 'enum',
+            symbols,
+        };
+
+        if (variants.length === 0) {
+            return enumeration;
+        }
+
+        variants.push(enumeration);
+    }
+
+    if (variants.length === 0) {
+        return null;
+    }
+
+    return variants;
+}
+
+function makeIntersection(ctx: Context, node: IntersectionTypeAnnotation): ?Type {
+    const types = [];
+
+    // TODO: refactor it.
+    for (const typeNode of node.types) {
+        const type = makeType(ctx, typeNode);
+
+        if (type == null) {
+            continue;
+        }
+
+        // TODO: support arbitrary types, not only references.
+        invariant(typeof type === 'string');
+
+        const queried = ctx.query(type);
+
+        invariant(isComplexType(queried));
+
+        types.push((queried: $FlowFixMe));
+    }
+
+    if (types.length === 0) {
+        return null;
+    }
+
+    const [name, intersection] = mergeTypes(types);
+
+    // TODO: dirty support for intersections.
+    (intersection: $FlowFixMe).name = name;
+
+    return intersection;
+}
+
+function makeEnum(node: StringLiteralTypeAnnotation): EnumType {
+    return {
+        type: 'enum',
+        symbols: [node.value],
+    };
+}
+
+function makeReference(ctx: Context, node: GenericTypeAnnotation): ReferenceType {
+    const {name} = node.id;
+    const params = node.typeParameters && map(node.typeParameters.params, n => makeType(ctx, n));
+
+    const type = ctx.query(name, params);
+
+    if (typeof type === 'string') {
+        return type;
+    }
+
+    // TODO: generalized it.
+    if ((type: $FlowFixMe).$unwrap) {
+        invariant(typeof type.type === 'string');
+
+        return type.type;
+    }
+
+    invariant(isComplexType(type));
+
+    if (type.namespace === ctx.namespace) {
+        return (type: $FlowFixMe).name;
+    }
+
+    return makeFullname((type: $FlowFixMe));
+}
+
+function extractPragmas(comments: Comment[]): Type[] {
+    return filterMap(comments, compose(get('value'), extractPragma));
+}
+
+function extractPragma(text: string): ?Type {
     const marker = '$avro ';
 
     const value = text.trimLeft();
@@ -311,82 +334,34 @@ function extractPragma(text) {
 
     const pragma = value.slice(marker.length).trim();
 
-    const pair = parsePragma(pragma);
+    return parsePragma(pragma);
+}
 
-    invariant(pair);
+function parsePragma(pragma: string): Type {
+    let [type, arg] = pragma.split(/\s+/);
 
-    const [type, arg] = pair;
+    if (isPrimitiveType(type)) {
+        invariant(arg == null);
+
+        return type;
+    }
 
     if (type === 'fixed') {
-        return {
+        arg = Number(arg);
+
+        invariant(Number.isInteger(arg));
+
+        return ({
             type: 'fixed',
             size: arg,
-        };
+        }: FixedType);
     }
 
-    return type;
+    invariant(false);
 }
 
-function isEnumSymbol(node) {
-    return node.type === 'StringLiteralTypeAnnotation';
-}
-
-function isPrimitive(type) {
-    switch (type) {
-        case 'null':
-        case 'int':
-        case 'long':
-        case 'float':
-        case 'double':
-        case 'bytes':
-        case 'string':
-        case 'boolean':
-            return true;
-        default:
-            return false;
-    }
-}
-
-function unwrapEnumSymbol(node) {
-    return node.value;
-}
-
-function makeFullname(schema) {
-    invariant(schema.namespace);
-
-    return `${schema.namespace}.${schema.name}`;
-}
-
-function mergeSchemas(schemas: Schema[]): Schema {
-    const map = new Map;
-
-    // TODO: overriding?
-    // TODO: anonymous?
-    let name = '';
-
-    for (const schema of schemas) {
-        // TODO: enums?
-        invariant(schema.type === 'record');
-
-        for (const field of schema.fields) {
-            const stored = map.get(field.name);
-
-            if (stored) {
-                // TODO: what about enums?
-                // TODO: improve checking.
-                invariant(stored.type === field.type);
-                continue;
-            }
-
-            map.set(field.name, field);
-        }
-
-        name += '_' + schema.name;
-    }
-
-    return {
-        type: 'record',
-        name,
-        fields: Array.from(map.values()),
-    };
+export default {
+    TypeAlias: processTypeAlias,
+    InterfaceDeclaration: processInterfaceDeclaration,
+    ClassDeclaration: processClassDeclaration,
 }

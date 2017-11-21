@@ -16,10 +16,6 @@ function run(title) {
     it('should provide expected schemas', () => {
         assert.deepEqual(actual.schemas, expected.schemas);
     });
-
-    it('should run expected tasks', () => {
-        assert.equal(actual.taskCount, expected.taskCount);
-    });
 }
 
 function main() {

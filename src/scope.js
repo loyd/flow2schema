@@ -2,7 +2,7 @@ import type {Node} from '@babel/types';
 
 import {invariant} from './utils';
 import type Module from './module';
-import type {Schema} from './schema';
+import type {Schema, Type} from './schema';
 import type {Query, Template, TemplateParam, ExternalInfo} from './query';
 
 export default class Scope {
@@ -65,7 +65,7 @@ export default class Scope {
         this._entries.set(name, entry);
     }
 
-    addInstance(name: string, schema: Schema, params: Schema[]) {
+    addInstance(name: string, schema: Schema, params: (?Type)[]) {
         const template = this._entries.get(name);
 
         invariant(template);
@@ -101,7 +101,7 @@ export default class Scope {
         });
     }
 
-    addExport(name: string, reference: string) {
+    addExport(name: ?string, reference: string) {
         invariant(this.module);
 
         this.module.addExport(name, this, reference);
@@ -113,11 +113,11 @@ export default class Scope {
         return this.module.resolve(path);
     }
 
-    query(name: string, params: Schema[]): Query {
+    query(name: string, params: (?Type)[]): Query {
         const entry = this._entries.get(name);
 
         if (entry && entry.type === 'template') {
-            const augmented = entry.params.map((p, i) => params[i] || p.default);
+            const augmented = entry.params.map((p, i) => params[i] === undefined ? p.default : params[i]);
             const schema = findInstance(entry, augmented);
 
             if (schema) {
@@ -143,7 +143,7 @@ export default class Scope {
     }
 }
 
-function findInstance(template: Template, queried: Schema[]): ?Schema {
+function findInstance(template: Template, queried: (?Type)[]): ?Schema {
     for (const {schema, params} of template.instances) {
         // TODO: compare complex structures.
         const same = params.every((p, i) => p === queried[i]);

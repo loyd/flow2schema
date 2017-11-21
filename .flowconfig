@@ -2,8 +2,6 @@
 .*/node_modules/.*
 .*/tests/samples/.*
 .*/lib/.*
-.*/src/definitions.js
-.*/src/declarations.js
 
 [libs]
 declarations/

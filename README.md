@@ -45,5 +45,6 @@ Output (`$ ./bin/flow2schema example.js`):
 ## TODO
 * Complete generics support.
 * Errors and warnings.
+* Support "declare".
 * Support commonjs modules.
 * Documentation.

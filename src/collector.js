@@ -1,56 +1,39 @@
 import * as fs from 'fs';
 import * as pathlib from 'path';
+import {isNode} from '@babel/types';
 import type {Node} from '@babel/types';
 
 import traverse from './traverse';
 import globals from './globals';
-// $FlowFixMe
 import definitionGroup from './definitions';
-// $FlowFixMe
 import declarationGroup from './declarations';
 import Module from './module';
 import Scope from './scope';
-import CircularList from './list';
-import {invariant, isNode} from './utils';
+import Context from './context';
+import {invariant, get, map} from './utils';
 import type Parser from './parser';
-import type {Schema} from './schema';
-
-type Task = Generator<void, ?Schema, void>;
-
-type Group = {
-    entries: string[],
-
-    [string]: Node => Generator<any, any, any>,
-};
+import type {Schema, Type} from './schema';
 
 type InstanceParam = {
     name: string,
-    value: Schema,
+    value: ?Type,
 };
+
+const VISITOR = Object.assign({}, definitionGroup, declarationGroup);
 
 export default class Collector {
     +root: string;
     +parser: Parser;
     +schemas: Schema[];
-    taskCount: number;
-    _tasks: CircularList<Task>;
-    _active: boolean;
     _modules: Map<string, Module>;
-    _roots: Set<Node>;
     _global: Scope;
-    _running: boolean;
 
     constructor(parser: Parser, root: string = '.') {
         this.root = root;
         this.parser = parser;
         this.schemas = [];
-        this.taskCount = 0;
-        this._tasks = new CircularList;
-        this._active = true;
         this._modules = new Map;
-        this._roots = new Set;
         this._global = Scope.global(globals);
-        this._running = false;
     }
 
     collect(path: string, internal: boolean = false) {
@@ -74,135 +57,34 @@ export default class Collector {
 
         const scope = this._global.extend(module);
 
-        this._freestyle(declarationGroup, ast.program, scope, []);
+        this._freestyle(ast.program, scope, []);
 
         this._modules.set(path, module);
 
-        if (this._running) {
-            return;
-        }
-
-        try {
-            this._running = true;
-            this._schedule();
-
-            if (!internal) {
-                const task = this._grabExports(module);
-                this._spawn(task);
-                this._schedule();
-            }
-        } finally {
-            this._running = false;
+        if (!internal) {
+            this._grabExports(module);
         }
     }
 
-    _freestyle(group: Group, root: Node, scope: Scope, params: InstanceParam[]) {
+    _freestyle(root: Node, scope: Scope, params: InstanceParam[]) {
+        const ctx = new Context(this, scope, params);
+
         const iter = traverse(root);
         let result = iter.next();
 
         while (!result.done) {
             const node = result.value;
-            const detain = isAcceptableGroup(group, node);
+            const detain = node.type in VISITOR;
 
-            if (detain && !this._roots.has(node)) {
-                const task = this._collect(group, node, scope, params);
-                this._roots.add(node);
-                this._spawn(task);
+            if (detain) {
+                VISITOR[node.type](ctx, node);
             }
 
             result = iter.next(detain);
         }
     }
 
-    * _collect(group: Group, node: Node, scope: Scope, params: InstanceParam[]): Task {
-        const extractor = group[node.type];
-
-        if (!extractor) {
-            this._freestyle(group, node, scope, []);
-            return null;
-        }
-
-        const iter = extractor(node);
-
-        let result = null;
-
-        while (true) {
-            this._active = true;
-
-            const {done, value} = iter.next(result);
-
-            if (done) {
-                return value;
-            }
-
-            invariant(value);
-
-            if (isNode(value)) {
-                result = yield* this._collect(group, value, scope, params);
-            } else if (value instanceof Array) {
-                result = [];
-
-                for (const val of value) {
-                    result.push(yield* this._collect(group, val, scope, params));
-                }
-            } else switch (value.kind) {
-                case 'declare':
-                    scope.addDeclaration(value.name, value.node, value.params);
-
-                    break;
-                case 'define':
-                    const {schema, declared} = value;
-
-                    if (declared && params.length > 0) {
-                        const name = schema.name;
-
-                        schema.name = generateGenericName(name, params);
-
-                        scope.addInstance(name, schema, params.map(p => p.value));
-                    } else {
-                        scope.addDefinition(schema, declared);
-                    }
-
-                    this.schemas.push(schema);
-
-                    break;
-                case 'external':
-                    scope.addImport(value.external);
-
-                    break;
-                case 'provide':
-                    scope.addExport(value.name, value.reference);
-
-                    break;
-                case 'query':
-                    const param = params.find(p => p.name === value.name);
-
-                    if (param) {
-                        // TODO: warning about missing param.
-                        result = param.value;
-                    } else {
-                        result = yield* this._query(scope, value.name, value.params);
-                    }
-
-                    break;
-                case 'enter':
-                    scope = scope.extend();
-
-                    break;
-                case 'exit':
-                    invariant(scope.parent);
-                    scope = scope.parent;
-
-                    break;
-                case 'namespace':
-                    result = scope.namespace;
-
-                    break;
-            }
-        }
-    }
-
-    * _query(scope: Scope, name: string, params: Schema[]): Task {
+    _query(scope: Scope, name: string, params: (?Type)[]): Type {
         let result = scope.query(name, params);
 
         // TODO: warning.
@@ -226,9 +108,7 @@ export default class Collector {
 
                 const {imported} = result.info;
 
-                while ((result = module.query(imported, params)).type === 'unknown') {
-                    yield;
-                }
+                result = module.query(imported, params);
 
                 if (result.type === 'definition') {
                     return result.schema;
@@ -249,19 +129,16 @@ export default class Collector {
                     for (const [i, p] of result.params.entries()) {
                         tmplParams.push({
                             name: p.name,
-                            value: params[i] || p.default,
+                            value: params[i] === undefined ? p.default : params[i],
                         });
                     }
                 }
 
                 invariant(result.type === 'declaration' || result.type === 'template');
 
-                this._freestyle(definitionGroup, result.node, scope, tmplParams);
+                this._freestyle(result.node, scope, tmplParams);
 
-                while ((result = scope.query(name, params)).type !== 'definition') {
-                    invariant(result.type !== 'external');
-                    yield;
-                }
+                result = scope.query(name, params);
 
                 invariant(result.type === 'definition');
 
@@ -269,43 +146,13 @@ export default class Collector {
             case 'definition':
                 return result.schema;
         }
+
+        invariant(false);
     }
 
-    * _grabExports(module: Module): Task {
+    _grabExports(module: Module) {
         for (const [scope, name] of module.exports()) {
-            yield* this._query(scope, name, []);
-        }
-    }
-
-    _spawn(task: Task) {
-        this._tasks.add(task);
-        ++this.taskCount;
-    }
-
-    _schedule() {
-        const tasks = this._tasks;
-
-        let marker = null;
-
-        while (!tasks.isEmpty) {
-            const task = tasks.remove();
-
-            const {done} = task.next();
-
-            if (done) {
-                marker = null;
-                continue;
-            }
-
-            tasks.add(task);
-
-            if (this._active) {
-                marker = task;
-                this._active = false;
-            } else if (task === marker) {
-                // TODO: warning.
-                return;
-            }
+            this._query(scope, name, []);
         }
     }
 }
@@ -320,19 +167,4 @@ function pathToNamespace(path: string): string {
         // TODO: replace invalid chars.
         .split(pathlib.sep)
         .join('.');
-}
-
-function isAcceptableGroup(group: Group, node: Node): boolean {
-    return group.entries.includes(node.type);
-}
-
-function generateGenericName(base: string, params: InstanceParam[]): string {
-    let name = base + '_';
-
-    for (const {value} of params) {
-        invariant(typeof value === 'string');
-        name += '_' + value;
-    }
-
-    return name;
 }

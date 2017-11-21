@@ -1,28 +1,6 @@
 {
     "schemas": [
         {
-            "type": "string",
-            "name": "X",
-            "namespace": "scopes"
-        },
-        {
-            "type": "record",
-            "name": "Y",
-            "namespace": "scopes",
-            "fields": [{"name": "x", "type": "X"}]
-        },
-        {
-            "type": "double",
-            "name": "X",
-            "namespace": "scopes._1"
-        },
-        {
-            "type": "record",
-            "name": "Y",
-            "namespace": "scopes._1",
-            "fields": [{"name": "x", "type": "X"}]
-        },
-        {
             "type": "boolean",
             "name": "X",
             "namespace": "scopes._2"
@@ -68,6 +46,28 @@
                 {"name": "x", "type": "X"},
                 {"name": "z", "type": "scopes._1.Z"}
             ]
+        },
+        {
+            "type": "double",
+            "name": "X",
+            "namespace": "scopes._1"
+        },
+        {
+            "type": "record",
+            "name": "Y",
+            "namespace": "scopes._1",
+            "fields": [{"name": "x", "type": "X"}]
+        },
+        {
+            "type": "string",
+            "name": "X",
+            "namespace": "scopes"
+        },
+        {
+            "type": "record",
+            "name": "Y",
+            "namespace": "scopes",
+            "fields": [{"name": "x", "type": "X"}]
         }
     ],
     "taskCount": 17

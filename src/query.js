@@ -1,7 +1,7 @@
 import type {Node} from '@babel/types';
 
 import type Scope from './scope';
-import type {Schema} from './schema';
+import type {Schema, Type} from './schema';
 
 export type Query =
     | Unknown
@@ -44,11 +44,11 @@ export type External = {
 
 export type TemplateParam = {
     name: string,
-    default: Schema,
+    default: ?Type,
 };
 
 export type Instance = {
-    params: Schema[],
+    params: (?Type)[],
     schema: Schema,
 };
 
