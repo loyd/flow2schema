@@ -18,7 +18,7 @@ import type {
 } from './schema';
 
 import {isPrimitiveType, isComplexType, makeFullname, mergeTypes} from './schema';
-import {invariant, compose, last, get, negate, partition, map, filter, filterMap, compact} from './utils';
+import {invariant, compose, last, get, partition, map, filter, filterMap, compact} from './utils';
 
 function processTypeAlias(ctx: Context, node: TypeAlias) {
     let type = makeType(ctx, node.right);

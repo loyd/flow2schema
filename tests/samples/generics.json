@@ -15,6 +15,5 @@
             "namespace": "generics",
             "fields": [{"name": "a", "type": "A__string_double"}]
         }
-    ],
-    "taskCount": 4
+    ]
 }

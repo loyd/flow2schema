@@ -22,6 +22,5 @@
                 {"name": "x", "type": "bytes"}
             ]
         }
-    ],
-    "taskCount": 6
+    ]
 }

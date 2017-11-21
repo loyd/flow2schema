@@ -36,6 +36,5 @@
                 {"name": "e", "type": {"type": "fixed", "size": 10}}
             ]
         }
-    ],
-    "taskCount": 5
+    ]
 }

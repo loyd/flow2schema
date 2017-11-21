@@ -24,6 +24,5 @@
                 {"name": "a", "type": {"type": "enum", "symbols": ["one"]}}
             ]
         }
-    ],
-    "taskCount": 5
+    ]
 }

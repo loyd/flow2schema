@@ -61,10 +61,6 @@ export function get<T: Object, K: $Keys<T>>(key: K): T => $ElementType<T, K> {
     return obj => obj[key];
 }
 
-export function negate<T>(pred: T => boolean): T => boolean {
-    return flag => !flag;
-}
-
 export function compose<X, Y, Z>(a: X => Y, b: Y => Z): X => Z {
     return x => b(a(x));
 }

@@ -27,6 +27,5 @@
                 "type": {"type": "array", "items": "double"}
             }]
         }
-    ],
-    "taskCount": 5
+    ]
 }

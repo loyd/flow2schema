@@ -27,6 +27,5 @@
                 {"name": "b", "type": "double"}
             ]
         }
-    ],
-    "taskCount": 8
+    ]
 }
