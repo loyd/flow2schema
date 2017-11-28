@@ -5,7 +5,7 @@ import type {
     ArrayTypeAnnotation, ClassDeclaration, ClassProperty, Comment, FlowTypeAnnotation,
     GenericTypeAnnotation, InterfaceDeclaration, IntersectionTypeAnnotation, TypeAlias,
     UnionTypeAnnotation, NullableTypeAnnotation, ObjectTypeIndexer, ObjectTypeProperty,
-    StringLiteralTypeAnnotation, ObjectTypeAnnotation,
+    StringLiteralTypeAnnotation, ObjectTypeAnnotation, AnyTypeAnnotation, MixedTypeAnnotation,
 } from '@babel/types';
 
 import {
@@ -123,6 +123,10 @@ function makeType(ctx: Context, node: FlowTypeAnnotation): ?Type {
             return {kind: 'literal', value: node.value};
         case 'GenericTypeAnnotation':
             return makeReference(ctx, node);
+        case 'AnyTypeAnnotation':
+            return {kind: 'any'};
+        case 'MixedTypeAnnotation':
+            return {kind: 'mixed'};
         case 'FunctionTypeAnnotation':
             return null;
         default:

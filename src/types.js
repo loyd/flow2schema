@@ -10,6 +10,8 @@ export type Type =
     | StringType
     | BooleanType
     | LiteralType
+    | AnyType
+    | MixedType
     | ReferenceType;
 
 export type TypeId = string[];
@@ -76,6 +78,14 @@ export type BooleanType = BaseType & {
 export type LiteralType = BaseType & {
     kind: 'literal',
     value: string | number | boolean | null | void,
+};
+
+export type AnyType = BaseType & {
+    kind: 'any',
+};
+
+export type MixedType = BaseType & {
+    kind: 'mixed',
 };
 
 export type ReferenceType = BaseType & {

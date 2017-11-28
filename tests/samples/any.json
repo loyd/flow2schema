@@ -1,0 +1,17 @@
+{
+    "types": [
+        {
+            "id": ["any", "X"],
+            "kind": "any"
+        },
+        {
+            "id": ["any", "Y"],
+            "kind": "record",
+            "fields": [{
+                "name": "y",
+                "value": {"kind": "any"},
+                "required": true
+            }]
+        }
+    ]
+}
