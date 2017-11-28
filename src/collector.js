@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as pathlib from 'path';
+import wu from 'wu';
 import {isNode} from '@babel/types';
 import type {Node} from '@babel/types';
 
@@ -145,7 +146,8 @@ export default class Collector {
                 return result.type;
 
             case 'special':
-                const type = result.call(params);
+                const resolve = id => this._findTypeById(id);
+                const type = result.call(params, resolve);
 
                 invariant(type);
 
@@ -159,6 +161,22 @@ export default class Collector {
         for (const [scope, name] of module.exports()) {
             this._query(scope, name, []);
         }
+    }
+
+    _findTypeById(id: TypeId): Type {
+        // TODO: get rid of the linear search.
+
+        for (const type of this.types) {
+            invariant(type.id);
+
+            const is = type.id.join('::') === id.join('::');
+
+            if (is) {
+                return type;
+            }
+        }
+
+        invariant(false);
     }
 }
 

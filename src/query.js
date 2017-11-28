@@ -1,7 +1,7 @@
 import type {Node} from '@babel/types';
 
 import type Scope from './scope';
-import type {Type} from './types';
+import type {Type, TypeId} from './types';
 
 export type Query =
     | Unknown
@@ -48,7 +48,7 @@ export type Special = {
     call: SpecialFn,
 };
 
-export type SpecialFn = (?Type)[] => ?Type;
+export type SpecialFn = ((?Type)[], TypeId => Type) => ?Type;
 
 export type TemplateParam = {
     name: string,

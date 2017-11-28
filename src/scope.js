@@ -182,6 +182,8 @@ function getTypeName(type: Type): string {
         case 'string':
         case 'boolean':
             return type.kind;
+        case 'literal':
+            return String(type.value);
         default:
             invariant(false);
     }
