@@ -5,7 +5,8 @@
             "kind": "record",
             "fields": [
                 {"name": "a", "value": {"kind": "string"}, "required": true},
-                {"name": "b", "value": {"kind": "boolean"}, "required": true}
+                {"name": "b", "value": {"kind": "boolean"}, "required": true},
+                {"name": "c", "value": {"kind": "string"}, "required": true}
             ]
         },
         {
@@ -13,7 +14,8 @@
             "kind": "record",
             "fields": [
                 {"name": "a", "value": {"kind": "string"}, "required": true},
-                {"name": "b", "value": {"kind": "boolean"}, "required": true}
+                {"name": "b", "value": {"kind": "boolean"}, "required": true},
+                {"name": "c", "value": {"kind": "string"}, "required": true}
             ]
         },
         {

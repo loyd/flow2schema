@@ -251,7 +251,7 @@ function makeArrayType(ctx: Context, node: ArrayTypeAnnotation): ?ArrayType {
     };
 }
 
-function makeUnionType(ctx: Context, node: UnionTypeAnnotation): ?UnionType {
+function makeUnionType(ctx: Context, node: UnionTypeAnnotation): ?Type {
     const variants = wu(node.types)
         .map(node => makeType(ctx, node))
         .filter()
@@ -259,6 +259,10 @@ function makeUnionType(ctx: Context, node: UnionTypeAnnotation): ?UnionType {
 
     if (variants.length === 0) {
         return null;
+    }
+
+    if (variants.length === 1) {
+        return variants[0];
     }
 
     return {

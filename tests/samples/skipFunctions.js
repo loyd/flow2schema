@@ -5,7 +5,12 @@ type Type = {
 
     b: boolean,
 
+    baz: (() => void)[],
+
     bar: () => void,
+    [string]: () => void,
+
+    c: string & () => void;
 };
 
 interface Interface {
@@ -15,7 +20,14 @@ interface Interface {
 
     b: boolean;
 
+    baz: ?() => void;
+
     bar: () => void;
+    [() => void]: string;
+
+    c: string | () => void;
+
+    kek: (() => string) & (() => void);
 }
 
 class Class {
@@ -27,7 +39,11 @@ class Class {
 
     b: boolean;
 
+    static baz() {}
+
     baz: () => void;
+
+    kek: (() => string) | (() => void);
 }
 
 export {Type, Interface, Class};

@@ -6,4 +6,15 @@ interface Interface {
     [string]: boolean;
 }
 
-export {Type, Interface};
+type Couple = {
+    [string]: boolean,
+    [number]: string,
+};
+
+type Mix = {
+    [string]: boolean,
+
+    foo: string,
+}
+
+export {Type, Interface, Couple, Mix};

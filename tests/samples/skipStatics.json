@@ -1,0 +1,11 @@
+{
+    "types": [{
+        "id": ["skipStatics", "X"],
+        "kind": "record",
+        "fields": [{
+            "name": "xxx",
+            "value": {"kind": "string"},
+            "required": true
+        }]
+    }]
+}
