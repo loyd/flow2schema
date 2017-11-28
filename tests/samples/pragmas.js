@@ -18,6 +18,9 @@ interface Interface {
     c: number;
     // @repr {f64}
     d: number;
+
+    // Some comment.
+    e: string;
 }
 
 class Class {
