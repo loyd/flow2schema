@@ -7,4 +7,8 @@ type X = {
     a: A<string, boolean>,
 };
 
-export {X};
+type Y = {
+    a: A<number, X>,
+}
+
+export {X, Y};

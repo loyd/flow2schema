@@ -16,6 +16,23 @@
                 "value": {"kind": "reference", "to": ["generics", "A", "string", "boolean"]},
                 "required": true
             }]
+        },
+        {
+            "id": ["generics", "A", "f64", "X"],
+            "kind": "record",
+            "fields": [
+                {"name": "t", "value": {"kind": "number", "repr": "f64"}, "required": true},
+                {"name": "k", "value": {"kind": "reference", "to": ["generics", "X"]}, "required": true}
+            ]
+        },
+        {
+            "id": ["generics", "Y"],
+            "kind": "record",
+            "fields": [{
+                "name": "a",
+                "value": {"kind": "reference", "to": ["generics", "A", "f64", "X"]},
+                "required": true
+            }]
         }
     ]
 }

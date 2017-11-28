@@ -29,9 +29,7 @@ export function extractPragmas(text: string): Pragma[] {
             },
         };
 
-        if (pragma) {
-            pragmas.push(pragma);
-        }
+        pragmas.push(pragma);
     }
 
     return pragmas;
