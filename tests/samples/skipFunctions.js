@@ -10,7 +10,9 @@ type Type = {
     bar: () => void,
     [string]: () => void,
 
-    c: string & () => void;
+    c: string & () => void,
+
+    kek: [() => void],
 };
 
 interface Interface {

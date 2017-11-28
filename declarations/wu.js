@@ -21,6 +21,9 @@ declare module 'wu' {
 
         pluck<K: $Keys<T>>(K): Wu<$ElementType<T, K>>;
 
+        some(): boolean;
+        some(T => boolean): boolean;
+
         toArray(): T[];
     }
 }

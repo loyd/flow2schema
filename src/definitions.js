@@ -6,6 +6,7 @@ import type {
     GenericTypeAnnotation, InterfaceDeclaration, IntersectionTypeAnnotation, TypeAlias,
     UnionTypeAnnotation, NullableTypeAnnotation, ObjectTypeIndexer, ObjectTypeProperty,
     StringLiteralTypeAnnotation, ObjectTypeAnnotation, AnyTypeAnnotation, MixedTypeAnnotation,
+    TupleTypeAnnotation,
 } from '@babel/types';
 
 import {
@@ -115,6 +116,8 @@ function makeType(ctx: Context, node: FlowTypeAnnotation): ?Type {
             return makeComplexType(ctx, node);
         case 'ArrayTypeAnnotation':
             return makeArrayType(ctx, node);
+        case 'TupleTypeAnnotation':
+            return makeTupleType(ctx, node);
         case 'UnionTypeAnnotation':
             return makeUnionType(ctx, node);
         case 'IntersectionTypeAnnotation':
@@ -251,6 +254,20 @@ function makeArrayType(ctx: Context, node: ArrayTypeAnnotation): ?ArrayType {
 
     return {
         kind: 'array',
+        items,
+    };
+}
+
+function makeTupleType(ctx: Context, node: TupleTypeAnnotation): ?TupleType {
+    // TODO: warning about nulls.
+    const items = wu(node.types).map(node => makeType(ctx, node)).toArray();
+
+    if (items.length === 0 || !wu(items).some()) {
+        return null;
+    }
+
+    return {
+        kind: 'tuple',
         items,
     };
 }

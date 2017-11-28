@@ -38,7 +38,7 @@ export type ArrayType = BaseType & {
 
 export type TupleType = BaseType & {
     kind: 'tuple',
-    items: Type[],
+    items: (?Type)[],
 };
 
 export type MapType = BaseType & {
