@@ -1,0 +1,24 @@
+{
+    "types": [
+        {
+            "id": ["exact", "X"],
+            "kind": "record",
+            "fields": [
+                {"name": "x", "value": {"kind": "string"}, "required": true},
+                {"name": "y", "value": {"kind": "boolean"}, "required": true}
+            ]
+        },
+        {
+            "id": ["exact", "Y"],
+            "kind": "reference",
+            "to": ["exact", "X"]
+        },
+        {
+            "id": ["exact", "Z"],
+            "kind": "record",
+            "fields": [
+                {"name": "z", "value": {"kind": "string"}, "required": true}
+            ]
+        }
+    ]
+}

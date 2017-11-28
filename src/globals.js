@@ -93,6 +93,14 @@ function shape(params: (?Type)[], resolve: TypeId => Type): ?Type {
     };
 }
 
+function unwrap(params: (?Type)[]): ?Type {
+    invariant(params.length === 1);
+
+    const [type] = params;
+
+    return type ? clone(type) : null;
+}
+
 export default {
     Object: object,
     Buffer: buffer,
@@ -102,4 +110,9 @@ export default {
     $ElementType: elemType,
     $NonMaybeType: stripMaybe,
     $Shape: shape,
+    $ReadOnly: unwrap,
+    $Exact: unwrap, // TODO: another semantic for exact types?
+    // TODO: $Keys
+    // TODO: $Values
+    // TODO: $Diff
 };
