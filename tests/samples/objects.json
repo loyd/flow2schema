@@ -1,0 +1,36 @@
+{
+    "types": [
+        {
+            "id": ["objects", "X"],
+            "kind": "map",
+            "keys": {"kind": "mixed"},
+            "values": {"kind": "mixed"}
+        },
+        {
+            "id": ["objects", "Y"],
+            "kind": "record",
+            "fields": [{
+                "name": "y",
+                "value": {
+                    "kind": "map",
+                    "keys": {"kind": "mixed"},
+                    "values": {"kind": "mixed"}
+                },
+                "required": true
+            }]
+        },
+        {
+            "id": ["objects", "Z"],
+            "kind": "record",
+            "fields": [{
+                "name": "z",
+                "value": {
+                    "kind": "map",
+                    "keys": {"kind": "mixed"},
+                    "values": {"kind": "mixed"}
+                },
+                "required": true
+            }]
+        }
+    ]
+}
