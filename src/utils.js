@@ -4,6 +4,8 @@ import * as assert from 'assert';
 // @see flow#112.
 export const invariant = assert.ok;
 
-export function last<T>(list: T[]): T | void {
-    return list.length > 0 ? list[list.length - 1] : undefined;
+export function last<T>(list: T[]): T {
+    invariant(list.length > 0);
+
+    return list[list.length - 1];
 }
