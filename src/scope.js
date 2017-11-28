@@ -4,7 +4,7 @@ import type {Node} from '@babel/types';
 import {invariant, last} from './utils';
 import type Module from './module';
 import type {Type, TypeId} from './types';
-import type {Query, Template, TemplateParam, ExternalInfo} from './query';
+import type {Query, Template, TemplateParam, ExternalInfo, SpecialFn} from './query';
 
 export default class Scope {
     +id: TypeId;
@@ -12,16 +12,13 @@ export default class Scope {
     +module: ?Module;
     _entries: Map<string, Query>;
 
-    static global(types: Type[]) {
+    static global(specials: {[string]: SpecialFn}) {
         const global = new Scope(null, null);
 
-        for (const type of types) {
-            invariant(type.id);
+        for (const name in specials) {
+            const fn = specials[name];
 
-            const name = last(type.id);
-            invariant(name != null);
-
-            global.addDefinition(name, type, false);
+            global.addSpecial(name, fn);
         }
 
         return global;
@@ -36,6 +33,15 @@ export default class Scope {
 
     extend(module: ?Module = null): Scope {
         return new Scope(this, module || this.module);
+    }
+
+    addSpecial(name: string, fn: SpecialFn) {
+        invariant(!this._entries.has(name));
+
+        this._entries.set(name, {
+            kind: 'special',
+            call: fn,
+        });
     }
 
     addDeclaration(name: string, node: Node, params: TemplateParam[]) {

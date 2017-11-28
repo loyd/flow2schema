@@ -8,7 +8,8 @@ export type Query =
     | Declaration
     | Template
     | Definition
-    | External;
+    | External
+    | Special;
 
 export type Unknown = {
     kind: 'unknown',
@@ -41,6 +42,13 @@ export type External = {
     info: ExternalInfo,
     scope: Scope,
 };
+
+export type Special = {
+    kind: 'special',
+    call: SpecialFn,
+};
+
+export type SpecialFn = (?Type)[] => ?Type;
 
 export type TemplateParam = {
     name: string,

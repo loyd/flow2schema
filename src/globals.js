@@ -1,7 +1,8 @@
-export default [
-    {
-        id: ['Buffer'],
-        kind: 'record',
-        fields: [],
+export default {
+    Buffer() {
+        return {
+            kind: 'reference',
+            to: ["Buffer"],
+        };
     },
-];
+}

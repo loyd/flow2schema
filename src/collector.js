@@ -86,8 +86,10 @@ export default class Collector {
         // TODO: warning.
         invariant(result.kind !== 'unknown');
 
-        // Resulting scope is always the best choice for waiting.
-        scope = result.scope;
+        if (result.kind !== 'special') {
+            // Resulting scope is always the best choice for waiting.
+            scope = result.scope;
+        }
 
         // It's only valid the sequence: E*[CT]?F,
         //     where E - external, C - declaration, T - template, F - definition.
@@ -141,6 +143,13 @@ export default class Collector {
                 // Fallthrough.
             case 'definition':
                 return result.type;
+
+            case 'special':
+                const type = result.call(params);
+
+                invariant(type);
+
+                return type;
         }
 
         invariant(false);
