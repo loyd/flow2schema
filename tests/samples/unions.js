@@ -1,16 +1,13 @@
 type Type = {
-    a: string | number,
-    b: ?string,
+    a: string | boolean,
 };
 
 interface Interface {
-    a: string | number;
-    b: ?string;
+    a: string | boolean | number;
 }
 
 class Class {
-    a: string | number;
-    b: ?string;
+    a: string | boolean;
 }
 
 export {Type, Interface, Class};

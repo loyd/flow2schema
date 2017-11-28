@@ -1,39 +1,33 @@
 {
-    "schemas": [
+    "types": [
         {
-            "type": "record",
-            "name": "Type",
-            "namespace": "primitives",
+            "id": ["primitives", "Type"],
+            "kind": "record",
             "fields": [
-                {"name": "a", "type": "string"},
-                {"name": "b", "type": "double"},
-                {"name": "c", "type": "boolean"},
-                {"name": "d", "type": "null"},
-                {"name": "e", "type": "bytes"}
+                {"name": "a", "value": {"kind": "string"}, "required": true},
+                {"name": "b", "value": {"kind": "number", "repr": "f64"}, "required": true},
+                {"name": "c", "value": {"kind": "boolean"}, "required": true},
+                {"name": "d", "value": {"kind": "literal", "value": null}, "required": true}
             ]
         },
         {
-            "type": "record",
-            "name": "Interface",
-            "namespace": "primitives",
+            "id": ["primitives", "Interface"],
+            "kind": "record",
             "fields": [
-                {"name": "a", "type": "string"},
-                {"name": "b", "type": "double"},
-                {"name": "c", "type": "boolean"},
-                {"name": "d", "type": "null"},
-                {"name": "e", "type": "bytes"}
+                {"name": "a", "value": {"kind": "string"}, "required": true},
+                {"name": "b", "value": {"kind": "number", "repr": "f64"}, "required": true},
+                {"name": "c", "value": {"kind": "boolean"}, "required": true},
+                {"name": "d", "value": {"kind": "literal", "value": null}, "required": true}
             ]
         },
         {
-            "type": "record",
-            "name": "Class",
-            "namespace": "primitives",
+            "id": ["primitives", "Class"],
+            "kind": "record",
             "fields": [
-                {"name": "a", "type": "string"},
-                {"name": "b", "type": "double"},
-                {"name": "c", "type": "boolean"},
-                {"name": "d", "type": "null"},
-                {"name": "e", "type": "bytes"}
+                {"name": "a", "value": {"kind": "string"}, "required": true},
+                {"name": "b", "value": {"kind": "number", "repr": "f64"}, "required": true},
+                {"name": "c", "value": {"kind": "boolean"}, "required": true},
+                {"name": "d", "value": {"kind": "literal", "value": null}, "required": true}
             ]
         }
     ]

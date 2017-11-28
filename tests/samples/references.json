@@ -1,35 +1,55 @@
 {
-    "schemas": [
+    "types": [
         {
-            "type": "string",
-            "name": "A",
-            "namespace": "references"
+            "id": ["references", "A"],
+            "kind": "string"
         },
         {
-            "type": "record",
-            "name": "Type",
-            "namespace": "references",
+            "id": ["references", "Type"],
+            "kind": "record",
             "fields": [
-                {"name": "a", "type": "A"},
-                {"name": "b", "type": {"type": "array", "items": "A"}}
+                {
+                    "name": "a",
+                    "value": {"kind": "reference", "to": ["references", "A"]},
+                    "required": true
+                },
+                {
+                    "name": "b",
+                    "value": {"kind": "array", "items": {"kind": "reference", "to": ["references", "A"]}},
+                    "required": true
+                }
             ]
         },
         {
-            "type": "record",
-            "name": "Interface",
-            "namespace": "references",
+            "id": ["references", "Interface"],
+            "kind": "record",
             "fields": [
-                {"name": "a", "type": "A"},
-                {"name": "b", "type": {"type": "array", "items": "A"}}
+                {
+                    "name": "a",
+                    "value": {"kind": "reference", "to": ["references", "A"]},
+                    "required": true
+                },
+                {
+                    "name": "b",
+                    "value": {"kind": "array", "items": {"kind": "reference", "to": ["references", "A"]}},
+                    "required": true
+                }
             ]
         },
         {
-            "type": "record",
-            "name": "Class",
-            "namespace": "references",
+            "id": ["references", "Class"],
+            "kind": "record",
             "fields": [
-                {"name": "a", "type": "A"},
-                {"name": "b", "type": {"type": "array", "items": "A"}}
+                {
+                    "name": "a",
+                    "value": {"kind": "reference", "to": ["references", "A"]},
+                    "required": true
+                },
+                {
+                    "name": "b",
+                    "value": {"kind": "array", "items": {"kind": "reference", "to": ["references", "A"]}},
+                    "required": true
+                }
             ]
         }
     ]

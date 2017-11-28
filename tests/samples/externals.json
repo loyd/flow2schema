@@ -1,73 +1,63 @@
 {
-    "schemas": [
+    "types": [
         {
-            "type": "record",
-            "name": "A",
-            "namespace": "externals.first",
-            "fields": [{"name": "a", "type": "boolean"}]
+            "id": ["externals", "first", "A"],
+            "kind": "record",
+            "fields": [{"name": "a", "value": {"kind": "boolean"}, "required": true}]
         },
         {
-            "type": "record",
-            "name": "B",
-            "namespace": "externals.first",
-            "fields": [{"name": "b", "type": "string"}]
+            "id": ["externals", "first", "B"],
+            "kind": "record",
+            "fields": [{"name": "b", "value": {"kind": "string"}, "required": true}]
         },
         {
-            "type": "record",
-            "name": "CC",
-            "namespace": "externals.first",
-            "fields": [{"name": "c", "type": "double"}]
+            "id": ["externals", "first", "CC"],
+            "kind": "record",
+            "fields": [{"name": "c", "value": {"kind": "number", "repr": "f64"}, "required": true}]
         },
         {
-            "type": "record",
-            "name": "D",
-            "namespace": "externals.first",
-            "fields": [{"name": "d", "type": "double"}]
+            "id": ["externals", "first", "D"],
+            "kind": "record",
+            "fields": [{"name": "d", "value": {"kind": "number", "repr": "f64"}, "required": true}]
         },
         {
-            "type": "record",
-            "name": "X",
-            "namespace": "externals",
+            "id": ["externals", "X"],
+            "kind": "record",
             "fields": [
-                {"name": "a", "type": "externals.first.A"},
-                {"name": "b", "type": "externals.first.B"},
-                {"name": "c", "type": "externals.first.CC"},
-                {"name": "d", "type": "externals.first.D"}
+                {"name": "a", "value": {"kind": "reference", "to": ["externals", "first", "A"]}, "required": true},
+                {"name": "b", "value": {"kind": "reference", "to": ["externals", "first", "B"]}, "required": true},
+                {"name": "c", "value": {"kind": "reference", "to": ["externals", "first", "CC"]}, "required": true},
+                {"name": "d", "value": {"kind": "reference", "to": ["externals", "first", "D"]}, "required": true}
             ]
         },
         {
-            "type": "record",
-            "name": "N",
-            "namespace": "externals.second",
-            "fields": [{"name": "n", "type": "boolean"}]
+            "id": ["externals", "second", "N"],
+            "kind": "record",
+            "fields": [{"name": "n", "value": {"kind": "boolean"}, "required": true}]
         },
         {
-            "type": "record",
-            "name": "M",
-            "namespace": "externals.second",
-            "fields": [{"name": "m", "type": "string"}]
+            "id": ["externals", "second", "M"],
+            "kind": "record",
+            "fields": [{"name": "m", "value": {"kind": "string"}, "required": true}]
         },
         {
-            "type": "record",
-            "name": "KK",
-            "namespace": "externals.second",
-            "fields": [{"name": "k", "type": "double"}]
+            "id": ["externals", "second", "KK"],
+            "kind": "record",
+            "fields": [{"name": "k", "value": {"kind": "number", "repr": "f64"}, "required": true}]
         },
         {
-            "type": "record",
-            "name": "P",
-            "namespace": "externals.second",
-            "fields": [{"name": "p", "type": "double"}]
+            "id": ["externals", "second", "P"],
+            "kind": "record",
+            "fields": [{"name": "p", "value": {"kind": "number", "repr": "f64"}, "required": true}]
         },
         {
-            "type": "record",
-            "name": "Y",
-            "namespace": "externals",
+            "id": ["externals", "Y"],
+            "kind": "record",
             "fields": [
-                {"name": "n", "type": "externals.second.N"},
-                {"name": "m", "type": "externals.second.M"},
-                {"name": "k", "type": "externals.second.KK"},
-                {"name": "p", "type": "externals.second.P"}
+                {"name": "n", "value": {"kind": "reference", "to": ["externals", "second", "N"]}, "required": true},
+                {"name": "m", "value": {"kind": "reference", "to": ["externals", "second", "M"]}, "required": true},
+                {"name": "k", "value": {"kind": "reference", "to": ["externals", "second", "KK"]}, "required": true},
+                {"name": "p", "value": {"kind": "reference", "to": ["externals", "second", "P"]}, "required": true}
             ]
         }
     ]

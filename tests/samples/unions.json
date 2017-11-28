@@ -1,47 +1,44 @@
 {
-    "schemas": [
+    "types": [
         {
-            "type": "record",
-            "name": "Type",
-            "namespace": "unions",
+            "id": ["unions", "Type"],
+            "kind": "record",
             "fields": [
                 {
                     "name": "a",
-                    "type": ["string", "double"]
-                },
-                {
-                    "name": "b",
-                    "type": ["null", "string"]
+                    "value": {
+                        "kind": "union",
+                        "variants": [{"kind": "string"}, {"kind": "boolean"}]
+                    },
+                    "required": true
                 }
             ]
         },
         {
-            "type": "record",
-            "name": "Interface",
-            "namespace": "unions",
+            "id": ["unions", "Interface"],
+            "kind": "record",
             "fields": [
                 {
                     "name": "a",
-                    "type": ["string", "double"]
-                },
-                {
-                    "name": "b",
-                    "type": ["null", "string"]
+                    "value": {
+                        "kind": "union",
+                        "variants": [{"kind": "string"}, {"kind": "boolean"}, {"kind": "number", "repr": "f64"}]
+                    },
+                    "required": true
                 }
             ]
         },
         {
-            "type": "record",
-            "name": "Class",
-            "namespace": "unions",
+            "id": ["unions", "Class"],
+            "kind": "record",
             "fields": [
                 {
                     "name": "a",
-                    "type": ["string", "double"]
-                },
-                {
-                    "name": "b",
-                    "type": ["null", "string"]
+                    "value": {
+                        "kind": "union",
+                        "variants": [{"kind": "string"}, {"kind": "boolean"}]
+                    },
+                    "required": true
                 }
             ]
         }

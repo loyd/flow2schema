@@ -1,25 +1,30 @@
 {
-    "schemas": [
+    "types": [
         {
-            "type": "record",
-            "name": "Buffer",
-            "namespace": "shadowing._1",
+            "id": ["shadowing", "1", "Buffer"],
+            "kind": "record",
             "fields": []
         },
         {
-            "type": "record",
-            "name": "Y",
-            "namespace": "shadowing._1",
+            "id": ["shadowing", "1", "Y"],
+            "kind": "record",
             "fields": [
-                {"name": "y", "type": "Buffer"}
+                {
+                    "name": "y",
+                    "value": {"kind": "reference", "to": ["shadowing", "1", "Buffer"]},
+                    "required": true
+                }
             ]
         },
         {
-            "type": "record",
-            "name": "X",
-            "namespace": "shadowing",
+            "id": ["shadowing", "X"],
+            "kind": "record",
             "fields": [
-                {"name": "x", "type": "bytes"}
+                {
+                    "name": "x",
+                    "value": {"kind": "reference", "to": ["Buffer"]},
+                    "required": true
+                }
             ]
         }
     ]

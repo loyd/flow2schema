@@ -1,16 +1,18 @@
 {
-    "schemas": [
+    "types": [
         {
-            "type": "record",
-            "name": "Test",
-            "namespace": "typeInMethod",
+            "id": ["typeInMethod", "Test"],
+            "kind": "record",
             "fields": []
         },
         {
-            "type": "record",
-            "name": "X",
-            "namespace": "typeInMethod._1",
-            "fields": [{"name": "t", "type": "typeInMethod.Test"}]
+            "id": ["typeInMethod", "1", "X"],
+            "kind": "record",
+            "fields": [{
+                "name": "t",
+                "value": {"kind": "reference", "to": ["typeInMethod", "Test"]},
+                "required": true
+            }]
         }
     ]
 }

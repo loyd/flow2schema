@@ -10,28 +10,24 @@ import declarationGroup from './declarations';
 import Module from './module';
 import Scope from './scope';
 import Context from './context';
-import {invariant, get, map} from './utils';
+import {invariant} from './utils';
 import type Parser from './parser';
-import type {Schema, Type} from './schema';
-
-type InstanceParam = {
-    name: string,
-    value: ?Type,
-};
+import type {Type, TypeId} from './types';
+import type {TemplateParam} from './query';
 
 const VISITOR = Object.assign({}, definitionGroup, declarationGroup);
 
 export default class Collector {
     +root: string;
     +parser: Parser;
-    +schemas: Schema[];
+    +types: Type[];
     _modules: Map<string, Module>;
     _global: Scope;
 
     constructor(parser: Parser, root: string = '.') {
         this.root = root;
         this.parser = parser;
-        this.schemas = [];
+        this.types = [];
         this._modules = new Map;
         this._global = Scope.global(globals);
     }
@@ -51,9 +47,9 @@ export default class Collector {
         const ast = this.parser.parse(code);
 
         // TODO: customize it.
-        const namespace = pathToNamespace(pathlib.relative('.', path));
+        const id = pathToId(path);
 
-        module = new Module(path, namespace);
+        module = new Module(id, path);
 
         const scope = this._global.extend(module);
 
@@ -66,7 +62,7 @@ export default class Collector {
         }
     }
 
-    _freestyle(root: Node, scope: Scope, params: InstanceParam[]) {
+    _freestyle(root: Node, scope: Scope, params: TemplateParam[]) {
         const ctx = new Context(this, scope, params);
 
         const iter = traverse(root);
@@ -88,7 +84,7 @@ export default class Collector {
         let result = scope.query(name, params);
 
         // TODO: warning.
-        invariant(result.type !== 'unknown');
+        invariant(result.kind !== 'unknown');
 
         // Resulting scope is always the best choice for waiting.
         scope = result.scope;
@@ -96,7 +92,7 @@ export default class Collector {
         // It's only valid the sequence: E*[CT]?F,
         //     where E - external, C - declaration, T - template, F - definition.
 
-        switch (result.type) {
+        switch (result.kind) {
             case 'external':
                 const modulePath = scope.resolve(result.info.path);
 
@@ -110,12 +106,12 @@ export default class Collector {
 
                 result = module.query(imported, params);
 
-                if (result.type === 'definition') {
-                    return result.schema;
+                if (result.kind === 'definition') {
+                    return result.type;
                 }
 
                 // TODO: reexports.
-                invariant(result.type === 'declaration' || result.type === 'template');
+                invariant(result.kind === 'declaration' || result.kind === 'template');
 
                 scope = result.scope;
                 name = result.name;
@@ -125,26 +121,26 @@ export default class Collector {
             case 'template':
                 const tmplParams = [];
 
-                if (result.type === 'template') {
+                if (result.kind === 'template') {
                     for (const [i, p] of result.params.entries()) {
                         tmplParams.push({
                             name: p.name,
-                            value: params[i] === undefined ? p.default : params[i],
+                            value: params[i] === undefined ? p.value : params[i],
                         });
                     }
                 }
 
-                invariant(result.type === 'declaration' || result.type === 'template');
+                invariant(result.kind === 'declaration' || result.kind === 'template');
 
                 this._freestyle(result.node, scope, tmplParams);
 
                 result = scope.query(name, params);
 
-                invariant(result.type === 'definition');
+                invariant(result.kind === 'definition');
 
                 // Fallthrough.
             case 'definition':
-                return result.schema;
+                return result.type;
         }
 
         invariant(false);
@@ -157,14 +153,14 @@ export default class Collector {
     }
 }
 
-function pathToNamespace(path: string): string {
-    const pathObj = pathlib.parse(path);
+function pathToId(path: string): TypeId {
+    const relPath = pathlib.relative('.', path);
+    const pathObj = pathlib.parse(relPath);
 
     return pathlib.format({
         dir: pathObj.dir,
         name: pathObj.name,
     })
         // TODO: replace invalid chars.
-        .split(pathlib.sep)
-        .join('.');
+        .split(pathlib.sep);
 }

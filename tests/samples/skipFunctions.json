@@ -1,30 +1,27 @@
 {
-    "schemas": [
+    "types": [
         {
-            "type": "record",
-            "name": "Type",
-            "namespace": "skipFunctions",
+            "id": ["skipFunctions", "Type"],
+            "kind": "record",
             "fields": [
-                {"name": "a", "type": "string"},
-                {"name": "b", "type": "double"}
+                {"name": "a", "value": {"kind": "string"}, "required": true},
+                {"name": "b", "value": {"kind": "boolean"}, "required": true}
             ]
         },
         {
-            "type": "record",
-            "name": "Interface",
-            "namespace": "skipFunctions",
+            "id": ["skipFunctions", "Interface"],
+            "kind": "record",
             "fields": [
-                {"name": "a", "type": "string"},
-                {"name": "b", "type": "double"}
+                {"name": "a", "value": {"kind": "string"}, "required": true},
+                {"name": "b", "value": {"kind": "boolean"}, "required": true}
             ]
         },
         {
-            "type": "record",
-            "name": "Class",
-            "namespace": "skipFunctions",
+            "id": ["skipFunctions", "Class"],
+            "kind": "record",
             "fields": [
-                {"name": "a", "type": "string"},
-                {"name": "b", "type": "double"}
+                {"name": "a", "value": {"kind": "string"}, "required": true},
+                {"name": "b", "value": {"kind": "boolean"}, "required": true}
             ]
         }
     ]

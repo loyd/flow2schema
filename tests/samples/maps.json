@@ -1,16 +1,16 @@
 {
-    "schemas": [
+    "types": [
         {
-            "type": "map",
-            "name": "Type",
-            "namespace": "maps",
-            "values": "double"
+            "id": ["maps", "Type"],
+            "kind": "map",
+            "keys": {"kind": "string"},
+            "values": {"kind": "boolean"}
         },
         {
-            "type": "map",
-            "name": "Interface",
-            "namespace": "maps",
-            "values": "double"
+            "id": ["maps", "Interface"],
+            "kind": "map",
+            "keys": {"kind": "string"},
+            "values": {"kind": "boolean"}
         }
     ]
 }

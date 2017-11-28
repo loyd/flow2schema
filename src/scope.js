@@ -1,44 +1,37 @@
+import wu from 'wu';
 import type {Node} from '@babel/types';
 
-import {invariant} from './utils';
+import {invariant, last} from './utils';
 import type Module from './module';
-import type {Schema, Type} from './schema';
+import type {Type, TypeId} from './types';
 import type {Query, Template, TemplateParam, ExternalInfo} from './query';
 
 export default class Scope {
+    +id: TypeId;
     +parent: ?Scope;
     +module: ?Module;
-    +scopeId: ?number;
     _entries: Map<string, Query>;
 
-    static global(schemas: Schema[]) {
+    static global(types: Type[]) {
         const global = new Scope(null, null);
 
-        for (const schema of schemas) {
-            global.addDefinition(schema, false);
+        for (const type of types) {
+            invariant(type.id);
+
+            const name = last(type.id);
+            invariant(name != null);
+
+            global.addDefinition(name, type, false);
         }
 
         return global;
     }
 
     constructor(parent: ?Scope, module: ?Module) {
+        this.id = module ? module.generateScopeId() : [];
         this.parent = parent;
         this.module = module;
-        this.scopeId = module && module.generateScopeId();
         this._entries = new Map;
-    }
-
-    get namespace(): string {
-        invariant(this.module);
-
-        let namespace = this.module.namespace;
-
-        // Nested scopes.
-        if (this.scopeId != null && this.scopeId > 0) {
-            namespace += '._' + this.scopeId;
-        }
-
-        return namespace;
     }
 
     extend(module: ?Module = null): Scope {
@@ -49,14 +42,14 @@ export default class Scope {
         invariant(!this._entries.has(name));
 
         const entry = params.length > 0 ? {
-            type: 'template',
+            kind: 'template',
             name,
             params,
             instances: [],
             node,
             scope: this,
         } : {
-            type: 'declaration',
+            kind: 'declaration',
             name,
             node,
             scope: this,
@@ -65,28 +58,34 @@ export default class Scope {
         this._entries.set(name, entry);
     }
 
-    addInstance(name: string, schema: Schema, params: (?Type)[]) {
+    addInstance(name: string, type: Type, params: (?Type)[]) {
         const template = this._entries.get(name);
 
         invariant(template);
-        invariant(template.type === 'template');
+        invariant(template.kind === 'template');
 
-        template.instances.push({params, schema});
+        const iname = generateGenericName(params);
+
+        type.id = this.id.concat(name, iname);
+
+        template.instances.push({params, type});
     }
 
-    addDefinition(schema: Schema, declared: boolean) {
-        const decl = this._entries.get(schema.name);
+    addDefinition(name: string, type: Type, declared: boolean) {
+        const decl = this._entries.get(name);
 
         if (declared) {
             invariant(decl);
-            invariant(decl.type === 'declaration');
+            invariant(decl.kind === 'declaration');
         } else {
             invariant(!decl);
         }
 
-        this._entries.set(schema.name, {
-            type: 'definition',
-            schema,
+        type.id = this.id.concat(name);
+
+        this._entries.set(name, {
+            kind: 'definition',
+            type,
             scope: this,
         });
     }
@@ -95,7 +94,7 @@ export default class Scope {
         invariant(!this._entries.has(info.local));
 
         this._entries.set(info.local, {
-            type: 'external',
+            kind: 'external',
             info,
             scope: this,
         });
@@ -116,14 +115,14 @@ export default class Scope {
     query(name: string, params: (?Type)[]): Query {
         const entry = this._entries.get(name);
 
-        if (entry && entry.type === 'template') {
-            const augmented = entry.params.map((p, i) => params[i] === undefined ? p.default : params[i]);
-            const schema = findInstance(entry, augmented);
+        if (entry && entry.kind === 'template') {
+            const augmented = entry.params.map((p, i) => params[i] === undefined ? p.value : params[i]);
+            const type = findInstance(entry, augmented);
 
-            if (schema) {
+            if (type) {
                 return {
-                    type: 'definition',
-                    schema,
+                    kind: 'definition',
+                    type,
                     scope: entry.scope,
                 };
             }
@@ -138,20 +137,46 @@ export default class Scope {
         }
 
         return {
-            type: 'unknown',
+            kind: 'unknown',
         };
     }
 }
 
-function findInstance(template: Template, queried: (?Type)[]): ?Schema {
-    for (const {schema, params} of template.instances) {
+function findInstance(template: Template, queried: (?Type)[]): ?Type {
+    for (const {type, params} of template.instances) {
         // TODO: compare complex structures.
         const same = params.every((p, i) => p === queried[i]);
 
         if (same) {
-            return schema;
+            return type;
         }
     }
 
     return null;
+}
+
+function generateGenericName(params: (?Type)[]): TypeId {
+    return wu(params)
+        .map(type => {
+            invariant(type);
+            return getTypeName(type);
+        })
+        .toArray();
+}
+
+function getTypeName(type: Type): string {
+    switch (type.kind) {
+        case 'reference':
+            const name = last(type.to);
+            invariant(name != null);
+
+            return name;
+        case 'number':
+            return type.repr;
+        case 'string':
+        case 'boolean':
+            return type.kind;
+        default:
+            invariant(false);
+    }
 }

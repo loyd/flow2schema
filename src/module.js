@@ -2,24 +2,29 @@ import * as pathlib from 'path';
 import * as resolve from 'resolve';
 
 import type Scope from './scope';
-import type {Schema, Type} from './schema';
+import type {Type, TypeId} from './types';
 import type {Query} from './query';
 
 export default class Module {
+    +id: TypeId;
     +path: string;
-    +namespace: string;
     _scopeCount: number;
     _exports: Map<?string, [Scope, string]>;
 
-    constructor(path: string, namespace: string) {
+    constructor(id: TypeId, path: string) {
+        this.id = id;
         this.path = path;
-        this.namespace = namespace;
         this._scopeCount = 0;
         this._exports = new Map;
     }
 
-    generateScopeId(): number {
-        return this._scopeCount++;
+    generateScopeId(): TypeId {
+        if (this._scopeCount === 0) {
+            ++this._scopeCount;
+            return this.id;
+        }
+
+        return this.id.concat(String(this._scopeCount++));
     }
 
     addExport(name: ?string, scope: Scope, reference: string) {
@@ -31,7 +36,7 @@ export default class Module {
 
         if (!result) {
             return {
-                type: 'unknown',
+                kind: 'unknown',
             };
         }
 

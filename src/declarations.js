@@ -1,4 +1,6 @@
-// flow#5376.
+import wu from 'wu';
+
+// @see flow#5376.
 import type {
     Block, ClassDeclaration, ExportDefaultDeclaration, ExportNamedDeclaration, Identifier,
     ImportDeclaration, ImportDefaultSpecifier, ImportSpecifier, InterfaceDeclaration,
@@ -12,7 +14,7 @@ import {
     isStringLiteral, isTypeAlias, isVariableDeclaration,
 } from '@babel/types';
 
-import {invariant, map, filter} from './utils';
+import {invariant} from './utils';
 import Context from './context';
 import type {ExternalInfo, TemplateParam} from './query';
 
@@ -146,7 +148,10 @@ function extractCommonjsNamedExternals<+T: Node>(nodes: T[], path: string): Exte
         path,
     });
 
-    return map(filter(nodes, pred), make);
+    return wu(nodes)
+        .filter(pred)
+        .map(make)
+        .toArray();
 }
 
 /*
@@ -201,7 +206,7 @@ function processDeclaration(ctx: Context, node: Declaration) {
 
     // TODO: do it only for "all"-mode.
     if (isClassDeclaration(node)) {
-        const methods = filter(node.body.body, isClassMethod);
+        const methods = wu(node.body.body).filter(isClassMethod).toArray();
 
         for (const method of methods) {
             ctx.freestyle(method);
@@ -214,10 +219,13 @@ function processDeclaration(ctx: Context, node: Declaration) {
 }
 
 function extractTemplateParams(node: TypeParameterDeclaration): TemplateParam[] {
-    return map(node.params, param => ({
-        name: param.name,
-        default: null,
-    }));
+    return wu(node.params)
+        .map(param => ({
+            name: param.name,
+            // TODO: default params.
+            value: null,
+        }))
+        .toArray();
 }
 
 export default {

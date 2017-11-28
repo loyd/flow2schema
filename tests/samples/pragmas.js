@@ -1,40 +1,34 @@
 type Type = {
-    // $avro int
+    // @repr {i32}
     a: number,
-    /* $avro long */
+    /* @repr {i64} */
     b: number,
-    //   $avro   float
+    //   @repr   {f32}
     c: number,
-    // $avro double
+    // @repr {f64}
     d: number,
-    /*   $avro   fixed       10   */
-    e: Buffer,
 };
 
 interface Interface {
-    // $avro int
+    // @repr {i32}
     a: number;
-    /* $avro long */
+    /* @repr {i64} */
     b: number;
-    //   $avro   float
+    //   @repr   {f32}
     c: number;
-    // $avro double
+    // @repr {f64}
     d: number;
-    /*   $avro   fixed       10   */
-    e: Buffer;
 }
 
 class Class {
-    // $avro int
+    // @repr {i32}
     a: number;
-    /* $avro long */
+    /* @repr {i64} */
     b: number;
-    //   $avro   float
+    //   @repr   {f32}
     c: number;
-    // $avro double
+    // @repr {f64}
     d: number;
-    /*   $avro   fixed       10   */
-    e: Buffer;
 }
 
 export {Type, Interface, Class};

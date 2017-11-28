@@ -1,7 +1,7 @@
 import type {Node} from '@babel/types';
 
 import type Scope from './scope';
-import type {Schema, Type} from './schema';
+import type {Type} from './types';
 
 export type Query =
     | Unknown
@@ -11,18 +11,18 @@ export type Query =
     | External;
 
 export type Unknown = {
-    type: 'unknown',
+    kind: 'unknown',
 };
 
 export type Declaration = {
-    type: 'declaration',
+    kind: 'declaration',
     name: string,
     node: Node,
     scope: Scope,
 };
 
 export type Template = {
-    type: 'template',
+    kind: 'template',
     name: string,
     params: TemplateParam[],
     instances: Instance[],
@@ -31,25 +31,25 @@ export type Template = {
 };
 
 export type Definition = {
-    type: 'definition',
-    schema: Schema,
+    kind: 'definition',
+    type: Type,
     scope: Scope,
 };
 
 export type External = {
-    type: 'external',
+    kind: 'external',
     info: ExternalInfo,
     scope: Scope,
 };
 
 export type TemplateParam = {
     name: string,
-    default: ?Type,
+    value: ?Type,
 };
 
 export type Instance = {
     params: (?Type)[],
-    schema: Schema,
+    type: Type,
 };
 
 export type ExternalInfo = {

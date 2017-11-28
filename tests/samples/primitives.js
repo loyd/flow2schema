@@ -3,7 +3,6 @@ type Type = {
     b: number,
     c: boolean,
     d: null,
-    e: Buffer,
 };
 
 interface Interface {
@@ -11,7 +10,6 @@ interface Interface {
     b: number;
     c: boolean;
     d: null;
-    e: Buffer;
 };
 
 class Class {
@@ -19,7 +17,6 @@ class Class {
     b: number;
     c: boolean;
     d: null;
-    e: Buffer;
 }
 
 export {Type, Interface, Class};

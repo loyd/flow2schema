@@ -1,21 +1,22 @@
 {
-    "schemas": [
+    "types": [
         {
-            "type": "string",
-            "name": "Z",
-            "namespace": "disorder"
+            "id": ["disorder", "Z"],
+            "kind": "string"
         },
         {
-            "type": "record",
-            "name": "Y",
-            "namespace": "disorder",
-            "fields": [{"name": "z", "type": "Z"}]
+            "id": ["disorder", "Y"],
+            "kind": "record",
+            "fields": [
+                {"name": "z", "value": {"kind": "reference", "to": ["disorder", "Z"]}, "required": true}
+            ]
         },
         {
-            "type": "record",
-            "name": "X",
-            "namespace": "disorder",
-            "fields": [{"name": "y", "type": "Y"}]
+            "id": ["disorder", "X"],
+            "kind": "record",
+            "fields": [
+                {"name": "y", "value": {"kind": "reference", "to": ["disorder", "Y"]}, "required": true}
+            ]
         }
     ]
 }

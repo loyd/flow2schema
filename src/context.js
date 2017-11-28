@@ -1,29 +1,21 @@
+import wu from 'wu';
 import type {Node} from '@babel/types';
 
 import Scope from './scope';
 import Collector from './collector';
-import {invariant, get, map} from './utils';
-import type {Schema, Type, ComplexType} from './schema';
+import {invariant} from './utils';
+import type {Type} from './types';
 import type {TemplateParam, ExternalInfo} from './query';
-
-type InstanceParam = {
-    name: string,
-    value: ?Type,
-};
 
 export default class Context {
     _collector: Collector;
     _scope: Scope;
-    _params: InstanceParam[];
+    _params: TemplateParam[];
 
-    constructor(collector: Collector, scope: Scope, params: InstanceParam[]) {
+    constructor(collector: Collector, scope: Scope, params: TemplateParam[]) {
         this._collector = collector;
         this._scope = scope;
         this._params = params;
-    }
-
-    get namespace(): string {
-        return this._scope.namespace;
     }
 
     freestyle(node: Node) {
@@ -34,26 +26,18 @@ export default class Context {
         this._scope.addDeclaration(name, node, params || []);
     }
 
-    define(name: string, type: ComplexType, declared: boolean = true): Schema {
-        // TODO: dirty support for intersections.
-        const _name = type.name != null ? type.name : name;
-
-        const schema: $FlowFixMe = Object.assign({}, type, {
-            name,
-            namespace: this._scope.namespace,
-        });
-
+    define(name: string, type: Type, declared: boolean = true): Type {
         if (declared && this._params.length > 0) {
-            schema.name = generateGenericName(name, this._params);
+            const params = wu(this._params).pluck('value').toArray();
 
-            this._scope.addInstance(name, schema, map(this._params, get('value')));
+            this._scope.addInstance(name, type, params);
         } else {
-            this._scope.addDefinition(schema, declared);
+            this._scope.addDefinition(name, type, declared);
         }
 
-        this._collector.schemas.push(schema);
+        this._collector.types.push(type);
 
-        return schema;
+        return type;
     }
 
     external(external: ExternalInfo) {
@@ -65,7 +49,7 @@ export default class Context {
     }
 
     query(name: string, params: ?(?Type)[]): Type {
-        const param = this._params.find(p => p.name === name);
+        const param = wu(this._params).find(p => p.name === name);
 
         if (param) {
             // TODO: warning about missing param.
@@ -85,15 +69,4 @@ export default class Context {
         invariant(this._scope.parent);
         this._scope = this._scope.parent;
     }
-}
-
-function generateGenericName(base: string, params: InstanceParam[]): string {
-    let name = base + '_';
-
-    for (const {value} of params) {
-        invariant(typeof value === 'string');
-        name += '_' + value;
-    }
-
-    return name;
 }

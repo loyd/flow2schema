@@ -1,39 +1,51 @@
 {
-    "schemas": [
+    "types": [
         {
-            "type": "record",
-            "name": "Type",
-            "namespace": "unionsAndEnums",
+            "id": ["unionsAndEnums", "Type"],
+            "kind": "record",
             "fields": [{
                 "name": "a",
-                "type": [
-                    "double",
-                    {"type": "enum", "symbols": ["one", "two"]}
-                ]
+                "value": {
+                    "kind": "union",
+                    "variants": [
+                        {"kind": "literal", "value": "one"},
+                        {"kind": "literal", "value": "two"},
+                        {"kind": "string"}
+                    ]
+                },
+                "required": true
             }]
         },
         {
-            "type": "record",
-            "name": "Interface",
-            "namespace": "unionsAndEnums",
+            "id": ["unionsAndEnums", "Interface"],
+            "kind": "record",
             "fields": [{
                 "name": "a",
-                "type": [
-                    "double",
-                    {"type": "enum", "symbols": ["one", "two"]}
-                ]
+                "value": {
+                    "kind": "union",
+                    "variants": [
+                        {"kind": "literal", "value": "one"},
+                        {"kind": "literal", "value": "two"},
+                        {"kind": "string"}
+                    ]
+                },
+                "required": true
             }]
         },
         {
-            "type": "record",
-            "name": "Class",
-            "namespace": "unionsAndEnums",
+            "id": ["unionsAndEnums", "Class"],
+            "kind": "record",
             "fields": [{
                 "name": "a",
-                "type": [
-                    "double",
-                    {"type": "enum", "symbols": ["one", "two"]}
-                ]
+                "value": {
+                    "kind": "union",
+                    "variants": [
+                        {"kind": "literal", "value": "one"},
+                        {"kind": "literal", "value": "two"},
+                        {"kind": "string"}
+                    ]
+                },
+                "required": true
             }]
         }
     ]

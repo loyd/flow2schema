@@ -13,8 +13,8 @@ function run(title) {
         expected = JSON.parse(fs.readFileSync(title + '.json', 'utf8'));
     });
 
-    it('should provide expected schemas', () => {
-        assert.deepEqual(actual.schemas, expected.schemas);
+    it('should provide expected types', () => {
+        assert.deepEqual(actual.types, expected.types);
     });
 }
 

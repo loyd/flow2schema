@@ -1,73 +1,68 @@
 {
-    "schemas": [
+    "types": [
         {
-            "type": "boolean",
-            "name": "X",
-            "namespace": "scopes._2"
+            "id": ["scopes", "2", "X"],
+            "kind": "boolean"
         },
         {
-            "type": "string",
-            "name": "Z",
-            "namespace": "scopes._1"
+            "id": ["scopes", "1", "Z"],
+            "kind": "string"
         },
         {
-            "type": "record",
-            "name": "Y",
-            "namespace": "scopes._2",
+            "id": ["scopes", "2", "Y"],
+            "kind": "record",
             "fields": [
-                {"name": "x", "type": "X"},
-                {"name": "z", "type": "scopes._1.Z"}
+                {"name": "x", "value": {"kind": "reference", "to": ["scopes", "2", "X"]}, "required": true},
+                {"name": "z", "value": {"kind": "reference", "to": ["scopes", "1", "Z"]}, "required": true}
             ]
         },
         {
-            "type": "double",
-            "name": "X",
-            "namespace": "scopes._3"
+            "id": ["scopes", "3", "X"],
+            "kind": "number",
+            "repr": "f64"
         },
         {
-            "type": "record",
-            "name": "Y",
-            "namespace": "scopes._3",
+            "id": ["scopes", "3", "Y"],
+            "kind": "record",
             "fields": [
-                {"name": "x", "type": "X"},
-                {"name": "z", "type": "scopes._1.Z"}
+                {"name": "x", "value": {"kind": "reference", "to": ["scopes", "3", "X"]}, "required": true},
+                {"name": "z", "value": {"kind": "reference", "to": ["scopes", "1", "Z"]}, "required": true}
             ]
         },
         {
-            "type": "string",
-            "name": "X",
-            "namespace": "scopes._4"
+            "id": ["scopes", "4", "X"],
+            "kind": "string"
         },
         {
-            "type": "record",
-            "name": "Y",
-            "namespace": "scopes._4",
+            "id": ["scopes", "4", "Y"],
+            "kind": "record",
             "fields": [
-                {"name": "x", "type": "X"},
-                {"name": "z", "type": "scopes._1.Z"}
+                {"name": "x", "value": {"kind": "reference", "to": ["scopes", "4", "X"]}, "required": true},
+                {"name": "z", "value": {"kind": "reference", "to": ["scopes", "1", "Z"]}, "required": true}
             ]
         },
         {
-            "type": "double",
-            "name": "X",
-            "namespace": "scopes._1"
+            "id": ["scopes", "1", "X"],
+            "kind": "number",
+            "repr": "f64"
         },
         {
-            "type": "record",
-            "name": "Y",
-            "namespace": "scopes._1",
-            "fields": [{"name": "x", "type": "X"}]
+            "id": ["scopes", "1", "Y"],
+            "kind": "record",
+            "fields": [
+                {"name": "x", "value": {"kind": "reference", "to": ["scopes", "1", "X"]}, "required": true}
+            ]
         },
         {
-            "type": "string",
-            "name": "X",
-            "namespace": "scopes"
+            "id": ["scopes", "X"],
+            "kind": "string"
         },
         {
-            "type": "record",
-            "name": "Y",
-            "namespace": "scopes",
-            "fields": [{"name": "x", "type": "X"}]
+            "id": ["scopes", "Y"],
+            "kind": "record",
+            "fields": [
+                {"name": "x", "value": {"kind": "reference", "to": ["scopes", "X"]}, "required": true}
+            ]
         }
     ]
 }

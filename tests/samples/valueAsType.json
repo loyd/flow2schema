@@ -1,27 +1,24 @@
 {
-    "schemas": [
+    "types": [
         {
-            "type": "record",
-            "name": "Type",
-            "namespace": "valueAsType",
+            "id": ["valueAsType", "Type"],
+            "kind": "record",
             "fields": [
-                {"name": "a", "type": {"type": "enum", "symbols": ["one"]}}
+                {"name": "a", "value": {"kind": "literal", "value": "one"}, "required": true}
             ]
         },
         {
-            "type": "record",
-            "name": "Interface",
-            "namespace": "valueAsType",
+            "id": ["valueAsType", "Interface"],
+            "kind": "record",
             "fields": [
-                {"name": "a", "type": {"type": "enum", "symbols": ["one"]}}
+                {"name": "a", "value": {"kind": "literal", "value": "one"}, "required": true}
             ]
         },
         {
-            "type": "record",
-            "name": "Class",
-            "namespace": "valueAsType",
+            "id": ["valueAsType", "Class"],
+            "kind": "record",
             "fields": [
-                {"name": "a", "type": {"type": "enum", "symbols": ["one"]}}
+                {"name": "a", "value": {"kind": "literal", "value": "one"}, "required": true}
             ]
         }
     ]

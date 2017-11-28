@@ -1,13 +1,13 @@
 type Type = {
-    a: number[],
+    a: string[],
 };
 
 interface Interface {
-    a: number[];
+    a: string[];
 }
 
 class Class {
-    a: number[];
+    a: string[];
 }
 
 export {Type, Interface, Class};

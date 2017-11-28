@@ -15,9 +15,9 @@ function run(path: string) {
     }
 
     try {
-        const {schemas} = collect(path);
+        const {types} = collect(path);
 
-        console.log(stringify(schemas, {maxLength: 100}));
+        console.log(stringify(types, {maxLength: 100}));
     } catch (ex) {
         console.error(ex.message);
         console.error(ex.stack);

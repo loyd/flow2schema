@@ -1,53 +1,57 @@
 {
-    "schemas": [
+    "types": [
         {
-            "type": "record",
-            "name": "A",
-            "namespace": "inheritance",
-            "fields": [{"name": "a", "type": "double"}]
+            "id": ["inheritance", "A"],
+            "kind": "record",
+            "fields": [{"name": "a", "value": {"kind": "number", "repr": "f64"}, "required": true}]
         },
         {
-            "type": "record",
-            "name": "B",
-            "namespace": "inheritance",
-            "fields": [
-                {"name": "a", "type": "double"},
-                {"name": "b", "type": "string"}
+            "id": ["inheritance", "B"],
+            "kind": "intersection",
+            "parts": [
+                {"kind": "reference", "to": ["inheritance", "A"]},
+                {
+                    "kind": "record",
+                    "fields": [{"name": "b", "value": {"kind": "string"}, "required": true}]
+                }
             ]
         },
         {
-            "type": "record",
-            "name": "C",
-            "namespace": "inheritance",
-            "fields": [
-                {"name": "a", "type": "double"},
-                {"name": "b", "type": "string"},
-                {"name": "c", "type": "boolean"}
+            "id": ["inheritance", "C"],
+            "kind": "intersection",
+            "parts": [
+                {"kind": "reference", "to": ["inheritance", "B"]},
+                {
+                    "kind": "record",
+                    "fields": [{"name": "c", "value": {"kind": "boolean"}, "required": true}]
+                }
             ]
         },
         {
-            "type": "record",
-            "name": "X",
-            "namespace": "inheritance",
-            "fields": [{"name": "x", "type": "double"}]
+            "id": ["inheritance", "X"],
+            "kind": "record",
+            "fields": [{"name": "x", "value": {"kind": "number", "repr": "f64"}, "required": true}]
         },
         {
-            "type": "record",
-            "name": "Y",
-            "namespace": "inheritance",
-            "fields": [
-                {"name": "x", "type": "double"},
-                {"name": "y", "type": "string"}
+            "id": ["inheritance", "Y"],
+            "kind": "intersection",
+            "parts": [
+                {"kind": "reference", "to": ["inheritance", "X"]},
+                {
+                    "kind": "record",
+                    "fields": [{"name": "y", "value": {"kind": "string"}, "required": true}]
+                }
             ]
         },
         {
-            "type": "record",
-            "name": "Z",
-            "namespace": "inheritance",
-            "fields": [
-                {"name": "x", "type": "double"},
-                {"name": "y", "type": "string"},
-                {"name": "z", "type": "boolean"}
+            "id": ["inheritance", "Z"],
+            "kind": "intersection",
+            "parts": [
+                {"kind": "reference", "to": ["inheritance", "Y"]},
+                {
+                    "kind": "record",
+                    "fields": [{"name": "z", "value": {"kind": "boolean"}, "required": true}]
+                }
             ]
         }
     ]

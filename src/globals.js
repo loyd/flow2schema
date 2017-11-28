@@ -1,7 +1,7 @@
 export default [
     {
-        name: 'Buffer',
-        type: 'bytes',
-        $unwrap: true,
+        id: ['Buffer'],
+        kind: 'record',
+        fields: [],
     },
 ];

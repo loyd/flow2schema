@@ -1,13 +1,13 @@
 type Type = {
-    a: 'one' | 'two' | number,
+    a: 'one' | 'two' | string,
 };
 
 interface Interface {
-    a: 'one' | 'two' | number;
+    a: 'one' | 'two' | string;
 }
 
 class Class {
-    a: 'one' | 'two' | number;
+    a: 'one' | 'two' | string;
 }
 
 export {Type, Interface, Class};

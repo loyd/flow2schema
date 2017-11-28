@@ -3,7 +3,7 @@ type Type = {
 
     foo(): void,
 
-    b: number,
+    b: boolean,
 
     bar: () => void,
 };
@@ -13,7 +13,7 @@ interface Interface {
 
     foo(): void;
 
-    b: number;
+    b: boolean;
 
     bar: () => void;
 }
@@ -25,7 +25,7 @@ class Class {
     get bar() {}
     set bar(a) {}
 
-    b: number;
+    b: boolean;
 
     baz: () => void;
 }

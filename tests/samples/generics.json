@@ -1,19 +1,21 @@
 {
-    "schemas": [
+    "types": [
         {
-            "type": "record",
-            "name": "A__string_double",
-            "namespace": "generics",
+            "id": ["generics", "A", "string", "boolean"],
+            "kind": "record",
             "fields": [
-                {"name": "t", "type": "string"},
-                {"name": "k", "type": "double"}
+                {"name": "t", "value": {"kind": "string"}, "required": true},
+                {"name": "k", "value": {"kind": "boolean"}, "required": true}
             ]
         },
         {
-            "type": "record",
-            "name": "X",
-            "namespace": "generics",
-            "fields": [{"name": "a", "type": "A__string_double"}]
+            "id": ["generics", "X"],
+            "kind": "record",
+            "fields": [{
+                "name": "a",
+                "value": {"kind": "reference", "to": ["generics", "A", "string", "boolean"]},
+                "required": true
+            }]
         }
     ]
 }

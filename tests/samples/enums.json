@@ -1,30 +1,48 @@
 {
-    "schemas": [
+    "types": [
         {
-            "type": "record",
-            "name": "Type",
-            "namespace": "enums",
+            "id": ["enums", "Type"],
+            "kind": "record",
             "fields": [{
                 "name": "a",
-                "type": {"type": "enum", "symbols": ["one", "two"]}
+                "value": {
+                    "kind": "union",
+                    "variants": [
+                        {"kind": "literal", "value": "one"},
+                        {"kind": "literal", "value": "two"}
+                    ]
+                },
+                "required": true
             }]
         },
         {
-            "type": "record",
-            "name": "Interface",
-            "namespace": "enums",
+            "id": ["enums", "Interface"],
+            "kind": "record",
             "fields": [{
                 "name": "a",
-                "type": {"type": "enum", "symbols": ["one", "two"]}
+                "value": {
+                    "kind": "union",
+                    "variants": [
+                        {"kind": "literal", "value": "one"},
+                        {"kind": "literal", "value": "two"}
+                    ]
+                },
+                "required": true
             }]
         },
         {
-            "type": "record",
-            "name": "Class",
-            "namespace": "enums",
+            "id": ["enums", "Class"],
+            "kind": "record",
             "fields": [{
                 "name": "a",
-                "type": {"type": "enum", "symbols": ["one", "two"]}
+                "value": {
+                    "kind": "union",
+                    "variants": [
+                        {"kind": "literal", "value": "one"},
+                        {"kind": "literal", "value": "two"}
+                    ]
+                },
+                "required": true
             }]
         }
     ]

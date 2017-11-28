@@ -4,7 +4,7 @@ type A<T, K> = {
 };
 
 type X = {
-    a: A<string, number>,
+    a: A<string, boolean>,
 };
 
 export {X};

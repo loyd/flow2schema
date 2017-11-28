@@ -1,39 +1,33 @@
 {
-    "schemas": [
+    "types": [
         {
-            "type": "record",
-            "name": "Type",
-            "namespace": "pragmas",
+            "id": ["pragmas", "Type"],
+            "kind": "record",
             "fields": [
-                {"name": "a", "type": "int"},
-                {"name": "b", "type": "long"},
-                {"name": "c", "type": "float"},
-                {"name": "d", "type": "double"},
-                {"name": "e", "type": {"type": "fixed", "size": 10}}
+                {"name": "a", "value": {"kind": "number", "repr": "i32"}, "required": true},
+                {"name": "b", "value": {"kind": "number", "repr": "i64"}, "required": true},
+                {"name": "c", "value": {"kind": "number", "repr": "f32"}, "required": true},
+                {"name": "d", "value": {"kind": "number", "repr": "f64"}, "required": true}
             ]
         },
         {
-            "type": "record",
-            "name": "Interface",
-            "namespace": "pragmas",
+            "id": ["pragmas", "Interface"],
+            "kind": "record",
             "fields": [
-                {"name": "a", "type": "int"},
-                {"name": "b", "type": "long"},
-                {"name": "c", "type": "float"},
-                {"name": "d", "type": "double"},
-                {"name": "e", "type": {"type": "fixed", "size": 10}}
+                {"name": "a", "value": {"kind": "number", "repr": "i32"}, "required": true},
+                {"name": "b", "value": {"kind": "number", "repr": "i64"}, "required": true},
+                {"name": "c", "value": {"kind": "number", "repr": "f32"}, "required": true},
+                {"name": "d", "value": {"kind": "number", "repr": "f64"}, "required": true}
             ]
         },
         {
-            "type": "record",
-            "name": "Class",
-            "namespace": "pragmas",
+            "id": ["pragmas", "Class"],
+            "kind": "record",
             "fields": [
-                {"name": "a", "type": "int"},
-                {"name": "b", "type": "long"},
-                {"name": "c", "type": "float"},
-                {"name": "d", "type": "double"},
-                {"name": "e", "type": {"type": "fixed", "size": 10}}
+                {"name": "a", "value": {"kind": "number", "repr": "i32"}, "required": true},
+                {"name": "b", "value": {"kind": "number", "repr": "i64"}, "required": true},
+                {"name": "c", "value": {"kind": "number", "repr": "f32"}, "required": true},
+                {"name": "d", "value": {"kind": "number", "repr": "f64"}, "required": true}
             ]
         }
     ]

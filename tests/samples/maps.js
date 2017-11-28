@@ -1,9 +1,9 @@
 type Type = {
-    [string]: number,
+    [string]: boolean,
 };
 
 interface Interface {
-    [string]: number;
+    [string]: boolean;
 }
 
 export {Type, Interface};
