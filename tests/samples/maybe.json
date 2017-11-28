@@ -1,0 +1,67 @@
+{
+    "types": [
+        {
+            "id": ["maybe", "X"],
+            "kind": "record",
+            "fields": [
+                {
+                    "name": "x",
+                    "value": {"kind": "maybe", "value": {"kind": "string"}},
+                    "required": true
+                },
+                {
+                    "name": "xx",
+                    "value": {"kind": "maybe", "value": {"kind": "array", "items": {"kind": "string"}}},
+                    "required": true
+                },
+                {
+                    "name": "xxx",
+                    "value": {"kind": "array", "items": {"kind": "maybe", "value": {"kind": "string"}}},
+                    "required": true
+                }
+            ]
+        },
+        {
+            "id": ["maybe", "Y"],
+            "kind": "record",
+            "fields": [
+                {
+                    "name": "y",
+                    "value": {"kind": "maybe", "value": {"kind": "string"}},
+                    "required": true
+                },
+                {
+                    "name": "yy",
+                    "value": {"kind": "maybe", "value": {"kind": "array", "items": {"kind": "string"}}},
+                    "required": true
+                },
+                {
+                    "name": "yyy",
+                    "value": {"kind": "array", "items": {"kind": "maybe", "value": {"kind": "string"}}},
+                    "required": true
+                }
+            ]
+        },
+        {
+            "id": ["maybe", "Z"],
+            "kind": "record",
+            "fields": [
+                {
+                    "name": "z",
+                    "value": {"kind": "maybe", "value": {"kind": "string"}},
+                    "required": true
+                },
+                {
+                    "name": "zz",
+                    "value": {"kind": "maybe", "value": {"kind": "array", "items": {"kind": "string"}}},
+                    "required": true
+                },
+                {
+                    "name": "zzz",
+                    "value": {"kind": "array", "items": {"kind": "maybe", "value": {"kind": "string"}}},
+                    "required": true
+                }
+            ]
+        }
+    ]
+}
