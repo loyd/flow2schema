@@ -71,6 +71,28 @@ function stripMaybe(params: (?Type)[], resolve: TypeId => Type): ?Type {
     return clone(maybe.value);
 }
 
+function shape(params: (?Type)[], resolve: TypeId => Type): ?Type {
+    invariant(params.length === 1);
+
+    const [ref] = params;
+
+    invariant(ref && ref.kind === 'reference');
+
+    const record = resolve(ref.to);
+
+    invariant(record.kind === 'record');
+
+    const fields = wu(record.fields)
+        .map(clone)
+        .tap(field => field.required = false)
+        .toArray();
+
+    return {
+        kind: 'record',
+        fields,
+    };
+}
+
 export default {
     Object: object,
     Buffer: buffer,
@@ -79,4 +101,5 @@ export default {
     $PropertyType: elemType,
     $ElementType: elemType,
     $NonMaybeType: stripMaybe,
+    $Shape: shape,
 };
