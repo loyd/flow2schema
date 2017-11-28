@@ -1,6 +1,6 @@
 import wu from 'wu';
 
-import {invariant} from './utils';
+import {invariant, clone} from './utils';
 import type {Type, TypeId} from './types';
 
 function object(params: (?Type)[]): ?Type {
@@ -50,7 +50,25 @@ function elemType(params: (?Type)[], resolve: TypeId => Type): ?Type {
 
     const field = wu(record.fields).find(field => field.name === key.value);
 
-    return field ? Object.assign({}, (field.value: $FlowFixMe)) : null;
+    // TODO: what about removing "id"?
+    return field ? clone(field.value) : null;
+}
+
+function stripMaybe(params: (?Type)[], resolve: TypeId => Type): ?Type {
+    invariant(params.length === 1);
+
+    const [ref] = params;
+
+    invariant(ref && ref.kind === 'reference');
+
+    const maybe = resolve(ref.to);
+
+    // TODO: support for unions and nested maybe.
+    if (maybe.kind !== 'maybe') {
+        return clone(ref);
+    }
+
+    return clone(maybe.value);
 }
 
 export default {
@@ -60,4 +78,5 @@ export default {
     $ReadOnlyArray: array,
     $PropertyType: elemType,
     $ElementType: elemType,
+    $NonMaybeType: stripMaybe,
 };

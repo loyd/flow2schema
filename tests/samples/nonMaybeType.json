@@ -1,0 +1,13 @@
+{
+    "types": [
+        {
+            "id": ["nonMaybeType", "X"],
+            "kind": "maybe",
+            "value": {"kind": "string"}
+        },
+        {
+            "id": ["nonMaybeType", "Y"],
+            "kind": "string"
+        }
+    ]
+}
