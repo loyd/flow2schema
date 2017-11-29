@@ -117,6 +117,30 @@ function keys(params: (?Type)[], resolve: TypeId => Type): ?Type {
         .map(name => ({kind: 'literal', value: name}))
         .toArray();
 
+    // TODO: empty records.
+
+    return {
+        kind: 'union',
+        variants,
+    };
+}
+
+function values(params: (?Type)[], resolve: TypeId => Type): ?Type {
+    invariant(params.length === 1);
+
+    const [ref] = params;
+
+    invariant(ref && ref.kind === 'reference');
+
+    const record = resolve(ref.to);
+
+    invariant(record.kind === 'record');
+
+    const variants =  wu(record.fields).pluck('value').toArray();
+
+    // TODO: empty records.
+    // TODO: dedup values.
+
     return {
         kind: 'union',
         variants,
@@ -135,7 +159,7 @@ export default {
     $ReadOnly: unwrap,
     $Exact: unwrap, // TODO: another semantic for exact types?
     $Keys: keys,
-    // TODO: $Values
+    $Values: values,
     // TODO: $Diff
     // TODO: $All
     // TODO: $Either
