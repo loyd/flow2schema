@@ -1,0 +1,20 @@
+{
+    "types": [
+        {
+            "id": ["keys", "X"],
+            "kind": "record",
+            "fields": [
+                {"name": "a", "value": {"kind": "string"}, "required": true},
+                {"name": "b", "value": {"kind": "boolean"}, "required": true}
+            ]
+        },
+        {
+            "id": ["keys", "Y"],
+            "kind": "union",
+            "variants": [
+                {"kind": "literal", "value": "a"},
+                {"kind": "literal", "value": "b"}
+            ]
+        }
+    ]
+}

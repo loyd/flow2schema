@@ -101,6 +101,28 @@ function unwrap(params: (?Type)[]): ?Type {
     return type ? clone(type) : null;
 }
 
+function keys(params: (?Type)[], resolve: TypeId => Type): ?Type {
+    invariant(params.length === 1);
+
+    const [ref] = params;
+
+    invariant(ref && ref.kind === 'reference');
+
+    const record = resolve(ref.to);
+
+    invariant(record.kind === 'record');
+
+    const variants =  wu(record.fields)
+        .pluck('name')
+        .map(name => ({kind: 'literal', value: name}))
+        .toArray();
+
+    return {
+        kind: 'union',
+        variants,
+    };
+}
+
 export default {
     Object: object,
     Buffer: buffer,
@@ -112,7 +134,9 @@ export default {
     $Shape: shape,
     $ReadOnly: unwrap,
     $Exact: unwrap, // TODO: another semantic for exact types?
-    // TODO: $Keys
+    $Keys: keys,
     // TODO: $Values
     // TODO: $Diff
+    // TODO: $All
+    // TODO: $Either
 };
