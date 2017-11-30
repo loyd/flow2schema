@@ -1,0 +1,9 @@
+types:
+-   kind: any
+    id: [any, X]
+-   kind: record
+    fields:
+    -   name: y
+        value: {kind: any}
+        required: true
+    id: [any, Y]

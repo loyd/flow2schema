@@ -1,0 +1,26 @@
+types:
+-   kind: record
+    fields:
+    -   name: x
+        value:
+            kind: union
+            variants:
+            - {kind: boolean}
+            - {kind: string}
+        required: true
+    id: [elementType, X, boolean]
+-   kind: record
+    fields:
+    -   name: y
+        value:
+            kind: union
+            variants:
+            - {kind: boolean}
+            - {kind: string}
+        required: true
+    id: [elementType, Y, x]
+-   kind: union
+    variants:
+    - {kind: boolean}
+    - {kind: string}
+    id: [elementType, Z]

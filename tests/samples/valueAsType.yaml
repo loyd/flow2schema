@@ -1,0 +1,19 @@
+types:
+-   kind: record
+    fields:
+    -   name: a
+        value: {kind: literal, value: one}
+        required: true
+    id: [valueAsType, Type]
+-   kind: record
+    fields:
+    -   name: a
+        value: {kind: literal, value: one}
+        required: true
+    id: [valueAsType, Interface]
+-   kind: record
+    fields:
+    -   name: a
+        value: {kind: literal, value: one}
+        required: true
+    id: [valueAsType, Class]

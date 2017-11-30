@@ -1,0 +1,9 @@
+types:
+-   kind: mixed
+    id: [mixed, X]
+-   kind: record
+    fields:
+    -   name: y
+        value: {kind: mixed}
+        required: true
+    id: [mixed, Y]

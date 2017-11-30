@@ -1,0 +1,19 @@
+types:
+-   kind: record
+    fields:
+    -   name: x
+        value: {kind: string}
+        required: true
+    -   name: y
+        value: {kind: boolean}
+        required: true
+    id: [readOnly, X]
+-   kind: reference
+    to: [readOnly, X]
+    id: [readOnly, Y]
+-   kind: record
+    fields:
+    -   name: z
+        value: {kind: string}
+        required: true
+    id: [readOnly, Z]

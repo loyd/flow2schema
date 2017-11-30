@@ -10,6 +10,21 @@ export function last<T>(list: T[]): T {
     return list[list.length - 1];
 }
 
-export function clone<T: Object>(obj: T): T {
-    return Object.assign({}, obj);
+export function clone<T>(that: T): T {
+    if (that == null || typeof that !== 'object') {
+        return that;
+    }
+
+    if (that instanceof Array) {
+        return that.map(clone);
+    }
+
+    const obj = {};
+
+    for (const key in that) {
+        obj[key] = clone(that[key]);
+    }
+
+    // TODO: we skip complex objects.
+    return (obj: $FlowFixMe);
 }

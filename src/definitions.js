@@ -56,7 +56,7 @@ function processInterfaceDeclaration(ctx: Context, node: InterfaceDeclaration) {
 
         parts.push({
             kind: 'reference',
-            to: type.id,
+            to: type.id.slice(),
         });
     }
 
@@ -89,7 +89,7 @@ function processClassDeclaration(ctx: Context, node: ClassDeclaration) {
 
     const baseRef = {
         kind: 'reference',
-        to: base.id,
+        to: base.id.slice(),
     };
 
     ctx.define(name, {
@@ -326,7 +326,7 @@ function makeReference(ctx: Context, node: GenericTypeAnnotation): ?Type {
 
     return {
         kind: 'reference',
-        to: type.id,
+        to: type.id.slice(),
     };
 }
 

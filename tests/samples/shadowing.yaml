@@ -1,0 +1,20 @@
+types:
+-   kind: record
+    fields: []
+    id: [shadowing, '1', Buffer]
+-   kind: record
+    fields:
+    -   name: y
+        value:
+            kind: reference
+            to: [shadowing, '1', Buffer]
+        required: true
+    id: [shadowing, '1', Y]
+-   kind: record
+    fields:
+    -   name: x
+        value:
+            kind: reference
+            to: [Buffer]
+        required: true
+    id: [shadowing, X]

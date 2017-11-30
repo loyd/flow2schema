@@ -1,6 +1,7 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as yaml from 'yaml-js';
 
 import collect from '../src';
 
@@ -10,11 +11,11 @@ function run(title) {
     // Run the collector only if the suite will be checked.
     before(() => {
         actual = collect(title + '.js');
-        expected = JSON.parse(fs.readFileSync(title + '.json', 'utf8'));
+        expected = yaml.load(fs.readFileSync(title + '.yaml', 'utf8'));
     });
 
     it('should provide expected types', () => {
-        assert.deepEqual(actual.types, expected.types);
+        assert.deepEqual((actual: any).types, (expected: any).types);
     });
 }
 

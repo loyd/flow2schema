@@ -28,7 +28,8 @@
         "json-stringify-pretty-compact": "^1.0.4",
         "optimist": "^0.6.1",
         "resolve": "^1.5.0",
-        "wu": "^2.1.0"
+        "wu": "^2.1.0",
+        "yaml-js": "^0.2.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.0.0-beta.32",

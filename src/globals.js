@@ -136,7 +136,10 @@ function values(params: (?Type)[], resolve: TypeId => Type): ?Type {
 
     invariant(record.kind === 'record');
 
-    const variants =  wu(record.fields).pluck('value').toArray();
+    const variants =  wu(record.fields)
+        .pluck('value')
+        .map(clone)
+        .toArray();
 
     // TODO: empty records.
     // TODO: dedup values.

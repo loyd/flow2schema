@@ -1,4 +1,4 @@
-import stringify from 'json-stringify-pretty-compact';
+import * as yaml from 'yaml-js';
 import * as optimist from 'optimist';
 
 import collect from '.';
@@ -17,7 +17,12 @@ function run(path: string) {
     try {
         const {types} = collect(path);
 
-        console.log(stringify(types, {maxLength: 100}));
+        const output = yaml.dump({types}, null, null, {
+            indent: 4,
+            width: 100,
+        });
+
+        console.log(output.trimRight());
     } catch (ex) {
         console.error(ex.message);
         console.error(ex.stack);

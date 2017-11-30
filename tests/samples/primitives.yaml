@@ -1,0 +1,46 @@
+types:
+-   kind: record
+    fields:
+    -   name: a
+        value: {kind: string}
+        required: true
+    -   name: b
+        value: {kind: number, repr: f64}
+        required: true
+    -   name: c
+        value: {kind: boolean}
+        required: true
+    -   name: d
+        value: {kind: literal, value: null}
+        required: true
+    id: [primitives, Type]
+-   kind: record
+    fields:
+    -   name: a
+        value: {kind: string}
+        required: true
+    -   name: b
+        value: {kind: number, repr: f64}
+        required: true
+    -   name: c
+        value: {kind: boolean}
+        required: true
+    -   name: d
+        value: {kind: literal, value: null}
+        required: true
+    id: [primitives, Interface]
+-   kind: record
+    fields:
+    -   name: a
+        value: {kind: string}
+        required: true
+    -   name: b
+        value: {kind: number, repr: f64}
+        required: true
+    -   name: c
+        value: {kind: boolean}
+        required: true
+    -   name: d
+        value: {kind: literal, value: null}
+        required: true
+    id: [primitives, Class]

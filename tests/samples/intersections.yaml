@@ -1,0 +1,52 @@
+types:
+-   kind: record
+    fields:
+    -   name: a
+        value: {kind: number, repr: f64}
+        required: true
+    id: [intersections, A]
+-   kind: record
+    fields:
+    -   name: b
+        value: {kind: string}
+        required: true
+    id: [intersections, B]
+-   kind: intersection
+    parts:
+    -   kind: reference
+        to: [intersections, A]
+    -   kind: reference
+        to: [intersections, B]
+    id: [intersections, X]
+-   kind: record
+    fields:
+    -   name: c
+        value: {kind: boolean}
+        required: true
+    id: [intersections, C]
+-   kind: record
+    fields:
+    -   name: y
+        value:
+            kind: intersection
+            parts:
+            -   kind: reference
+                to: [intersections, A]
+            -   kind: reference
+                to: [intersections, B]
+            -   kind: reference
+                to: [intersections, C]
+        required: true
+    id: [intersections, Y]
+-   kind: record
+    fields:
+    -   name: z
+        value:
+            kind: intersection
+            parts:
+            -   kind: reference
+                to: [intersections, A]
+            -   kind: reference
+                to: [intersections, C]
+        required: true
+    id: [intersections, Z]
