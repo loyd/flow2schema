@@ -6,6 +6,8 @@ declare module 'wu' {
     declare export default class Wu<T> {
         static <T>(Iterable<T>): Wu<T>;
 
+        static values<T: Object>(T): Wu<$Values<T>>;
+
         tap(T => mixed): Wu<T>;
 
         map<U>(T => U): Wu<U>;
@@ -23,6 +25,8 @@ declare module 'wu' {
 
         some(): boolean;
         some(T => boolean): boolean;
+
+        forEach(T => mixed): void;
 
         toArray(): T[];
     }
