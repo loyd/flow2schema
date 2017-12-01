@@ -11,9 +11,9 @@ import declarationGroup from './declarations';
 import Module from './module';
 import Scope from './scope';
 import Context from './context';
-import {invariant} from './utils';
-import type Parser from './parser';
-import type {Type, TypeId} from './types';
+import {invariant} from '../utils';
+import type Parser from '../parser';
+import type {Type, TypeId} from '../types';
 import type {TemplateParam} from './query';
 
 const VISITOR = Object.assign({}, definitionGroup, declarationGroup);

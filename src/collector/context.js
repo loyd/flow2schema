@@ -2,9 +2,9 @@ import wu from 'wu';
 import type {Node} from '@babel/types';
 
 import Scope from './scope';
-import Collector from './collector';
-import {invariant} from './utils';
-import type {Type} from './types';
+import Collector from '.';
+import {invariant} from '../utils';
+import type {Type} from '../types';
 import type {TemplateParam, ExternalInfo} from './query';
 
 export default class Context {

@@ -18,13 +18,13 @@ import Context from './context';
 import type {
     Type, RecordType, Field, ArrayType, TupleType, MapType, UnionType, IntersectionType,
     MaybeType, NumberType, StringType, BooleanType, LiteralType, ReferenceType,
-} from './types';
+} from '../types';
 
-import * as t from './types';
+import * as t from '../types';
 
 import {extractPragmas} from './pragmas';
 
-import {invariant} from './utils';
+import {invariant} from '../utils';
 
 function processTypeAlias(ctx: Context, node: TypeAlias) {
     const {name} = node.id;

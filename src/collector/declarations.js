@@ -14,7 +14,7 @@ import {
     isStringLiteral, isTypeAlias, isVariableDeclaration,
 } from '@babel/types';
 
-import {invariant} from './utils';
+import {invariant} from '../utils';
 import Context from './context';
 import type {ExternalInfo, TemplateParam} from './query';
 

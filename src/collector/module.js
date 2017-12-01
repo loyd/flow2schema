@@ -2,7 +2,7 @@ import * as pathlib from 'path';
 import * as resolve from 'resolve';
 
 import type Scope from './scope';
-import type {Type, TypeId} from './types';
+import type {Type, TypeId} from '../types';
 import type {Query} from './query';
 
 export default class Module {

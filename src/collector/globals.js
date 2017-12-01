@@ -1,8 +1,8 @@
 import wu from 'wu';
 
-import {invariant} from './utils';
-import type {Type, TypeId} from './types';
-import * as t from './types';
+import {invariant} from '../utils';
+import type {Type, TypeId} from '../types';
+import * as t from '../types';
 
 function object(params: (?Type)[]): ?Type {
     invariant(params.length === 0);

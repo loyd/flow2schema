@@ -1,7 +1,7 @@
 import type {Node} from '@babel/types';
 
 import type Scope from './scope';
-import type {Type, TypeId} from './types';
+import type {Type, TypeId} from '../types';
 
 export type Query =
     | Unknown

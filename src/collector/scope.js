@@ -1,9 +1,9 @@
 import wu from 'wu';
 import type {Node} from '@babel/types';
 
-import {invariant, last} from './utils';
+import {invariant, last} from '../utils';
 import type Module from './module';
-import type {Type, TypeId} from './types';
+import type {Type, TypeId} from '../types';
 import type {Query, Template, TemplateParam, ExternalInfo, SpecialFn} from './query';
 
 export default class Scope {

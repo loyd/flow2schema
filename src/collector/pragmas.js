@@ -1,7 +1,7 @@
-import {invariant} from './utils';
+import {invariant} from '../utils';
 
-import type {Type} from './types';
-import * as t from './types';
+import type {Type} from '../types';
+import * as t from '../types';
 
 export type Pragma =
     | TypePragma;
