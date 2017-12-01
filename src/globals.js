@@ -1,35 +1,26 @@
 import wu from 'wu';
 
-import {invariant, clone} from './utils';
+import {invariant} from './utils';
 import type {Type, TypeId} from './types';
+import * as t from './types';
 
 function object(params: (?Type)[]): ?Type {
     invariant(params.length === 0);
 
-    return {
-        kind: 'map',
-        keys: {kind: 'mixed'},
-        values: {kind: 'mixed'},
-    };
+    return t.createMap(t.createMixed(), t.createMixed());
 }
 
 function buffer(params: (?Type)[]): ?Type {
     invariant(params.length === 0);
 
-    return {
-        kind: 'reference',
-        to: ['Buffer'],
-    };
+    return t.createReference(['Buffer']);
 }
 
 function array(params: (?Type)[]): ?Type {
     invariant(params.length === 1);
     invariant(params[0]);
 
-    return {
-        kind: 'array',
-        items: params[0],
-    };
+    return t.createArray(t.clone(params[0]));
 }
 
 function elemType(params: (?Type)[], resolve: TypeId => Type): ?Type {
@@ -51,7 +42,7 @@ function elemType(params: (?Type)[], resolve: TypeId => Type): ?Type {
     const field = wu(record.fields).find(field => field.name === key.value);
 
     // TODO: what about removing "id"?
-    return field ? clone(field.value) : null;
+    return field ? t.clone(field.value) : null;
 }
 
 function stripMaybe(params: (?Type)[], resolve: TypeId => Type): ?Type {
@@ -65,10 +56,10 @@ function stripMaybe(params: (?Type)[], resolve: TypeId => Type): ?Type {
 
     // TODO: support for unions and nested maybe.
     if (maybe.kind !== 'maybe') {
-        return clone(ref);
+        return t.clone(ref);
     }
 
-    return clone(maybe.value);
+    return t.clone(maybe.value);
 }
 
 function shape(params: (?Type)[], resolve: TypeId => Type): ?Type {
@@ -83,14 +74,14 @@ function shape(params: (?Type)[], resolve: TypeId => Type): ?Type {
     invariant(record.kind === 'record');
 
     const fields = wu(record.fields)
-        .map(clone)
-        .tap(field => field.required = false)
+        .map(field => ({
+            name: field.name,
+            value: t.clone(field.value),
+            required: false,
+        }))
         .toArray();
 
-    return {
-        kind: 'record',
-        fields,
-    };
+    return t.createRecord(fields);
 }
 
 function unwrap(params: (?Type)[]): ?Type {
@@ -98,7 +89,7 @@ function unwrap(params: (?Type)[]): ?Type {
 
     const [type] = params;
 
-    return type ? clone(type) : null;
+    return type ? t.clone(type) : null;
 }
 
 function keys(params: (?Type)[], resolve: TypeId => Type): ?Type {
@@ -114,15 +105,12 @@ function keys(params: (?Type)[], resolve: TypeId => Type): ?Type {
 
     const variants =  wu(record.fields)
         .pluck('name')
-        .map(name => ({kind: 'literal', value: name}))
+        .map(t.createLiteral)
         .toArray();
 
     // TODO: empty records.
 
-    return {
-        kind: 'union',
-        variants,
-    };
+    return t.createUnion(variants);
 }
 
 function values(params: (?Type)[], resolve: TypeId => Type): ?Type {
@@ -138,16 +126,13 @@ function values(params: (?Type)[], resolve: TypeId => Type): ?Type {
 
     const variants =  wu(record.fields)
         .pluck('value')
-        .map(clone)
+        .map(t.clone)
         .toArray();
 
     // TODO: empty records.
     // TODO: dedup values.
 
-    return {
-        kind: 'union',
-        variants,
-    };
+    return t.createUnion(variants);
 }
 
 export default {

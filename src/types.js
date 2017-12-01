@@ -92,3 +92,73 @@ export type ReferenceType = BaseType & {
     kind: 'reference',
     to: TypeId,
 };
+
+export const createRecord = (fields: *): RecordType => ({kind: 'record', fields});
+export const createArray = (items: *): ArrayType => ({kind: 'array', items});
+export const createTuple = (items: *): TupleType => ({kind: 'tuple', items});
+export const createMap = (keys: *, values: *): MapType => ({kind: 'map', keys, values});
+export const createUnion = (variants: *): UnionType => ({kind: 'union', variants});
+export const createIntersection = (parts: *): IntersectionType => ({kind: 'intersection', parts});
+export const createMaybe = (value: *): MaybeType => ({kind: 'maybe', value});
+export const createNumber = (repr: *): NumberType => ({kind: 'number', repr});
+export const createString = (): StringType => ({kind: 'string'});
+export const createBoolean = (): BooleanType => ({kind: 'boolean'});
+export const createLiteral = (value: *): LiteralType => ({kind: 'literal', value});
+export const createAny = () => ({kind: 'any'});
+export const createMixed = () => ({kind: 'mixed'});
+export const createReference = (to: *) => ({kind: 'reference', to});
+
+declare function clone(Type): Type;
+declare function clone(TypeId): TypeId;
+declare function clone(?Type): ?Type;
+export function clone(type: ?Type | TypeId): ?Type | TypeId {
+    if (!type) {
+        return null;
+    }
+
+    if (type instanceof Array) {
+        return type.slice();
+    }
+
+    return cloneType(type);
+}
+
+function cloneType(type: Type): Type {
+    switch (type.kind) {
+        case 'record':
+            const fields = type.fields.map(field => ({
+                name: field.name,
+                value: clone(field.value),
+                required: field.required,
+            }));
+
+            return createRecord(fields);
+        case 'array':
+            return createArray(clone(type.items));
+        case 'tuple':
+            return createTuple(type.items.map(clone));
+        case 'map':
+            return createMap(clone(type.keys), clone(type.values));
+        case 'union':
+            return createUnion(type.variants.map(clone));
+        case 'intersection':
+            return createIntersection(type.parts.map(clone));
+        case 'maybe':
+            return createMaybe(clone(type.value));
+        case 'number':
+            return createNumber(type.repr);
+        case 'string':
+            return createString();
+        case 'boolean':
+            return createBoolean();
+        case 'literal':
+            return createLiteral(type.value);
+        case 'any':
+            return createAny();
+        case 'mixed':
+            return createMixed();
+        case 'reference':
+        default:
+            return createReference(type.to.slice());
+    }
+}

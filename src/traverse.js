@@ -16,7 +16,7 @@ export default function* traverse(node: Node): Generator<Node, void, boolean> {
     }
 
     for (const key of keys) {
-        const subNode = (node: Object)[key];
+        const subNode = (node: $FlowFixMe)[key];
 
         if (subNode instanceof Array) {
             for (const node of subNode) {

@@ -20,6 +20,8 @@ import type {
     MaybeType, NumberType, StringType, BooleanType, LiteralType, ReferenceType,
 } from './types';
 
+import * as t from './types';
+
 import {extractPragmas} from './pragmas';
 
 import {invariant} from './utils';
@@ -54,18 +56,16 @@ function processInterfaceDeclaration(ctx: Context, node: InterfaceDeclaration) {
 
         invariant(type.id);
 
-        parts.push({
-            kind: 'reference',
-            to: type.id.slice(),
-        });
+        const reference = t.createReference(t.clone(type.id));
+
+        parts.push(reference);
     }
 
     parts.push(type);
 
-    ctx.define(name, {
-        kind: 'intersection',
-        parts,
-    });
+    const intersection = t.createIntersection(parts);
+
+    ctx.define(name, intersection);
 }
 
 // TODO: type params.
@@ -87,27 +87,22 @@ function processClassDeclaration(ctx: Context, node: ClassDeclaration) {
 
     invariant(base.id);
 
-    const baseRef = {
-        kind: 'reference',
-        to: base.id.slice(),
-    };
+    const baseRef = t.createReference(t.clone(base.id));
+    const intersection = t.createIntersection([baseRef, type]);
 
-    ctx.define(name, {
-        kind: 'intersection',
-        parts: [baseRef, type],
-    });
+    ctx.define(name, intersection);
 }
 
 function makeType(ctx: Context, node: FlowTypeAnnotation): ?Type {
     switch (node.type) {
         case 'NullLiteralTypeAnnotation':
-            return {kind: 'literal', value: null};
+            return t.createLiteral(null);
         case 'BooleanTypeAnnotation':
-            return {kind: 'boolean'};
+            return t.createBoolean();
         case 'NumberTypeAnnotation':
-            return {kind: 'number', repr: 'f64'};
+            return t.createNumber('f64');
         case 'StringTypeAnnotation':
-            return {kind: 'string'};
+            return t.createString();
         case 'TypeAnnotation':
             return makeType(ctx, node.typeAnnotation);
         case 'NullableTypeAnnotation':
@@ -123,13 +118,13 @@ function makeType(ctx: Context, node: FlowTypeAnnotation): ?Type {
         case 'IntersectionTypeAnnotation':
             return makeIntersection(ctx, node);
         case 'StringLiteralTypeAnnotation':
-            return {kind: 'literal', value: node.value};
+            return t.createLiteral(node.value);
         case 'GenericTypeAnnotation':
             return makeReference(ctx, node);
         case 'AnyTypeAnnotation':
-            return {kind: 'any'};
+            return t.createAny();
         case 'MixedTypeAnnotation':
-            return {kind: 'mixed'};
+            return t.createMixed();
         case 'FunctionTypeAnnotation':
             return null;
         default:
@@ -144,10 +139,7 @@ function makeMaybe(ctx: Context, node: NullableTypeAnnotation): ?MaybeType {
         return null;
     }
 
-    return {
-        kind: 'maybe',
-        value: type,
-    };
+    return t.createMaybe(type);
 }
 
 function makeComplexType(ctx: Context, node: ObjectTypeAnnotation): Type {
@@ -168,10 +160,7 @@ function makeComplexType(ctx: Context, node: ObjectTypeAnnotation): Type {
 
     const parts = record.fields.length > 0 ? [record, ...maps] : maps;
 
-    return {
-        kind: 'intersection',
-        parts,
-    };
+    return t.createIntersection(parts);
 }
 
 function makeRecord<T: ObjectTypeProperty | ClassProperty>(ctx: Context, nodes: T[]): RecordType {
@@ -180,10 +169,7 @@ function makeRecord<T: ObjectTypeProperty | ClassProperty>(ctx: Context, nodes: 
         .filter()
         .toArray();
 
-    return {
-        kind: 'record',
-        fields,
-    };
+    return t.createRecord(fields);
 }
 
 function makeField(ctx: Context, node: ObjectTypeProperty | ClassProperty): ?Field {
@@ -238,11 +224,7 @@ function makeMap(ctx: Context, node: ObjectTypeIndexer): ?MapType {
         return null;
     }
 
-    return {
-        kind: 'map',
-        keys,
-        values,
-    };
+    return t.createMap(keys, values);
 }
 
 function makeArrayType(ctx: Context, node: ArrayTypeAnnotation): ?ArrayType {
@@ -252,10 +234,7 @@ function makeArrayType(ctx: Context, node: ArrayTypeAnnotation): ?ArrayType {
         return null;
     }
 
-    return {
-        kind: 'array',
-        items,
-    };
+    return t.createArray(items);
 }
 
 function makeTupleType(ctx: Context, node: TupleTypeAnnotation): ?TupleType {
@@ -266,10 +245,7 @@ function makeTupleType(ctx: Context, node: TupleTypeAnnotation): ?TupleType {
         return null;
     }
 
-    return {
-        kind: 'tuple',
-        items,
-    };
+    return t.createTuple(items);
 }
 
 function makeUnionType(ctx: Context, node: UnionTypeAnnotation): ?Type {
@@ -286,10 +262,7 @@ function makeUnionType(ctx: Context, node: UnionTypeAnnotation): ?Type {
         return variants[0];
     }
 
-    return {
-        kind: 'union',
-        variants,
-    };
+    return t.createUnion(variants);
 }
 
 function makeIntersection(ctx: Context, node: IntersectionTypeAnnotation): ?Type {
@@ -307,10 +280,7 @@ function makeIntersection(ctx: Context, node: IntersectionTypeAnnotation): ?Type
         return parts[0];
     }
 
-    return {
-        kind: 'intersection',
-        parts,
-    };
+    return t.createIntersection(parts);
 }
 
 function makeReference(ctx: Context, node: GenericTypeAnnotation): ?Type {
@@ -324,10 +294,7 @@ function makeReference(ctx: Context, node: GenericTypeAnnotation): ?Type {
         return type;
     }
 
-    return {
-        kind: 'reference',
-        to: type.id.slice(),
-    };
+    return t.createReference(t.clone(type.id));
 }
 
 export default {

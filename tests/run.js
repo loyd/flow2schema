@@ -7,7 +7,7 @@ import wu from 'wu';
 import collect from '../src';
 
 function run(title) {
-    let actual, expected: any;
+    let actual, expected: $FlowFixMe;
 
     // Run the collector only if the suite will be checked.
     before(() => {

@@ -1,6 +1,7 @@
 import {invariant} from './utils';
 
 import type {Type} from './types';
+import * as t from './types';
 
 export type Pragma =
     | TypePragma;
@@ -21,15 +22,10 @@ export function extractPragmas(text: string): Pragma[] {
 
         invariant(['i32', 'i64', 'u32', 'u64', 'f32', 'f64'].includes(repr));
 
-        const pragma = {
+        pragmas.push({
             kind: 'type',
-            value: {
-                kind: 'number',
-                repr,
-            },
-        };
-
-        pragmas.push(pragma);
+            value: t.createNumber(repr),
+        });
     }
 
     return pragmas;
