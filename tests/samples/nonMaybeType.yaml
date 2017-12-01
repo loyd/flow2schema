@@ -1,6 +1,0 @@
-types:
--   kind: maybe
-    value: {kind: string}
-    id: [nonMaybeType, X]
--   kind: string
-    id: [nonMaybeType, Y]

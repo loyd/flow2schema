@@ -7,12 +7,12 @@ import wu from 'wu';
 import collect from '../src';
 
 function run(title) {
-    let actual, expected: $FlowFixMe;
+    let actual, expected;
 
     // Run the collector only if the suite will be checked.
     before(() => {
-        actual = collect(title + '.js');
-        expected = yaml.load(fs.readFileSync(title + '.yaml', 'utf8'));
+        actual = collect(title + '/source.js');
+        expected = yaml.load(fs.readFileSync(title + '/types.yaml', 'utf8'));
     });
 
     it('should not include cycles', () => {
@@ -20,7 +20,7 @@ function run(title) {
     });
 
     it('should provide expected types', () => {
-        assert.deepEqual(actual.types, expected.types);
+        assert.deepEqual(actual.types, expected);
     });
 }
 
@@ -47,13 +47,9 @@ function detectCycles(obj: mixed, cycles: Set<mixed> = new Set, objs: Set<mixed>
 function main() {
     process.chdir(path.join(__dirname, 'samples'));
 
-    fs.readdirSync('.')
-        .filter(name => path.extname(name) === '.js')
-        .forEach(name => {
-            const title = path.basename(name, '.js');
-
-            describe(title, () => run(title));
-        });
+    for (const title of fs.readdirSync('.')) {
+        describe(title, () => run(title));
+    }
 }
 
 main();

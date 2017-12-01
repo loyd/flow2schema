@@ -1,7 +1,0 @@
-types:
--   kind: record
-    fields:
-    -   name: xxx
-        value: {kind: string}
-        required: true
-    id: [skipStatics, X]

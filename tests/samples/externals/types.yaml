@@ -1,0 +1,94 @@
+-   kind: record
+    fields:
+    -   name: a
+        value: {kind: boolean}
+        required: true
+    id: [externals, modules, first, A]
+-   kind: record
+    fields:
+    -   name: b
+        value: {kind: string}
+        required: true
+    id: [externals, modules, first, B]
+-   kind: record
+    fields:
+    -   name: c
+        value: {kind: number, repr: f64}
+        required: true
+    id: [externals, modules, first, CC]
+-   kind: record
+    fields:
+    -   name: d
+        value: {kind: number, repr: f64}
+        required: true
+    id: [externals, modules, first, D]
+-   kind: record
+    fields:
+    -   name: a
+        value:
+            kind: reference
+            to: [externals, modules, first, A]
+        required: true
+    -   name: b
+        value:
+            kind: reference
+            to: [externals, modules, first, B]
+        required: true
+    -   name: c
+        value:
+            kind: reference
+            to: [externals, modules, first, CC]
+        required: true
+    -   name: d
+        value:
+            kind: reference
+            to: [externals, modules, first, D]
+        required: true
+    id: [externals, X]
+-   kind: record
+    fields:
+    -   name: n
+        value: {kind: boolean}
+        required: true
+    id: [externals, modules, second, N]
+-   kind: record
+    fields:
+    -   name: m
+        value: {kind: string}
+        required: true
+    id: [externals, modules, second, M]
+-   kind: record
+    fields:
+    -   name: k
+        value: {kind: number, repr: f64}
+        required: true
+    id: [externals, modules, second, KK]
+-   kind: record
+    fields:
+    -   name: p
+        value: {kind: number, repr: f64}
+        required: true
+    id: [externals, modules, second, P]
+-   kind: record
+    fields:
+    -   name: n
+        value:
+            kind: reference
+            to: [externals, modules, second, N]
+        required: true
+    -   name: m
+        value:
+            kind: reference
+            to: [externals, modules, second, M]
+        required: true
+    -   name: k
+        value:
+            kind: reference
+            to: [externals, modules, second, KK]
+        required: true
+    -   name: p
+        value:
+            kind: reference
+            to: [externals, modules, second, P]
+        required: true
+    id: [externals, Y]

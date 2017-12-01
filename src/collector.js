@@ -48,8 +48,8 @@ export default class Collector {
         const ast = this.parser.parse(code);
 
         // TODO: customize it.
-        const id = pathToId(path);
-
+        // XXX: replace with normal resolver and path-to-id converter.
+        const id = pathToId(path.replace(/\/source\.js$/, ''));
         module = new Module(id, path);
 
         const scope = this._global.extend(module);

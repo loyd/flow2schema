@@ -1,0 +1,33 @@
+-   kind: record
+    fields:
+    -   name: a
+        value: {kind: string}
+        required: true
+    -   name: b
+        value: {kind: boolean}
+        required: true
+    -   name: c
+        value: {kind: string}
+        required: true
+    id: [skipFunctions, Type]
+-   kind: record
+    fields:
+    -   name: a
+        value: {kind: string}
+        required: true
+    -   name: b
+        value: {kind: boolean}
+        required: true
+    -   name: c
+        value: {kind: string}
+        required: true
+    id: [skipFunctions, Interface]
+-   kind: record
+    fields:
+    -   name: a
+        value: {kind: string}
+        required: true
+    -   name: b
+        value: {kind: boolean}
+        required: true
+    id: [skipFunctions, Class]

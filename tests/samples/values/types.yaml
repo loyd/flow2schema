@@ -1,0 +1,14 @@
+-   kind: record
+    fields:
+    -   name: a
+        value: {kind: string}
+        required: true
+    -   name: b
+        value: {kind: boolean}
+        required: true
+    id: [values, X]
+-   kind: union
+    variants:
+    - {kind: string}
+    - {kind: boolean}
+    id: [values, Y]

@@ -1,0 +1,22 @@
+-   kind: map
+    keys: {kind: mixed}
+    values: {kind: mixed}
+    id: [objects, X]
+-   kind: record
+    fields:
+    -   name: y
+        value:
+            kind: map
+            keys: {kind: mixed}
+            values: {kind: mixed}
+        required: true
+    id: [objects, Y]
+-   kind: record
+    fields:
+    -   name: z
+        value:
+            kind: map
+            keys: {kind: mixed}
+            values: {kind: mixed}
+        required: true
+    id: [objects, Z]

@@ -1,0 +1,54 @@
+-   kind: record
+    fields:
+    -   name: a
+        value:
+            kind: array
+            items: {kind: string}
+        required: true
+    -   name: b
+        value:
+            kind: array
+            items: {kind: string}
+        required: true
+    -   name: c
+        value:
+            kind: array
+            items: {kind: string}
+        required: true
+    id: [arrays, Type]
+-   kind: record
+    fields:
+    -   name: a
+        value:
+            kind: array
+            items: {kind: string}
+        required: true
+    -   name: b
+        value:
+            kind: array
+            items: {kind: string}
+        required: true
+    -   name: c
+        value:
+            kind: array
+            items: {kind: string}
+        required: true
+    id: [arrays, Interface]
+-   kind: record
+    fields:
+    -   name: a
+        value:
+            kind: array
+            items: {kind: string}
+        required: true
+    -   name: b
+        value:
+            kind: array
+            items: {kind: string}
+        required: true
+    -   name: c
+        value:
+            kind: array
+            items: {kind: string}
+        required: true
+    id: [arrays, Class]

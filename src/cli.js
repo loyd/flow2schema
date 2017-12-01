@@ -17,7 +17,7 @@ function run(path: string) {
     try {
         const {types} = collect(path);
 
-        const output = yaml.dump({types}, null, null, {
+        const output = yaml.dump(types, null, null, {
             indent: 4,
             width: 100,
         });

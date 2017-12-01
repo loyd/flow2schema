@@ -1,0 +1,30 @@
+-   kind: record
+    fields:
+    -   name: a
+        value:
+            kind: union
+            variants:
+            - {kind: literal, value: one}
+            - {kind: literal, value: two}
+        required: true
+    id: [enums, Type]
+-   kind: record
+    fields:
+    -   name: a
+        value:
+            kind: union
+            variants:
+            - {kind: literal, value: one}
+            - {kind: literal, value: two}
+        required: true
+    id: [enums, Interface]
+-   kind: record
+    fields:
+    -   name: a
+        value:
+            kind: union
+            variants:
+            - {kind: literal, value: one}
+            - {kind: literal, value: two}
+        required: true
+    id: [enums, Class]

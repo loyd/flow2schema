@@ -1,0 +1,11 @@
+-   kind: record
+    fields: []
+    id: [typeInMethod, Test]
+-   kind: record
+    fields:
+    -   name: t
+        value:
+            kind: reference
+            to: [typeInMethod, Test]
+        required: true
+    id: [typeInMethod, '1', X]
