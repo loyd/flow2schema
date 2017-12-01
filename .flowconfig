@@ -8,7 +8,7 @@
 declarations/
 
 [lints]
-all=warn
+all=error
 
 [options]
 all=true
