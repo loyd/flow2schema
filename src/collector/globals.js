@@ -135,6 +135,39 @@ function values(params: (?Type)[], resolve: TypeId => Type): ?Type {
     return t.createUnion(variants);
 }
 
+function diff(params: (?Type)[], resolve: TypeId => Type): ?Type {
+    invariant(params.length === 2);
+
+    let [minuend, subtrahend] = params;
+
+    invariant(minuend && subtrahend);
+    invariant(minuend.kind === 'reference');
+
+    minuend = resolve(minuend.to);
+
+    invariant(minuend.kind === 'record');
+
+    if (subtrahend.kind === 'reference') {
+        subtrahend = resolve(subtrahend.to);
+    }
+
+    invariant(subtrahend.kind === 'record');
+
+    // TODO: more clever subtraction.
+    const blacklist = wu(subtrahend.fields).pluck('name').toArray();
+
+    const fields = wu(minuend.fields)
+        .filter(field => !blacklist.includes(field.name))
+        .map(field => ({
+            name: field.name,
+            value: t.clone(field.value),
+            required: field.required,
+        }))
+        .toArray();
+
+    return t.createRecord(fields);
+}
+
 export default {
     Object: object,
     Buffer: buffer,
@@ -148,7 +181,7 @@ export default {
     $Exact: unwrap, // TODO: another semantic for exact types?
     $Keys: keys,
     $Values: values,
-    // TODO: $Diff
+    $Diff: diff,
     // TODO: $All
     // TODO: $Either
 };

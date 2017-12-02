@@ -1,0 +1,27 @@
+-   kind: record
+    fields:
+    -   name: x
+        value: {kind: string}
+        required: true
+    -   name: y
+        value: {kind: boolean}
+        required: true
+    id: [diffs, A]
+-   kind: record
+    fields:
+    -   name: y
+        value: {kind: boolean}
+        required: true
+    id: [diffs, B]
+-   kind: record
+    fields:
+    -   name: x
+        value: {kind: string}
+        required: true
+    id: [diffs, X]
+-   kind: record
+    fields:
+    -   name: y
+        value: {kind: boolean}
+        required: true
+    id: [diffs, Y]
