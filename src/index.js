@@ -11,5 +11,9 @@ export default function (path: string): {+types: Type[]} {
 
     collector.collect(path);
 
-    return collector;
+    const fund = collector.finish();
+
+    return {
+        types: fund.flatten(),
+    };
 }

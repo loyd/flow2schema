@@ -35,7 +35,7 @@ export default class Context {
             this._scope.addDefinition(name, type, declared);
         }
 
-        this._collector.types.push(type);
+        this._collector._fund.put(type);
 
         return type;
     }

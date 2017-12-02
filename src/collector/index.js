@@ -8,6 +8,7 @@ import traverse from './traverse';
 import globals from './globals';
 import definitionGroup from './definitions';
 import declarationGroup from './declarations';
+import Fund from '../fund';
 import Module from './module';
 import Scope from './scope';
 import Context from './context';
@@ -21,14 +22,14 @@ const VISITOR = Object.assign({}, definitionGroup, declarationGroup);
 export default class Collector {
     +root: string;
     +parser: Parser;
-    +types: Type[];
+    _fund: Fund;
     _modules: Map<string, Module>;
     _global: Scope;
 
     constructor(parser: Parser, root: string = '.') {
         this.root = root;
         this.parser = parser;
-        this.types = [];
+        this._fund = new Fund;
         this._modules = new Map;
         this._global = Scope.global(globals);
     }
@@ -61,6 +62,10 @@ export default class Collector {
         if (!internal) {
             this._grabExports(module);
         }
+    }
+
+    finish(): Fund {
+        return this._fund;
     }
 
     _freestyle(root: Node, scope: Scope, params: TemplateParam[]) {
@@ -146,37 +151,22 @@ export default class Collector {
                 return result.type;
 
             case 'special':
-                const resolve = id => this._findTypeById(id);
+            default:
+                const resolve = id => this._fund.take(id);
                 const type = result.call(params, resolve);
 
                 invariant(type);
 
                 return type;
         }
-
-        invariant(false);
     }
 
     _grabExports(module: Module) {
         for (const [scope, name] of module.exports()) {
-            this._query(scope, name, []);
+            const type = this._query(scope, name, []);
+
+            this._fund.put(type, true);
         }
-    }
-
-    _findTypeById(id: TypeId): Type {
-        // TODO: get rid of the linear search.
-
-        for (const type of this.types) {
-            invariant(type.id);
-
-            const is = type.id.join('::') === id.join('::');
-
-            if (is) {
-                return type;
-            }
-        }
-
-        invariant(false);
     }
 }
 
