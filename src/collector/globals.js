@@ -4,18 +4,21 @@ import {invariant} from '../utils';
 import type {Type, TypeId} from '../types';
 import * as t from '../types';
 
+// Object.
 function object(params: (?Type)[]): ?Type {
     invariant(params.length === 0);
 
     return t.createMap(t.createMixed(), t.createMixed());
 }
 
+// Buffer.
 function buffer(params: (?Type)[]): ?Type {
     invariant(params.length === 0);
 
     return t.createReference(['Buffer']);
 }
 
+// Array<T> and $ReadOnlyArray<T>.
 function array(params: (?Type)[]): ?Type {
     invariant(params.length === 1);
     invariant(params[0]);
@@ -23,6 +26,7 @@ function array(params: (?Type)[]): ?Type {
     return t.createArray(t.clone(params[0]));
 }
 
+// $ElementType<T, K> and $PropertyType<T, k>.
 function elemType(params: (?Type)[], resolve: TypeId => Type): ?Type {
     invariant(params.length === 2);
 
@@ -45,6 +49,7 @@ function elemType(params: (?Type)[], resolve: TypeId => Type): ?Type {
     return field ? t.clone(field.value) : null;
 }
 
+// $NonMaybeType<T>.
 function stripMaybe(params: (?Type)[], resolve: TypeId => Type): ?Type {
     invariant(params.length === 1);
 
@@ -62,6 +67,7 @@ function stripMaybe(params: (?Type)[], resolve: TypeId => Type): ?Type {
     return t.clone(maybe.value);
 }
 
+// $Shape<T>.
 function shape(params: (?Type)[], resolve: TypeId => Type): ?Type {
     invariant(params.length === 1);
 
@@ -84,6 +90,7 @@ function shape(params: (?Type)[], resolve: TypeId => Type): ?Type {
     return t.createRecord(fields);
 }
 
+// $Exact<T> and $ReadOnly<T>.
 function unwrap(params: (?Type)[]): ?Type {
     invariant(params.length === 1);
 
@@ -92,6 +99,7 @@ function unwrap(params: (?Type)[]): ?Type {
     return type ? t.clone(type) : null;
 }
 
+// $Keys<T>.
 function keys(params: (?Type)[], resolve: TypeId => Type): ?Type {
     invariant(params.length === 1);
 
@@ -113,6 +121,7 @@ function keys(params: (?Type)[], resolve: TypeId => Type): ?Type {
     return t.createUnion(variants);
 }
 
+// $Values<T>.
 function values(params: (?Type)[], resolve: TypeId => Type): ?Type {
     invariant(params.length === 1);
 
@@ -135,6 +144,7 @@ function values(params: (?Type)[], resolve: TypeId => Type): ?Type {
     return t.createUnion(variants);
 }
 
+// $Diff<M, S>.
 function diff(params: (?Type)[], resolve: TypeId => Type): ?Type {
     invariant(params.length === 2);
 
