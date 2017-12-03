@@ -1,0 +1,22 @@
+-   kind: record
+    fields:
+    -   name: a
+        value: {kind: string}
+        required: true
+    id: [declare, Type]
+-   kind: record
+    fields:
+    -   name: a
+        value:
+            kind: reference
+            to: [declare, Type]
+        required: true
+    id: [declare, Interface]
+-   kind: record
+    fields:
+    -   name: a
+        value:
+            kind: reference
+            to: [declare, Interface]
+        required: true
+    id: [declare, Class]

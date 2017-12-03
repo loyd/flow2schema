@@ -6,7 +6,7 @@ import type {
     GenericTypeAnnotation, InterfaceDeclaration, IntersectionTypeAnnotation, TypeAlias,
     UnionTypeAnnotation, NullableTypeAnnotation, ObjectTypeIndexer, ObjectTypeProperty,
     StringLiteralTypeAnnotation, ObjectTypeAnnotation, AnyTypeAnnotation, MixedTypeAnnotation,
-    TupleTypeAnnotation,
+    TupleTypeAnnotation, DeclareTypeAlias, DeclareInterface, DeclareClass,
 } from '@babel/types';
 
 import {
@@ -26,7 +26,7 @@ import {extractPragmas} from './pragmas';
 
 import {invariant} from '../utils';
 
-function processTypeAlias(ctx: Context, node: TypeAlias) {
+function processTypeAlias(ctx: Context, node: TypeAlias | DeclareTypeAlias) {
     const {name} = node.id;
     const type = makeType(ctx, node.right);
 
@@ -37,7 +37,10 @@ function processTypeAlias(ctx: Context, node: TypeAlias) {
 }
 
 // TODO: type params.
-function processInterfaceDeclaration(ctx: Context, node: InterfaceDeclaration) {
+function processInterfaceDeclaration(
+    ctx: Context,
+    node: InterfaceDeclaration | DeclareInterface | DeclareClass
+) {
     const {name} = node.id;
     const type = makeType(ctx, node.body);
 
@@ -282,6 +285,9 @@ function makeReference(ctx: Context, node: GenericTypeAnnotation): ?Type {
 
 export default {
     TypeAlias: processTypeAlias,
+    DeclareTypeAlias: processTypeAlias,
     InterfaceDeclaration: processInterfaceDeclaration,
+    DeclareInterface: processInterfaceDeclaration,
     ClassDeclaration: processClassDeclaration,
+    DeclareClass: processInterfaceDeclaration,
 }

@@ -5,13 +5,14 @@ import type {
     Block, ClassDeclaration, ExportDefaultDeclaration, ExportNamedDeclaration, Identifier,
     ImportDeclaration, ImportDefaultSpecifier, ImportSpecifier, InterfaceDeclaration,
     Node, TypeAlias, TypeParameterDeclaration, VariableDeclaration, VariableDeclarator,
+    DeclareTypeAlias, DeclareInterface, DeclareClass,
 } from '@babel/types';
 
 import {
-    isCallExpression, isClassDeclaration, isClassMethod, isExportDefaultDeclaration,
+    isCallExpression, isClassDeclaration, isClassMethod, isExportDefaultDeclaration, isProgram,
     isExportNamedDeclaration, isIdentifier, isImportDeclaration, isImportNamespaceSpecifier,
-    isImportSpecifier, isInterfaceDeclaration, isObjectPattern, isObjectProperty, isProgram,
-    isStringLiteral, isTypeAlias, isVariableDeclaration,
+    isImportSpecifier, isInterfaceDeclaration, isObjectPattern, isObjectProperty, isDeclareClass,
+    isStringLiteral, isTypeAlias, isVariableDeclaration, isDeclareTypeAlias, isDeclareInterface,
 } from '@babel/types';
 
 import {invariant} from '../utils';
@@ -194,10 +195,12 @@ function processExportDefaultDeclaration(ctx: Context, node: ExportDefaultDeclar
  * TODO: support "declare ..." form.
  */
 
-type Declaration = TypeAlias | InterfaceDeclaration | ClassDeclaration;
+type Declaration = TypeAlias | InterfaceDeclaration | ClassDeclaration
+                 | DeclareTypeAlias | DeclareInterface | DeclareClass;
 
 function isDeclaration(node: mixed): boolean %checks {
-    return isTypeAlias(node) || isInterfaceDeclaration(node) || isClassDeclaration(node);
+    return isTypeAlias(node) || isInterfaceDeclaration(node) || isClassDeclaration(node)
+        || isDeclareTypeAlias(node) || isDeclareInterface(node) || isDeclareClass(node);
 }
 
 function processDeclaration(ctx: Context, node: Declaration) {
