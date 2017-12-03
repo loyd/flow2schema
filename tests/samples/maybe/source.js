@@ -1,19 +1,15 @@
 type X = {
     x: ?string,
-    xx: ?string[],
-    xxx: (?string)[],
+    xx: ?(?string),
 };
 
 interface Y {
-    y: ?string;
-    yy: ?string[];
-    yyy: (?string)[];
+    y: ?string[];
+    yy: ?(?(?string));
 }
 
 class Z {
-    z: ?string;
-    zz: ?string[];
-    zzz: (?string)[];
+    z: (?string)[];
 }
 
 export {X, Y, Z};

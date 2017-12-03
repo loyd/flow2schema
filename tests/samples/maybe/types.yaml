@@ -8,16 +8,7 @@
     -   name: xx
         value:
             kind: maybe
-            value:
-                kind: array
-                items: {kind: string}
-        required: true
-    -   name: xxx
-        value:
-            kind: array
-            items:
-                kind: maybe
-                value: {kind: string}
+            value: {kind: string}
         required: true
     id: [maybe, X]
 -   kind: record
@@ -25,38 +16,19 @@
     -   name: y
         value:
             kind: maybe
-            value: {kind: string}
-        required: true
-    -   name: yy
-        value:
-            kind: maybe
             value:
                 kind: array
                 items: {kind: string}
         required: true
-    -   name: yyy
+    -   name: yy
         value:
-            kind: array
-            items:
-                kind: maybe
-                value: {kind: string}
+            kind: maybe
+            value: {kind: string}
         required: true
     id: [maybe, Y]
 -   kind: record
     fields:
     -   name: z
-        value:
-            kind: maybe
-            value: {kind: string}
-        required: true
-    -   name: zz
-        value:
-            kind: maybe
-            value:
-                kind: array
-                items: {kind: string}
-        required: true
-    -   name: zzz
         value:
             kind: array
             items:

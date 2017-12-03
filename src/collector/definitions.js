@@ -141,7 +141,11 @@ function makeType(ctx: Context, node: FlowTypeAnnotation): ?Type {
 function makeMaybe(ctx: Context, node: NullableTypeAnnotation): ?MaybeType {
     const type = makeType(ctx, node.typeAnnotation);
 
-    return type != null ? t.createMaybe(type) : null;
+    if (!type) {
+        return null;
+    }
+
+    return type.kind === 'maybe' ? type : t.createMaybe(type);
 }
 
 function makeComplex(ctx: Context, node: ObjectTypeAnnotation): Type {

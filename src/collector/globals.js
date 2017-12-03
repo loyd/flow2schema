@@ -59,7 +59,7 @@ function stripMaybe(params: (?Type)[], resolve: TypeId => Type): ?Type {
 
     const maybe = resolve(ref.to);
 
-    // TODO: support for unions and nested maybe.
+    // TODO: support for unions.
     if (maybe.kind !== 'maybe') {
         return t.clone(ref);
     }
