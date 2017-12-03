@@ -94,6 +94,9 @@ function processClassDeclaration(ctx: Context, node: ClassDeclaration) {
 }
 
 function makeType(ctx: Context, node: FlowTypeAnnotation): ?Type {
+    // TODO: ThisTypeAnnotation
+    // TODO: VoidTypeAnnotation
+    // TODO: TypeofTypeAnnotation
     switch (node.type) {
         case 'NullLiteralTypeAnnotation':
             return t.createLiteral(null);
@@ -108,13 +111,13 @@ function makeType(ctx: Context, node: FlowTypeAnnotation): ?Type {
         case 'NullableTypeAnnotation':
             return makeMaybe(ctx, node);
         case 'ObjectTypeAnnotation':
-            return makeComplexType(ctx, node);
+            return makeComplex(ctx, node);
         case 'ArrayTypeAnnotation':
-            return makeArrayType(ctx, node);
+            return makeArray(ctx, node);
         case 'TupleTypeAnnotation':
-            return makeTupleType(ctx, node);
+            return makeTuple(ctx, node);
         case 'UnionTypeAnnotation':
-            return makeUnionType(ctx, node);
+            return makeUnion(ctx, node);
         case 'IntersectionTypeAnnotation':
             return makeIntersection(ctx, node);
         case 'StringLiteralTypeAnnotation':
@@ -135,14 +138,10 @@ function makeType(ctx: Context, node: FlowTypeAnnotation): ?Type {
 function makeMaybe(ctx: Context, node: NullableTypeAnnotation): ?MaybeType {
     const type = makeType(ctx, node.typeAnnotation);
 
-    if (!type) {
-        return null;
-    }
-
-    return t.createMaybe(type);
+    return type != null ? t.createMaybe(type) : null;
 }
 
-function makeComplexType(ctx: Context, node: ObjectTypeAnnotation): Type {
+function makeComplex(ctx: Context, node: ObjectTypeAnnotation): Type {
     const maps = wu(node.indexers)
         .map(node => makeMap(ctx, node))
         .filter()
@@ -220,24 +219,16 @@ function makeMap(ctx: Context, node: ObjectTypeIndexer): ?MapType {
     const keys = makeType(ctx, node.key);
     const values = makeType(ctx, node.value);
 
-    if (!(keys && values)) {
-        return null;
-    }
-
-    return t.createMap(keys, values);
+    return keys && values ? t.createMap(keys, values) : null;
 }
 
-function makeArrayType(ctx: Context, node: ArrayTypeAnnotation): ?ArrayType {
+function makeArray(ctx: Context, node: ArrayTypeAnnotation): ?ArrayType {
     const items = makeType(ctx, node.elementType);
 
-    if (!items) {
-        return null;
-    }
-
-    return t.createArray(items);
+    return items != null ? t.createArray(items) : null;
 }
 
-function makeTupleType(ctx: Context, node: TupleTypeAnnotation): ?TupleType {
+function makeTuple(ctx: Context, node: TupleTypeAnnotation): ?TupleType {
     // TODO: warning about nulls.
     const items = wu(node.types).map(node => makeType(ctx, node)).toArray();
 
@@ -248,21 +239,15 @@ function makeTupleType(ctx: Context, node: TupleTypeAnnotation): ?TupleType {
     return t.createTuple(items);
 }
 
-function makeUnionType(ctx: Context, node: UnionTypeAnnotation): ?Type {
+function makeUnion(ctx: Context, node: UnionTypeAnnotation): ?Type {
     const variants = wu(node.types)
         .map(node => makeType(ctx, node))
         .filter()
         .toArray();
 
-    if (variants.length === 0) {
-        return null;
-    }
-
-    if (variants.length === 1) {
-        return variants[0];
-    }
-
-    return t.createUnion(variants);
+    return variants.length === 0 ? null
+         : variants.length === 1 ? variants[0]
+         : t.createUnion(variants);
 }
 
 function makeIntersection(ctx: Context, node: IntersectionTypeAnnotation): ?Type {
@@ -272,15 +257,9 @@ function makeIntersection(ctx: Context, node: IntersectionTypeAnnotation): ?Type
         .filter()
         .toArray();
 
-    if (parts.length === 0) {
-        return null;
-    }
-
-    if (parts.length === 1) {
-        return parts[0];
-    }
-
-    return t.createIntersection(parts);
+    return parts.length === 0 ? null
+         : parts.length === 1 ? parts[0]
+         : t.createIntersection(parts);
 }
 
 function makeReference(ctx: Context, node: GenericTypeAnnotation): ?Type {
