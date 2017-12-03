@@ -1,0 +1,12 @@
+-   kind: record
+    fields:
+    -   name: a
+        value: {kind: string}
+        required: false
+    id: [optionals, Type]
+-   kind: record
+    fields:
+    -   name: a
+        value: {kind: boolean}
+        required: false
+    id: [optionals, Interface]
