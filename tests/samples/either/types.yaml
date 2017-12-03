@@ -1,0 +1,27 @@
+-   kind: record
+    fields:
+    -   name: a
+        value:
+            kind: union
+            variants:
+            - {kind: string}
+            - {kind: boolean}
+        required: true
+    id: [either, Type]
+-   kind: record
+    fields:
+    -   name: a
+        value:
+            kind: union
+            variants:
+            - {kind: string}
+            - {kind: boolean}
+            - {kind: number, repr: f64}
+        required: true
+    id: [either, Interface]
+-   kind: record
+    fields:
+    -   name: a
+        value: {kind: string}
+        required: true
+    id: [either, Class]

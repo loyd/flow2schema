@@ -178,6 +178,24 @@ function diff(params: (?Type)[], resolve: TypeId => Type): ?Type {
     return t.createRecord(fields);
 }
 
+// $All<M, S>.
+function all(params: (?Type)[]): ?Type {
+    const parts = wu(params).filter().toArray();
+
+    return parts.length === 0 ? null
+         : parts.length === 1 ? parts[0]
+         : t.createIntersection(parts);
+}
+
+// $Either<M, S>.
+function either(params: (?Type)[]): ?Type {
+    const variants = wu(params).filter().toArray();
+
+    return variants.length === 0 ? null
+         : variants.length === 1 ? variants[0]
+         : t.createUnion(variants);
+}
+
 export default {
     Object: object,
     Buffer: buffer,
@@ -192,6 +210,6 @@ export default {
     $Keys: keys,
     $Values: values,
     $Diff: diff,
-    // TODO: $All
-    // TODO: $Either
+    $All: all,
+    $Either: either,
 };

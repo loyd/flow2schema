@@ -1,3 +1,4 @@
+// TODO: disassembly the test.
 type Type = {
     a: string,
 
