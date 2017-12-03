@@ -54,7 +54,7 @@ function processInterfaceDeclaration(ctx: Context, node: InterfaceDeclaration) {
         const {name} = extend.id;
         const type = ctx.query(name);
 
-        invariant(type.id);
+        invariant(type && type.id);
 
         const reference = t.createReference(t.clone(type.id));
 
@@ -85,7 +85,7 @@ function processClassDeclaration(ctx: Context, node: ClassDeclaration) {
 
     const base = ctx.query(node.superClass.name);
 
-    invariant(base.id);
+    invariant(base && base.id);
 
     const baseRef = t.createReference(t.clone(base.id));
     const intersection = t.createIntersection([baseRef, type]);
@@ -269,8 +269,12 @@ function makeReference(ctx: Context, node: GenericTypeAnnotation): ?Type {
 
     const type = ctx.query(name, params);
 
+    if (!type) {
+        return null;
+    }
+
     if (!type.id) {
-        return type;
+        return t.clone(type);
     }
 
     return t.createReference(t.clone(type.id));

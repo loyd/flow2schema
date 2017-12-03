@@ -48,7 +48,7 @@ export default class Context {
         this._scope.addExport(name, reference);
     }
 
-    query(name: string, params: ?(?Type)[]): Type {
+    query(name: string, params: ?(?Type)[]): ?Type {
         const param = wu(this._params).find(p => p.name === name);
 
         if (param) {

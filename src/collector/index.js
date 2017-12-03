@@ -86,7 +86,7 @@ export default class Collector {
         }
     }
 
-    _query(scope: Scope, name: string, params: (?Type)[]): Type {
+    _query(scope: Scope, name: string, params: (?Type)[]): ?Type {
         let result = scope.query(name, params);
 
         // TODO: warning.
@@ -153,11 +153,7 @@ export default class Collector {
             case 'special':
             default:
                 const resolve = id => this._fund.take(id);
-                const type = result.call(params, resolve);
-
-                invariant(type);
-
-                return type;
+                return result.call(params, resolve);
         }
     }
 
@@ -165,7 +161,9 @@ export default class Collector {
         for (const [scope, name] of module.exports()) {
             const type = this._query(scope, name, []);
 
-            this._fund.put(type, true);
+            if (type) {
+                this._fund.put(type, true);
+            }
         }
     }
 }
