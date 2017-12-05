@@ -8,9 +8,19 @@
             - {kind: string}
         required: true
     id: [elementType, X, boolean]
+-   kind: literal
+    value: x
+    id: [elementType, P]
 -   kind: record
     fields:
     -   name: y
+        value:
+            kind: union
+            variants:
+            - {kind: boolean}
+            - {kind: string}
+        required: true
+    -   name: yy
         value:
             kind: union
             variants:

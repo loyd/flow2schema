@@ -39,13 +39,13 @@ function elemType(params: (?Type)[], resolve: TypeId => Type): ?Type {
 
     invariant(record.kind === 'record');
 
-    // TODO: support for references.
-    invariant(key.kind === 'literal');
-    invariant(typeof key.value === 'string');
+    const prop = key.kind === 'reference' ? resolve(key.to) : key;
 
-    const field = wu(record.fields).find(field => field.name === key.value);
+    invariant(prop.kind === 'literal');
+    invariant(typeof prop.value === 'string');
 
-    // TODO: what about removing "id"?
+    const field = wu(record.fields).find(field => field.name === prop.value);
+
     return field ? t.clone(field.value) : null;
 }
 
