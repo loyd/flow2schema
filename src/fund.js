@@ -28,7 +28,11 @@ export default class Fund {
         return type;
     }
 
-    flatten(): Type[] {
-        return Array.from(this._types.values());
+    takeAll(): Iterable<Type> {
+        return this._types.values();
+    }
+
+    takeTops(): Iterable<Type> {
+        return this._tops;
     }
 }

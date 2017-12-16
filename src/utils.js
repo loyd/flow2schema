@@ -9,3 +9,13 @@ export function last<T>(list: T[]): T {
 
     return list[list.length - 1];
 }
+
+export function collect<T>(iter: Iterable<[string, T]>): {[string]: T} {
+    const result = {};
+
+    for (const [key, value] of iter) {
+        result[key] = value;
+    }
+
+    return result;
+}
