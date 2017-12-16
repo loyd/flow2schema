@@ -4,6 +4,9 @@ declare module 'wu' {
     declare type DeepFlat<T> = $Call<<U>(DeepIterable<U> | U) => U, T>;
 
     declare export default class Wu<T> {
+        // Implicit implement `Iterable<T>`.
+        @@iterator(): Iterator<T>;
+
         static <T>(Iterable<T>): Wu<T>;
 
         static values<T: Object>(T): Wu<$Values<T>>;
