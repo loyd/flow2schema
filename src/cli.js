@@ -1,5 +1,6 @@
 import * as yaml from 'yaml-js';
 import * as optimist from 'optimist';
+import stringifyJson from 'json-stringify-pretty-compact';
 
 import collect from '.';
 
@@ -15,14 +16,16 @@ function run(path: string) {
     }
 
     try {
-        const {types} = collect(path);
+        const {types, schema} = collect(path);
 
         const output = yaml.dump(types, null, null, {
             indent: 4,
-            width: 100,
+            width: 80,
         });
 
         console.log(output.trimRight());
+        console.log('--------');
+        console.log(stringifyJson(schema, {maxLength: 80}));
     } catch (ex) {
         console.error(ex.message);
         console.error(ex.stack);
