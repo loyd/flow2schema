@@ -6,7 +6,7 @@ import type {Type, NumberType} from '../types';
 
 export type SchemaType = 'object' | 'array' | 'boolean' | 'integer' | 'number' | 'string' | 'null';
 
-export type Schema = {
+export type Schema = boolean | {
     id?: string,
     $ref?: string,
     $schema?: string,
@@ -60,16 +60,14 @@ function convert(fund: Fund, type: ?Type): Schema {
                 .pluck('name')
                 .toArray();
 
-            const schema: Schema = {
+            return required.length > 0 ? {
+                type: 'object',
+                properties,
+                required,
+            } : {
                 type: 'object',
                 properties,
             };
-
-            if (required.length > 0) {
-                schema.required = required;
-            }
-
-            return schema;
         case 'array':
             return {
                 type: 'array',
@@ -82,6 +80,7 @@ function convert(fund: Fund, type: ?Type): Schema {
             };
         case 'map':
             // TODO: invariant(type.keys.kind === 'string');
+            // TODO: "propertyNames".
 
             return {
                 type: 'object',
@@ -140,11 +139,11 @@ function convert(fund: Fund, type: ?Type): Schema {
             return type.value === null ? {
                 type: 'null',
             } : {
-                enum: [type.value],
+                const: type.value,
             };
         case 'any':
         case 'mixed':
-            return {};
+            return true;
         case 'reference':
         default:
             return {
@@ -161,6 +160,7 @@ export default function (fund: Fund): Schema {
     });
 
     return {
+        $schema: 'http://json-schema.org/draft-06/schema#',
         definitions: collect(schemas),
     };
 }
