@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'yaml-js';
 import wu from 'wu';
+import Ajv from 'ajv';
 
 import collect from '../src';
 
@@ -21,6 +22,14 @@ function run(title) {
 
     it('should provide expected types', () => {
         assert.deepEqual(actual.types, expected);
+    });
+
+    it('should generate valid JSON schema', () => {
+        const ajv = new Ajv;
+
+        ajv.validateSchema(actual.schema);
+
+        assert.equal(ajv.errors, null);
     });
 }
 
