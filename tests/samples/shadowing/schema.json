@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "shadowing::1::Buffer": {"type": "object", "properties": {}},
+        "shadowing::1::Y": {
+            "type": "object",
+            "properties": {"y": {"$ref": "#/definitions/shadowing::1::Buffer"}},
+            "required": ["y"]
+        },
+        "shadowing::X": {
+            "type": "object",
+            "properties": {"x": {"$ref": "#/definitions/Buffer"}},
+            "required": ["x"]
+        }
+    }
+}

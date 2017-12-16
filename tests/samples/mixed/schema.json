@@ -1,0 +1,11 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "mixed::X": true,
+        "mixed::Y": {
+            "type": "object",
+            "properties": {"y": true},
+            "required": ["y"]
+        }
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "shape::X": {
+            "type": "object",
+            "properties": {"x": {"type": "string"}, "y": {"type": "boolean"}},
+            "required": ["x", "y"]
+        },
+        "shape::Y": {
+            "type": "object",
+            "properties": {"x": {"type": "string"}, "y": {"type": "boolean"}}
+        }
+    }
+}

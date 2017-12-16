@@ -1,0 +1,32 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "unions::Type": {
+            "type": "object",
+            "properties": {
+                "a": {"anyOf": [{"type": "string"}, {"type": "boolean"}]}
+            },
+            "required": ["a"]
+        },
+        "unions::Interface": {
+            "type": "object",
+            "properties": {
+                "a": {
+                    "anyOf": [
+                        {"type": "string"},
+                        {"type": "boolean"},
+                        {"type": "number"}
+                    ]
+                }
+            },
+            "required": ["a"]
+        },
+        "unions::Class": {
+            "type": "object",
+            "properties": {
+                "a": {"anyOf": [{"type": "string"}, {"type": "boolean"}]}
+            },
+            "required": ["a"]
+        }
+    }
+}

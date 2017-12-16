@@ -1,0 +1,25 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "diffs::A": {
+            "type": "object",
+            "properties": {"x": {"type": "string"}, "y": {"type": "boolean"}},
+            "required": ["x", "y"]
+        },
+        "diffs::B": {
+            "type": "object",
+            "properties": {"y": {"type": "boolean"}},
+            "required": ["y"]
+        },
+        "diffs::X": {
+            "type": "object",
+            "properties": {"x": {"type": "string"}},
+            "required": ["x"]
+        },
+        "diffs::Y": {
+            "type": "object",
+            "properties": {"y": {"type": "boolean"}},
+            "required": ["y"]
+        }
+    }
+}

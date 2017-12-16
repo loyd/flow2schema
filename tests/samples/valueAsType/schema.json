@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "valueAsType::Type": {
+            "type": "object",
+            "properties": {"a": {"const": "one"}},
+            "required": ["a"]
+        },
+        "valueAsType::Interface": {
+            "type": "object",
+            "properties": {"a": {"const": "one"}},
+            "required": ["a"]
+        },
+        "valueAsType::Class": {
+            "type": "object",
+            "properties": {"a": {"const": "one"}},
+            "required": ["a"]
+        }
+    }
+}

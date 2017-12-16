@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "readOnly::X": {
+            "type": "object",
+            "properties": {"x": {"type": "string"}, "y": {"type": "boolean"}},
+            "required": ["x", "y"]
+        },
+        "readOnly::Y": {"$ref": "#/definitions/readOnly::X"},
+        "readOnly::Z": {
+            "type": "object",
+            "properties": {"z": {"type": "string"}},
+            "required": ["z"]
+        }
+    }
+}

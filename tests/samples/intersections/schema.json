@@ -1,0 +1,51 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "intersections::A": {
+            "type": "object",
+            "properties": {"a": {"type": "number"}},
+            "required": ["a"]
+        },
+        "intersections::B": {
+            "type": "object",
+            "properties": {"b": {"type": "string"}},
+            "required": ["b"]
+        },
+        "intersections::X": {
+            "allOf": [
+                {"$ref": "#/definitions/intersections::A"},
+                {"$ref": "#/definitions/intersections::B"}
+            ]
+        },
+        "intersections::C": {
+            "type": "object",
+            "properties": {"c": {"type": "boolean"}},
+            "required": ["c"]
+        },
+        "intersections::Y": {
+            "type": "object",
+            "properties": {
+                "y": {
+                    "allOf": [
+                        {"$ref": "#/definitions/intersections::A"},
+                        {"$ref": "#/definitions/intersections::B"},
+                        {"$ref": "#/definitions/intersections::C"}
+                    ]
+                }
+            },
+            "required": ["y"]
+        },
+        "intersections::Z": {
+            "type": "object",
+            "properties": {
+                "z": {
+                    "allOf": [
+                        {"$ref": "#/definitions/intersections::A"},
+                        {"$ref": "#/definitions/intersections::C"}
+                    ]
+                }
+            },
+            "required": ["z"]
+        }
+    }
+}

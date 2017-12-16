@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "objects::X": {"type": "object", "additionalProperties": true},
+        "objects::Y": {
+            "type": "object",
+            "properties": {
+                "y": {"type": "object", "additionalProperties": true}
+            },
+            "required": ["y"]
+        },
+        "objects::Z": {
+            "type": "object",
+            "properties": {
+                "z": {"type": "object", "additionalProperties": true}
+            },
+            "required": ["z"]
+        }
+    }
+}

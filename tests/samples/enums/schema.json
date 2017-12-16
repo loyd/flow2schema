@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "enums::Type": {
+            "type": "object",
+            "properties": {"a": {"enum": ["one", "two"]}},
+            "required": ["a"]
+        },
+        "enums::Interface": {
+            "type": "object",
+            "properties": {"a": {"enum": ["one", "two"]}},
+            "required": ["a"]
+        },
+        "enums::Class": {
+            "type": "object",
+            "properties": {"a": {"enum": ["one", "two"]}},
+            "required": ["a"]
+        }
+    }
+}

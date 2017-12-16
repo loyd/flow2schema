@@ -1,0 +1,32 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "arrays::Type": {
+            "type": "object",
+            "properties": {
+                "a": {"type": "array", "items": {"type": "string"}},
+                "b": {"type": "array", "items": {"type": "string"}},
+                "c": {"type": "array", "items": {"type": "string"}}
+            },
+            "required": ["a", "b", "c"]
+        },
+        "arrays::Interface": {
+            "type": "object",
+            "properties": {
+                "a": {"type": "array", "items": {"type": "string"}},
+                "b": {"type": "array", "items": {"type": "string"}},
+                "c": {"type": "array", "items": {"type": "string"}}
+            },
+            "required": ["a", "b", "c"]
+        },
+        "arrays::Class": {
+            "type": "object",
+            "properties": {
+                "a": {"type": "array", "items": {"type": "string"}},
+                "b": {"type": "array", "items": {"type": "string"}},
+                "c": {"type": "array", "items": {"type": "string"}}
+            },
+            "required": ["a", "b", "c"]
+        }
+    }
+}

@@ -1,0 +1,55 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "inheritance::A": {
+            "type": "object",
+            "properties": {"a": {"type": "number"}},
+            "required": ["a"]
+        },
+        "inheritance::B": {
+            "allOf": [
+                {"$ref": "#/definitions/inheritance::A"},
+                {
+                    "type": "object",
+                    "properties": {"b": {"type": "string"}},
+                    "required": ["b"]
+                }
+            ]
+        },
+        "inheritance::C": {
+            "allOf": [
+                {"$ref": "#/definitions/inheritance::B"},
+                {
+                    "type": "object",
+                    "properties": {"c": {"type": "boolean"}},
+                    "required": ["c"]
+                }
+            ]
+        },
+        "inheritance::X": {
+            "type": "object",
+            "properties": {"x": {"type": "number"}},
+            "required": ["x"]
+        },
+        "inheritance::Y": {
+            "allOf": [
+                {"$ref": "#/definitions/inheritance::X"},
+                {
+                    "type": "object",
+                    "properties": {"y": {"type": "string"}},
+                    "required": ["y"]
+                }
+            ]
+        },
+        "inheritance::Z": {
+            "allOf": [
+                {"$ref": "#/definitions/inheritance::Y"},
+                {
+                    "type": "object",
+                    "properties": {"z": {"type": "boolean"}},
+                    "required": ["z"]
+                }
+            ]
+        }
+    }
+}

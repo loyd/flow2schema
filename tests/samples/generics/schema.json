@@ -1,0 +1,30 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "generics::A::string::boolean": {
+            "type": "object",
+            "properties": {"t": {"type": "string"}, "k": {"type": "boolean"}},
+            "required": ["t", "k"]
+        },
+        "generics::X": {
+            "type": "object",
+            "properties": {
+                "a": {"$ref": "#/definitions/generics::A::string::boolean"}
+            },
+            "required": ["a"]
+        },
+        "generics::A::f64::X": {
+            "type": "object",
+            "properties": {
+                "t": {"type": "number"},
+                "k": {"$ref": "#/definitions/generics::X"}
+            },
+            "required": ["t", "k"]
+        },
+        "generics::Y": {
+            "type": "object",
+            "properties": {"a": {"$ref": "#/definitions/generics::A::f64::X"}},
+            "required": ["a"]
+        }
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "any::X": true,
+        "any::Y": {
+            "type": "object",
+            "properties": {"y": true},
+            "required": ["y"]
+        }
+    }
+}

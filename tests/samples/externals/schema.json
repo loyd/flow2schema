@@ -1,0 +1,65 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "externals::modules::first::A": {
+            "type": "object",
+            "properties": {"a": {"type": "boolean"}},
+            "required": ["a"]
+        },
+        "externals::modules::first::B": {
+            "type": "object",
+            "properties": {"b": {"type": "string"}},
+            "required": ["b"]
+        },
+        "externals::modules::first::CC": {
+            "type": "object",
+            "properties": {"c": {"type": "number"}},
+            "required": ["c"]
+        },
+        "externals::modules::first::D": {
+            "type": "object",
+            "properties": {"d": {"type": "number"}},
+            "required": ["d"]
+        },
+        "externals::X": {
+            "type": "object",
+            "properties": {
+                "a": {"$ref": "#/definitions/externals::modules::first::A"},
+                "b": {"$ref": "#/definitions/externals::modules::first::B"},
+                "c": {"$ref": "#/definitions/externals::modules::first::CC"},
+                "d": {"$ref": "#/definitions/externals::modules::first::D"}
+            },
+            "required": ["a", "b", "c", "d"]
+        },
+        "externals::modules::second::N": {
+            "type": "object",
+            "properties": {"n": {"type": "boolean"}},
+            "required": ["n"]
+        },
+        "externals::modules::second::M": {
+            "type": "object",
+            "properties": {"m": {"type": "string"}},
+            "required": ["m"]
+        },
+        "externals::modules::second::KK": {
+            "type": "object",
+            "properties": {"k": {"type": "number"}},
+            "required": ["k"]
+        },
+        "externals::modules::second::P": {
+            "type": "object",
+            "properties": {"p": {"type": "number"}},
+            "required": ["p"]
+        },
+        "externals::Y": {
+            "type": "object",
+            "properties": {
+                "n": {"$ref": "#/definitions/externals::modules::second::N"},
+                "m": {"$ref": "#/definitions/externals::modules::second::M"},
+                "k": {"$ref": "#/definitions/externals::modules::second::KK"},
+                "p": {"$ref": "#/definitions/externals::modules::second::P"}
+            },
+            "required": ["n", "m", "k", "p"]
+        }
+    }
+}

@@ -1,0 +1,44 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "tuples::Type": {
+            "type": "object",
+            "properties": {
+                "a": {
+                    "type": "array",
+                    "items": [{"type": "string"}, {"type": "boolean"}]
+                }
+            },
+            "required": ["a"]
+        },
+        "tuples::Interface": {
+            "type": "object",
+            "properties": {
+                "a": {
+                    "type": "array",
+                    "items": [
+                        {"type": "string"},
+                        {"type": "null"},
+                        {"type": "boolean"}
+                    ]
+                },
+                "b": {
+                    "type": "array",
+                    "items": [
+                        {"type": "string"},
+                        {"type": "null"},
+                        {"type": "boolean"}
+                    ]
+                }
+            },
+            "required": ["a", "b"]
+        },
+        "tuples::Class": {
+            "type": "object",
+            "properties": {
+                "a": {"type": "array", "items": [{"type": "boolean"}]}
+            },
+            "required": ["a"]
+        }
+    }
+}

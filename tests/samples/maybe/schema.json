@@ -1,0 +1,36 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "maybe::X": {
+            "type": "object",
+            "properties": {
+                "x": {"oneOf": [{"type": "string"}, {"type": "null"}]},
+                "xx": {"oneOf": [{"type": "string"}, {"type": "null"}]}
+            },
+            "required": ["x", "xx"]
+        },
+        "maybe::Y": {
+            "type": "object",
+            "properties": {
+                "y": {
+                    "oneOf": [
+                        {"type": "array", "items": {"type": "string"}},
+                        {"type": "null"}
+                    ]
+                },
+                "yy": {"oneOf": [{"type": "string"}, {"type": "null"}]}
+            },
+            "required": ["y", "yy"]
+        },
+        "maybe::Z": {
+            "type": "object",
+            "properties": {
+                "z": {
+                    "type": "array",
+                    "items": {"oneOf": [{"type": "string"}, {"type": "null"}]}
+                }
+            },
+            "required": ["z"]
+        }
+    }
+}

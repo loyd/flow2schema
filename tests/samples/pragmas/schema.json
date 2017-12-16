@@ -1,0 +1,36 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "pragmas::Type": {
+            "type": "object",
+            "properties": {
+                "a": {"type": "integer"},
+                "b": {"type": "integer"},
+                "c": {"type": "number"},
+                "d": {"type": "number"}
+            },
+            "required": ["a", "b", "c", "d"]
+        },
+        "pragmas::Interface": {
+            "type": "object",
+            "properties": {
+                "a": {"type": "integer"},
+                "b": {"type": "integer"},
+                "c": {"type": "number"},
+                "d": {"type": "number"},
+                "e": {"type": "string"}
+            },
+            "required": ["a", "b", "c", "d", "e"]
+        },
+        "pragmas::Class": {
+            "type": "object",
+            "properties": {
+                "a": {"type": "integer"},
+                "b": {"type": "integer"},
+                "c": {"type": "number"},
+                "d": {"type": "number"}
+            },
+            "required": ["a", "b", "c", "d"]
+        }
+    }
+}

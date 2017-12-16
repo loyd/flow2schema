@@ -1,0 +1,39 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "references::A": {"type": "string"},
+        "references::Type": {
+            "type": "object",
+            "properties": {
+                "a": {"$ref": "#/definitions/references::A"},
+                "b": {
+                    "type": "array",
+                    "items": {"$ref": "#/definitions/references::A"}
+                }
+            },
+            "required": ["a", "b"]
+        },
+        "references::Interface": {
+            "type": "object",
+            "properties": {
+                "a": {"$ref": "#/definitions/references::A"},
+                "b": {
+                    "type": "array",
+                    "items": {"$ref": "#/definitions/references::A"}
+                }
+            },
+            "required": ["a", "b"]
+        },
+        "references::Class": {
+            "type": "object",
+            "properties": {
+                "a": {"$ref": "#/definitions/references::A"},
+                "b": {
+                    "type": "array",
+                    "items": {"$ref": "#/definitions/references::A"}
+                }
+            },
+            "required": ["a", "b"]
+        }
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "typeInMethod::Test": {"type": "object", "properties": {}},
+        "typeInMethod::1::X": {
+            "type": "object",
+            "properties": {"t": {"$ref": "#/definitions/typeInMethod::Test"}},
+            "required": ["t"]
+        }
+    }
+}

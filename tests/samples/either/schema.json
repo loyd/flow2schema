@@ -1,0 +1,30 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "either::Type": {
+            "type": "object",
+            "properties": {
+                "a": {"anyOf": [{"type": "string"}, {"type": "boolean"}]}
+            },
+            "required": ["a"]
+        },
+        "either::Interface": {
+            "type": "object",
+            "properties": {
+                "a": {
+                    "anyOf": [
+                        {"type": "string"},
+                        {"type": "boolean"},
+                        {"type": "number"}
+                    ]
+                }
+            },
+            "required": ["a"]
+        },
+        "either::Class": {
+            "type": "object",
+            "properties": {"a": {"type": "string"}},
+            "required": ["a"]
+        }
+    }
+}

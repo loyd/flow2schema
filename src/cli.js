@@ -16,16 +16,22 @@ function run(path: string) {
     }
 
     try {
+        const [indent, width] = [4, 80];
         const {types, schema} = collect(path);
 
-        const output = yaml.dump(types, null, null, {
-            indent: 4,
-            width: 80,
+        const typesOutput = yaml.dump(types, null, null, {
+            indent,
+            width,
+        }).trimRight();
+
+        const schemaOutput = stringifyJson(schema, {
+            indent,
+            maxLength: width,
         });
 
-        console.log(output.trimRight());
+        console.log(typesOutput);
         console.log('--------');
-        console.log(stringifyJson(schema, {maxLength: 80}));
+        console.log(schemaOutput);
     } catch (ex) {
         console.error(ex.message);
         console.error(ex.stack);

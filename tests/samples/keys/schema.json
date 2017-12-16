@@ -1,0 +1,11 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "keys::X": {
+            "type": "object",
+            "properties": {"a": {"type": "string"}, "b": {"type": "boolean"}},
+            "required": ["a", "b"]
+        },
+        "keys::Y": {"enum": ["a", "b"]}
+    }
+}

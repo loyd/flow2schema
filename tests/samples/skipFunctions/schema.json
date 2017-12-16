@@ -1,0 +1,28 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "skipFunctions::Type": {
+            "type": "object",
+            "properties": {
+                "a": {"type": "string"},
+                "b": {"type": "boolean"},
+                "c": {"type": "string"}
+            },
+            "required": ["a", "b", "c"]
+        },
+        "skipFunctions::Interface": {
+            "type": "object",
+            "properties": {
+                "a": {"type": "string"},
+                "b": {"type": "boolean"},
+                "c": {"type": "string"}
+            },
+            "required": ["a", "b", "c"]
+        },
+        "skipFunctions::Class": {
+            "type": "object",
+            "properties": {"a": {"type": "string"}, "b": {"type": "boolean"}},
+            "required": ["a", "b"]
+        }
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "elementType::X::boolean": {
+            "type": "object",
+            "properties": {
+                "x": {"anyOf": [{"type": "boolean"}, {"type": "string"}]}
+            },
+            "required": ["x"]
+        },
+        "elementType::P": {"const": "x"},
+        "elementType::Y::x": {
+            "type": "object",
+            "properties": {
+                "y": {"anyOf": [{"type": "boolean"}, {"type": "string"}]},
+                "yy": {"anyOf": [{"type": "boolean"}, {"type": "string"}]}
+            },
+            "required": ["y", "yy"]
+        },
+        "elementType::Z": {"anyOf": [{"type": "boolean"}, {"type": "string"}]}
+    }
+}

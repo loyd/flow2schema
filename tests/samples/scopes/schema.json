@@ -1,0 +1,45 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "scopes::2::X": {"type": "boolean"},
+        "scopes::1::Z": {"type": "string"},
+        "scopes::2::Y": {
+            "type": "object",
+            "properties": {
+                "x": {"$ref": "#/definitions/scopes::2::X"},
+                "z": {"$ref": "#/definitions/scopes::1::Z"}
+            },
+            "required": ["x", "z"]
+        },
+        "scopes::3::X": {"type": "number"},
+        "scopes::3::Y": {
+            "type": "object",
+            "properties": {
+                "x": {"$ref": "#/definitions/scopes::3::X"},
+                "z": {"$ref": "#/definitions/scopes::1::Z"}
+            },
+            "required": ["x", "z"]
+        },
+        "scopes::4::X": {"type": "string"},
+        "scopes::4::Y": {
+            "type": "object",
+            "properties": {
+                "x": {"$ref": "#/definitions/scopes::4::X"},
+                "z": {"$ref": "#/definitions/scopes::1::Z"}
+            },
+            "required": ["x", "z"]
+        },
+        "scopes::1::X": {"type": "number"},
+        "scopes::1::Y": {
+            "type": "object",
+            "properties": {"x": {"$ref": "#/definitions/scopes::1::X"}},
+            "required": ["x"]
+        },
+        "scopes::X": {"type": "string"},
+        "scopes::Y": {
+            "type": "object",
+            "properties": {"x": {"$ref": "#/definitions/scopes::X"}},
+            "required": ["x"]
+        }
+    }
+}

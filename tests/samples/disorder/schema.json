@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "disorder::Z": {"type": "string"},
+        "disorder::Y": {
+            "type": "object",
+            "properties": {"z": {"$ref": "#/definitions/disorder::Z"}},
+            "required": ["z"]
+        },
+        "disorder::X": {
+            "type": "object",
+            "properties": {"y": {"$ref": "#/definitions/disorder::Y"}},
+            "required": ["y"]
+        }
+    }
+}

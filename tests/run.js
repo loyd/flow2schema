@@ -8,12 +8,13 @@ import Ajv from 'ajv';
 import collect from '../src';
 
 function run(title) {
-    let actual, expected;
+    let actual, expectedTypes, expectedSchema;
 
     // Run the collector only if the suite will be checked.
     before(() => {
         actual = collect(title + '/source.js');
-        expected = yaml.load(fs.readFileSync(title + '/types.yaml', 'utf8'));
+        expectedTypes = yaml.load(fs.readFileSync(title + '/types.yaml', 'utf8'));
+        expectedSchema = JSON.parse(fs.readFileSync(title + '/schema.json', 'utf8'));
     });
 
     it('should not include cycles', () => {
@@ -21,7 +22,7 @@ function run(title) {
     });
 
     it('should provide expected types', () => {
-        assert.deepEqual(actual.types, expected);
+        assert.deepEqual(actual.types, expectedTypes);
     });
 
     it('should generate valid JSON schema', () => {
@@ -30,6 +31,10 @@ function run(title) {
         ajv.validateSchema(actual.schema);
 
         assert.equal(ajv.errors, null);
+    });
+
+    it('should provide expected JSON schema', () => {
+        assert.deepEqual(actual.schema, expectedSchema);
     });
 }
 

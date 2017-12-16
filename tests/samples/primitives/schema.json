@@ -1,0 +1,35 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "primitives::Type": {
+            "type": "object",
+            "properties": {
+                "a": {"type": "string"},
+                "b": {"type": "number"},
+                "c": {"type": "boolean"},
+                "d": {"type": "null"}
+            },
+            "required": ["a", "b", "c", "d"]
+        },
+        "primitives::Interface": {
+            "type": "object",
+            "properties": {
+                "a": {"type": "string"},
+                "b": {"type": "number"},
+                "c": {"type": "boolean"},
+                "d": {"type": "null"}
+            },
+            "required": ["a", "b", "c", "d"]
+        },
+        "primitives::Class": {
+            "type": "object",
+            "properties": {
+                "a": {"type": "string"},
+                "b": {"type": "number"},
+                "c": {"type": "boolean"},
+                "d": {"type": "null"}
+            },
+            "required": ["a", "b", "c", "d"]
+        }
+    }
+}

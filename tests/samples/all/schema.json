@@ -1,0 +1,44 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "all::A": {
+            "type": "object",
+            "properties": {"a": {"type": "number"}},
+            "required": ["a"]
+        },
+        "all::B": {
+            "type": "object",
+            "properties": {"b": {"type": "string"}},
+            "required": ["b"]
+        },
+        "all::X": {
+            "allOf": [
+                {"$ref": "#/definitions/all::A"},
+                {"$ref": "#/definitions/all::B"}
+            ]
+        },
+        "all::C": {
+            "type": "object",
+            "properties": {"c": {"type": "boolean"}},
+            "required": ["c"]
+        },
+        "all::Y": {
+            "type": "object",
+            "properties": {
+                "y": {
+                    "allOf": [
+                        {"$ref": "#/definitions/all::A"},
+                        {"$ref": "#/definitions/all::B"},
+                        {"$ref": "#/definitions/all::C"}
+                    ]
+                }
+            },
+            "required": ["y"]
+        },
+        "all::Z": {
+            "type": "object",
+            "properties": {"z": {"$ref": "#/definitions/all::A"}},
+            "required": ["z"]
+        }
+    }
+}

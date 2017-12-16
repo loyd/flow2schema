@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "unionsAndEnums::Type": {
+            "type": "object",
+            "properties": {
+                "a": {"anyOf": [{"type": "string"}, {"enum": ["one", "two"]}]}
+            },
+            "required": ["a"]
+        },
+        "unionsAndEnums::Interface": {
+            "type": "object",
+            "properties": {
+                "a": {"anyOf": [{"type": "string"}, {"enum": ["one", "two"]}]}
+            },
+            "required": ["a"]
+        },
+        "unionsAndEnums::Class": {
+            "type": "object",
+            "properties": {
+                "a": {"anyOf": [{"type": "string"}, {"enum": ["one", "two"]}]}
+            },
+            "required": ["a"]
+        }
+    }
+}
