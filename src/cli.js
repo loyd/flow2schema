@@ -1,39 +1,65 @@
 import * as yaml from 'yaml-js';
-import * as optimist from 'optimist';
+import yargs from 'yargs';
 import stringifyJson from 'json-stringify-pretty-compact';
 
 import collect from '.';
 
-const argv = optimist
-    .usage('Usage: $0 <path> ...')
-    .argv;
+type Args = {
+    _: string[],
+    type: 'json-schema' | 'intermediate',
+    indent: number,
+    maxWidth: number,
+};
 
-argv._.forEach(run);
+function run(file: string, args: Args): string {
+    const {types, schema} = collect(file);
 
-function run(path: string) {
-    if (path === '-') {
-        path = '/dev/stdin';
+    switch (args.type) {
+        case 'intermediate':
+            return yaml.dump(types, null, null, {
+                indent: args.indent,
+                width: args.maxWidth,
+            }).trimRight();
+        case 'json-schema':
+        default:
+            return stringifyJson(schema, {
+                indent: args.indent,
+                maxLength: args.maxWidth,
+            });
     }
+}
+
+export default function (argv: string[]) {
+    const args: Args = yargs(argv)
+        .usage('flow2schema -t type [file]')
+        .option('type', {
+            alias: 't',
+            choices: ['json-schema', 'intermediate'],
+            demand: true,
+        })
+        .option('indent', {
+            type: 'number',
+            default: 4,
+            coerce: val => val >= 2 ? Math.floor(val) : 4,
+        })
+        .option('max-width', {
+            type: 'number',
+            default: 100,
+            coerce: val => val >= 20 ? Math.floor(val) : 100,
+        })
+        .argv;
+
+    // TODO: support Windows.
+    const file = args._.length === 0 ? '/dev/stdin' : args._[0];
 
     try {
-        const [indent, width] = [4, 80];
-        const {types, schema} = collect(path);
+        const output = run(file, args);
 
-        const typesOutput = yaml.dump(types, null, null, {
-            indent,
-            width,
-        }).trimRight();
-
-        const schemaOutput = stringifyJson(schema, {
-            indent,
-            maxLength: width,
-        });
-
-        console.log(typesOutput);
-        console.log('--------');
-        console.log(schemaOutput);
+        console.log(output);
     } catch (ex) {
         console.error(ex.message);
         console.error(ex.stack);
+
+        process.exit(1);
     }
 }
