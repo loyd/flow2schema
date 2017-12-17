@@ -7,7 +7,7 @@ import type {Schema} from './generators/jsonSchema';
 // @see babel#6805.
 //export {Parser, Collector};
 
-export default function (path: string): {+types: Type[], +schema: Schema} {
+function collect(path: string): {+types: Type[], +schema: Schema} {
     const parser = new Parser;
     const collector = new Collector(parser);
 
@@ -20,3 +20,6 @@ export default function (path: string): {+types: Type[], +schema: Schema} {
         schema: generateJsonSchema(fund),
     };
 }
+
+// Export in CommonJS for the users.
+module.exports = collect;
