@@ -122,9 +122,11 @@ function convert(fund: Fund, type: ?Type): Schema {
                 oneOf: [convert(fund, type.value), {type: 'null'}],
             };
         case 'number':
-            return {
-                type: type.repr === 'f32' || type.repr === 'f64' ? 'number' : 'integer',
-            };
+            const {repr} = type;
+
+            return repr === 'f32' || repr === 'f64' ? {type: 'number'}
+                 : repr === 'i32' || repr === 'i64' ? {type: 'integer'}
+                 : {type: 'integer', minimum: 0};
         case 'string':
             return {
                 type: 'string',

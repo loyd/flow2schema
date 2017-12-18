@@ -12,6 +12,12 @@
     -   name: d
         value: {kind: number, repr: f64}
         required: true
+    -   name: e
+        value: {kind: number, repr: u32}
+        required: true
+    -   name: f
+        value: {kind: number, repr: u64}
+        required: true
     id: [pragmas, Type]
 -   kind: record
     fields:
@@ -28,6 +34,12 @@
         value: {kind: number, repr: f64}
         required: true
     -   name: e
+        value: {kind: number, repr: u32}
+        required: true
+    -   name: f
+        value: {kind: number, repr: u64}
+        required: true
+    -   name: g
         value: {kind: string}
         required: true
     id: [pragmas, Interface]
@@ -44,5 +56,11 @@
         required: true
     -   name: d
         value: {kind: number, repr: f64}
+        required: true
+    -   name: e
+        value: {kind: number, repr: u32}
+        required: true
+    -   name: f
+        value: {kind: number, repr: u64}
         required: true
     id: [pragmas, Class]

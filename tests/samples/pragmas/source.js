@@ -7,6 +7,10 @@ type Type = {
     c: number,
     // @repr {f64}
     d: number,
+    // @repr {u32}
+    e: number,
+    // @repr {u64}
+    f: number,
 };
 
 interface Interface {
@@ -18,9 +22,13 @@ interface Interface {
     c: number;
     // @repr {f64}
     d: number;
+    // @repr {u32}
+    e: number;
+    // @repr {u64}
+    f: number;
 
     // Some comment.
-    e: string;
+    g: string;
 }
 
 class Class {
@@ -32,6 +40,10 @@ class Class {
     c: number;
     // @repr {f64}
     d: number;
+    // @repr {u32}
+    e: number;
+    // @repr {u64}
+    f: number;
 }
 
 export {Type, Interface, Class};

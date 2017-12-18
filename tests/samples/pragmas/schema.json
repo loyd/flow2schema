@@ -7,9 +7,11 @@
                 "a": {"type": "integer"},
                 "b": {"type": "integer"},
                 "c": {"type": "number"},
-                "d": {"type": "number"}
+                "d": {"type": "number"},
+                "e": {"type": "integer", "minimum": 0},
+                "f": {"type": "integer", "minimum": 0}
             },
-            "required": ["a", "b", "c", "d"]
+            "required": ["a", "b", "c", "d", "e", "f"]
         },
         "pragmas::Interface": {
             "type": "object",
@@ -18,9 +20,11 @@
                 "b": {"type": "integer"},
                 "c": {"type": "number"},
                 "d": {"type": "number"},
-                "e": {"type": "string"}
+                "e": {"type": "integer", "minimum": 0},
+                "f": {"type": "integer", "minimum": 0},
+                "g": {"type": "string"}
             },
-            "required": ["a", "b", "c", "d", "e"]
+            "required": ["a", "b", "c", "d", "e", "f", "g"]
         },
         "pragmas::Class": {
             "type": "object",
@@ -28,9 +32,11 @@
                 "a": {"type": "integer"},
                 "b": {"type": "integer"},
                 "c": {"type": "number"},
-                "d": {"type": "number"}
+                "d": {"type": "number"},
+                "e": {"type": "integer", "minimum": 0},
+                "f": {"type": "integer", "minimum": 0}
             },
-            "required": ["a", "b", "c", "d"]
+            "required": ["a", "b", "c", "d", "e", "f"]
         }
     }
 }
