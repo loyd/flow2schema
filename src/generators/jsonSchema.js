@@ -1,6 +1,6 @@
 import wu from 'wu';
 
-import {invariant, collect} from '../utils';
+import {invariant, collect, partition} from '../utils';
 import type Fund from '../fund';
 import type {Type, NumberType} from '../types';
 
@@ -114,8 +114,29 @@ function convert(fund: Fund, type: ?Type): Schema {
                 anyOf: schemas,
             };
         case 'intersection':
-            return {
-                allOf: wu(type.parts).map(part => convert(fund, part)).toArray(),
+            const [maps, others] = partition(type.parts, type => type.kind === 'map');
+
+            const parts = wu(others).map(part => convert(fund, part)).toArray();
+
+            if (maps.length > 0) {
+                const keys = wu(maps).map(map => convert(fund, (map: $FlowFixMe).values)).toArray();
+                const key = keys.length === 1 ? keys[0] : {anyOf: keys};
+
+                if (parts.length === 1 && parts[0].type === 'object') {
+                    invariant(typeof parts[0] === 'object');
+                    invariant(parts[0].additionalProperties == null);
+
+                    parts[0].additionalProperties = key;
+                } else {
+                    parts.push({
+                        type: 'object',
+                        additionalProperties: key,
+                    });
+                }
+            }
+
+            return parts.length === 1 ? parts[0] : {
+                allOf: parts,
             };
         case 'maybe':
             return {

@@ -19,3 +19,13 @@ export function collect<T>(iter: Iterable<[string, T]>): {[string]: T} {
 
     return result;
 }
+
+export function partition<T>(iter: Iterable<T>, pred: T => boolean): [T[], T[]] {
+    const [left, right] = [[], []];
+
+    for (const item of iter) {
+        (pred(item) ? left : right).push(item);
+    }
+
+    return [left, right];
+}

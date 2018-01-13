@@ -10,20 +10,19 @@
             "additionalProperties": {"type": "boolean"}
         },
         "maps::Couple": {
-            "allOf": [
-                {"type": "object", "additionalProperties": {"type": "boolean"}},
-                {"type": "object", "additionalProperties": {"type": "string"}}
-            ]
+            "type":  "object",
+            "additionalProperties": {
+                "anyOf": [
+                    {"type": "boolean"},
+                    {"type": "string"}
+                ]
+            }
         },
         "maps::Mix": {
-            "allOf": [
-                {
-                    "type": "object",
-                    "properties": {"foo": {"type": "string"}},
-                    "required": ["foo"]
-                },
-                {"type": "object", "additionalProperties": {"type": "boolean"}}
-            ]
+            "type": "object",
+            "properties": {"foo": {"type": "string"}},
+            "required": ["foo"],
+            "additionalProperties": {"type": "boolean"}
         }
     }
 }
