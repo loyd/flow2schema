@@ -140,7 +140,7 @@ function convert(fund: Fund, type: ?Type): Schema {
             };
         case 'maybe':
             return {
-                oneOf: [convert(fund, type.value), {type: 'null'}],
+                anyOf: [convert(fund, type.value), {type: 'null'}],
             };
         case 'number':
             const {repr} = type;

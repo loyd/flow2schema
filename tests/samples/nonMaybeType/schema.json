@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-06/schema#",
     "definitions": {
-        "nonMaybeType::X": {"oneOf": [{"type": "string"}, {"type": "null"}]},
+        "nonMaybeType::X": {"anyOf": [{"type": "string"}, {"type": "null"}]},
         "nonMaybeType::Y": {"type": "string"}
     }
 }

@@ -4,8 +4,8 @@
         "maybe::X": {
             "type": "object",
             "properties": {
-                "x": {"oneOf": [{"type": "string"}, {"type": "null"}]},
-                "xx": {"oneOf": [{"type": "string"}, {"type": "null"}]}
+                "x": {"anyOf": [{"type": "string"}, {"type": "null"}]},
+                "xx": {"anyOf": [{"type": "string"}, {"type": "null"}]}
             },
             "required": ["x", "xx"]
         },
@@ -13,12 +13,12 @@
             "type": "object",
             "properties": {
                 "y": {
-                    "oneOf": [
+                    "anyOf": [
                         {"type": "array", "items": {"type": "string"}},
                         {"type": "null"}
                     ]
                 },
-                "yy": {"oneOf": [{"type": "string"}, {"type": "null"}]}
+                "yy": {"anyOf": [{"type": "string"}, {"type": "null"}]}
             },
             "required": ["y", "yy"]
         },
@@ -27,7 +27,7 @@
             "properties": {
                 "z": {
                     "type": "array",
-                    "items": {"oneOf": [{"type": "string"}, {"type": "null"}]}
+                    "items": {"anyOf": [{"type": "string"}, {"type": "null"}]}
                 }
             },
             "required": ["z"]
