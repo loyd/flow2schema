@@ -12,7 +12,8 @@ export type Type =
     | LiteralType
     | AnyType
     | MixedType
-    | ReferenceType;
+    | ReferenceType
+    ;
 
 export type TypeId = string[];
 
@@ -64,8 +65,10 @@ export type MaybeType = BaseType & {
 
 export type NumberType = BaseType & {
     kind: 'number',
-    repr: 'i32' | 'i64' | 'u32' | 'u64' | 'f32' | 'f64',
+    repr: Repr,
 };
+
+export type Repr = 'i32' | 'i64' | 'u32' | 'u64' | 'f32' | 'f64';
 
 export type StringType = BaseType & {
     kind: 'string',
@@ -77,8 +80,10 @@ export type BooleanType = BaseType & {
 
 export type LiteralType = BaseType & {
     kind: 'literal',
-    value: string | number | boolean | null | void,
+    value: LiteralValue,
 };
+
+export type LiteralValue = string | number | boolean | null | void;
 
 export type AnyType = BaseType & {
     kind: 'any',
@@ -93,20 +98,20 @@ export type ReferenceType = BaseType & {
     to: TypeId,
 };
 
-export const createRecord = (fields: *): RecordType => ({kind: 'record', fields});
-export const createArray = (items: *): ArrayType => ({kind: 'array', items});
-export const createTuple = (items: *): TupleType => ({kind: 'tuple', items});
-export const createMap = (keys: *, values: *): MapType => ({kind: 'map', keys, values});
-export const createUnion = (variants: *): UnionType => ({kind: 'union', variants});
-export const createIntersection = (parts: *): IntersectionType => ({kind: 'intersection', parts});
-export const createMaybe = (value: *): MaybeType => ({kind: 'maybe', value});
-export const createNumber = (repr: *): NumberType => ({kind: 'number', repr});
+export const createRecord = (fields: Field[]): RecordType => ({kind: 'record', fields});
+export const createArray = (items: Type): ArrayType => ({kind: 'array', items});
+export const createTuple = (items: Array<?Type>): TupleType => ({kind: 'tuple', items});
+export const createMap = (keys: Type, values: Type): MapType => ({kind: 'map', keys, values});
+export const createUnion = (variants: Type[]): UnionType => ({kind: 'union', variants});
+export const createIntersection = (parts: Type[]): IntersectionType => ({kind: 'intersection', parts});
+export const createMaybe = (value: Type): MaybeType => ({kind: 'maybe', value});
+export const createNumber = (repr: Repr): NumberType => ({kind: 'number', repr});
 export const createString = (): StringType => ({kind: 'string'});
 export const createBoolean = (): BooleanType => ({kind: 'boolean'});
-export const createLiteral = (value: *): LiteralType => ({kind: 'literal', value});
+export const createLiteral = (value: LiteralValue): LiteralType => ({kind: 'literal', value});
 export const createAny = () => ({kind: 'any'});
 export const createMixed = () => ({kind: 'mixed'});
-export const createReference = (to: *) => ({kind: 'reference', to});
+export const createReference = (to: TypeId) => ({kind: 'reference', to});
 
 declare function clone(Type): Type;
 declare function clone(TypeId): TypeId;
@@ -161,4 +166,8 @@ function cloneType(type: Type): Type {
         default:
             return createReference(type.to.slice());
     }
+}
+
+export function isRepr(v: string): boolean %checks {
+    return v === 'i32' || v === 'i64' || v === 'u32' || v === 'u64' || v === 'f32' || v === 'f64';
 }

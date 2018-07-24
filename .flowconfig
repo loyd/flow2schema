@@ -9,13 +9,13 @@ declarations/
 
 [lints]
 all=error
+unsafe-getters-setters=off
 
 [options]
 all=true
 module.use_strict=true
 munge_underscores=true
 include_warnings=true
-unsafe.enable_getters_and_setters=true
 suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
 suppress_comment= \\(.\\|\n\\)*\\$FlowIssue
 suppress_type=$FlowFixMe
