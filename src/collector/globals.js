@@ -198,6 +198,11 @@ function either(params: (?Type)[]): ?Type {
          : t.createUnion(variants);
 }
 
+// $ FlowFixMe
+function fixMe(): ?Type {
+    return t.createAny();
+}
+
 export default {
     Object: object,
     Buffer: buffer,
@@ -214,4 +219,5 @@ export default {
     $Diff: diff,
     $All: all,
     $Either: either,
+    $FlowFixMe: fixMe,
 };

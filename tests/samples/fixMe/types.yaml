@@ -1,0 +1,8 @@
+-   kind: any
+    id: [fixMe, X]
+-   kind: record
+    fields:
+    -   name: y
+        value: {kind: any}
+        required: true
+    id: [fixMe, Y]

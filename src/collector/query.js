@@ -11,7 +11,8 @@ export type Query =
     | Template
     | Definition
     | External
-    | Special;
+    | Special
+    ;
 
 export type Unknown = {
     kind: 'unknown',
