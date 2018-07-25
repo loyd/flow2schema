@@ -1,3 +1,5 @@
+// @flow
+
 import * as pathlib from 'path';
 import * as resolve from 'resolve';
 

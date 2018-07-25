@@ -1,3 +1,5 @@
+// @flow
+
 import * as fs from 'fs';
 import * as pathlib from 'path';
 import wu from 'wu';

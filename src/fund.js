@@ -1,3 +1,5 @@
+// @flow
+
 import {invariant} from './utils';
 import type {TypeId, Type} from './types';
 

@@ -1,3 +1,5 @@
+// @flow
+
 import Parser from './parser';
 import Collector from './collector';
 import type {Type} from './types';

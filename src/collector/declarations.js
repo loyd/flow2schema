@@ -1,3 +1,5 @@
+// @flow
+
 import wu from 'wu';
 
 // @see flow#5376.

@@ -1,3 +1,5 @@
+// @flow
+
 import * as yaml from 'yaml-js';
 import yargs from 'yargs';
 import stringifyJson from 'json-stringify-pretty-compact';

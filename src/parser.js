@@ -1,3 +1,5 @@
+// @flow
+
 import * as babylon from 'babylon';
 import type {File} from '@babel/types';
 

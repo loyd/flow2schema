@@ -1,3 +1,5 @@
+// @flow
+
 import wu from 'wu';
 import type {Node} from '@babel/types';
 

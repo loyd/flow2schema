@@ -1,3 +1,5 @@
+// @flow
+
 export type Type =
     | RecordType
     | ArrayType

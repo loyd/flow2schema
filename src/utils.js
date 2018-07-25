@@ -1,3 +1,5 @@
+// @flow
+
 import * as assert from 'assert';
 
 // I so much dream about the user guards...

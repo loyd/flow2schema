@@ -1,3 +1,5 @@
+// @flow
+
 import wu from 'wu';
 
 import {invariant, collect, partition} from '../utils';

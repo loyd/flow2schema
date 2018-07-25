@@ -1,3 +1,5 @@
+// @flow
+
 import type {Node} from '@babel/types';
 
 import type Scope from './scope';
