@@ -203,6 +203,36 @@ function fixMe(): ?Type {
     return t.createAny();
 }
 
+// $$extDef<T, P>
+function extDef(params: (?Type)[]): ?Type {
+    let [type, decl] = params;
+
+    invariant(decl && decl.kind === 'record');
+    type = type ? t.clone(type) : null;
+
+    if (type) {
+        for (let {name, value} of decl.fields) {
+            // ToDo: support other kinds
+            switch (value.kind) {
+                case 'record':
+                    type[name] = t.createRecord(value.fields, value);
+                    break;
+                case 'array':
+                    type[name] = t.createArray(value.items, value);
+                    break;
+                case 'reference':
+                    type[name] = t.createReference(value.to);
+                    break;
+                case 'literal':
+                    type[name] = value.value;
+                    break;
+            }
+        }
+    }
+
+    return type;
+}
+
 export default {
     Object: object,
     Buffer: buffer,
@@ -220,4 +250,7 @@ export default {
     $All: all,
     $Either: either,
     $FlowFixMe: fixMe,
+
+    // Extends types
+    $$extDef: extDef,
 };

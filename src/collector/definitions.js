@@ -105,8 +105,12 @@ function makeType(ctx: Context, node: FlowTypeAnnotation): ?Type {
     switch (node.type) {
         case 'NullLiteralTypeAnnotation':
             return t.createLiteral(null);
+        case 'BooleanLiteralTypeAnnotation':
+            return t.createLiteral(node.value);
         case 'BooleanTypeAnnotation':
             return t.createBoolean();
+        case 'NumberLiteralTypeAnnotation':
+            return t.createLiteral(node.value);
         case 'NumberTypeAnnotation':
             return t.createNumber('f64');
         case 'StringTypeAnnotation':

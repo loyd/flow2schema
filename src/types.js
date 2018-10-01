@@ -26,6 +26,11 @@ export type BaseType = {
 export type RecordType = BaseType & {
     kind: 'record',
     fields: Field[],
+    maxProperties?: number,
+    minProperties?: number,
+    patternProperties?: {[string]: Type},
+    additionalProperties?: Type,
+    propertyNames?: Type,
 };
 
 export type Field = {
@@ -37,6 +42,11 @@ export type Field = {
 export type ArrayType = BaseType & {
     kind: 'array',
     items: Type,
+    additionalItems?: Type,
+    maxItems?: number,
+    minItems?: number,
+    uniqueItems?: boolean,
+    contains?: Type,
 };
 
 export type TupleType = BaseType & {
@@ -68,12 +78,21 @@ export type MaybeType = BaseType & {
 export type NumberType = BaseType & {
     kind: 'number',
     repr: Repr,
+    multipleOf?: number,
+    maximum?: number,
+    exclusiveMaximum?: number,
+    minimum?: number,
+    exclusiveMinimum?: number,
 };
 
 export type Repr = 'i32' | 'i64' | 'u32' | 'u64' | 'f32' | 'f64';
 
 export type StringType = BaseType & {
     kind: 'string',
+    maxLength?: number,
+    minLength?: number,
+    pattern?: string,
+    format?: string,
 };
 
 export type BooleanType = BaseType & {
@@ -100,15 +119,15 @@ export type ReferenceType = BaseType & {
     to: TypeId,
 };
 
-export const createRecord = (fields: Field[]): RecordType => ({kind: 'record', fields});
-export const createArray = (items: Type): ArrayType => ({kind: 'array', items});
+export const createRecord = (fields: Field[], props?: RecordType): RecordType => ({...props, kind: 'record', fields});
+export const createArray = (items: Type, props?: ArrayType): ArrayType => ({...props, kind: 'array', items});
 export const createTuple = (items: Array<?Type>): TupleType => ({kind: 'tuple', items});
 export const createMap = (keys: Type, values: Type): MapType => ({kind: 'map', keys, values});
 export const createUnion = (variants: Type[]): UnionType => ({kind: 'union', variants});
 export const createIntersection = (parts: Type[]): IntersectionType => ({kind: 'intersection', parts});
 export const createMaybe = (value: Type): MaybeType => ({kind: 'maybe', value});
-export const createNumber = (repr: Repr): NumberType => ({kind: 'number', repr});
-export const createString = (): StringType => ({kind: 'string'});
+export const createNumber = (repr: Repr, props?: NumberType): NumberType => ({...props, kind: 'number', repr});
+export const createString = (props?: StringType): StringType => ({...props, kind: 'string'});
 export const createBoolean = (): BooleanType => ({kind: 'boolean'});
 export const createLiteral = (value: LiteralValue): LiteralType => ({kind: 'literal', value});
 export const createAny = () => ({kind: 'any'});
@@ -139,9 +158,9 @@ function cloneType(type: Type): Type {
                 required: field.required,
             }));
 
-            return createRecord(fields);
+            return createRecord(fields, type);
         case 'array':
-            return createArray(clone(type.items));
+            return createArray(clone(type.items), type);
         case 'tuple':
             return createTuple(type.items.map(clone));
         case 'map':
@@ -153,9 +172,9 @@ function cloneType(type: Type): Type {
         case 'maybe':
             return createMaybe(clone(type.value));
         case 'number':
-            return createNumber(type.repr);
+            return createNumber(type.repr, type);
         case 'string':
-            return createString();
+            return createString(type);
         case 'boolean':
             return createBoolean();
         case 'literal':
