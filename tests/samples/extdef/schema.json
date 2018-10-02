@@ -1,0 +1,66 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "extdef::A": {
+            "type": "object",
+            "properties": {"a": {"const": "string"}},
+            "required": ["a"]
+        },
+        "extdef::B": {"type": "number", "minimum": 0},
+        "extdef::C": {
+            "type": "array",
+            "items": {"$ref": "#/definitions/extdef::B"},
+            "uniqueItems": true
+        },
+        "extdef::X": {
+            "type": "object",
+            "properties": {
+                "a": {
+                    "type": "array",
+                    "items": {"$ref": "#/definitions/extdef::A"},
+                    "additionalItems": {
+                        "type": "object",
+                        "properties": {
+                            "a": {"$ref": "#/definitions/extdef::A"}
+                        },
+                        "required": ["a"]
+                    },
+                    "contains": {"$ref": "#/definitions/extdef::B"},
+
+                    "maxItems": 10,
+                    "minItems": 1,
+                    "uniqueItems": false
+                },
+                "b": {"$ref": "#/definitions/extdef::C"},
+                "c": {
+                    "type": "string",
+                    "maxLength": 1,
+                    "minLength": 1,
+                    "pattern": "/[a-z]+/i",
+                    "format": "email"
+                },
+                "d": {
+                    "type": "number",
+                    "multipleOf": 1,
+                    "maximum": 10,
+                    "exclusiveMaximum": 10,
+                    "minimum": 1,
+                    "exclusiveMinimum": 1
+                },
+                "e": {"$ref": "#/definitions/extdef::A"},
+                "f": {"type": "array", "items": {"type": "string"}},
+                "g": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {"a": {"const": "string"}},
+                        "required": ["a"],
+                        "maxProperties": 1
+                    },
+                    "uniqueItems": false
+                }
+            },
+            "required": ["a", "b", "c", "d", "e", "f", "g"]
+        }
+    }
+}

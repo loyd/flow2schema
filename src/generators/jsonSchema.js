@@ -4,7 +4,7 @@ import wu from 'wu';
 
 import {invariant, collect, partition} from '../utils';
 import type Fund from '../fund';
-import type {Type, NumberType} from '../types';
+import type {Type} from '../types';
 
 export type SchemaType = 'object' | 'array' | 'boolean' | 'integer' | 'number' | 'string' | 'null';
 
@@ -17,9 +17,9 @@ export type Schema = boolean | {
     default?: mixed,
     multipleOf?: number,
     maximum?: number,
-    exclusiveMaximum?: boolean,
+    exclusiveMaximum?: number,
     minimum?: number,
-    exclusiveMinimum?: boolean,
+    exclusiveMinimum?: number,
     maxLength?: number,
     minLength?: number,
     pattern?: string,
@@ -62,18 +62,29 @@ function convert(fund: Fund, type: ?Type): Schema {
                 .pluck('name')
                 .toArray();
 
+            //ToDo: support patternProperties
+            const {maxProperties, minProperties, propertyNames} = type;
+            const additionalProperties = type.additionalProperties && convert(fund, type.additionalProperties);
+
             return required.length > 0 ? {
                 type: 'object',
                 properties,
                 required,
+                ...clearType({maxProperties, minProperties, additionalProperties, propertyNames}),
             } : {
                 type: 'object',
                 properties,
+                ...clearType({maxProperties, minProperties, additionalProperties, propertyNames}),
             };
         case 'array':
+            const {maxItems, minItems, uniqueItems} = type;
+            const additionalItems = type.additionalItems && convert(fund, type.additionalItems);
+            const contains = type.contains && convert(fund, type.contains);
+
             return {
                 type: 'array',
                 items: convert(fund, type.items),
+                ...clearType({additionalItems, contains, maxItems, minItems, uniqueItems}),
             };
         case 'tuple':
             return {
@@ -145,14 +156,33 @@ function convert(fund: Fund, type: ?Type): Schema {
                 anyOf: [convert(fund, type.value), {type: 'null'}],
             };
         case 'number':
-            const {repr} = type;
+            const {multipleOf, maximum, exclusiveMaximum, minimum, exclusiveMinimum} = type;
 
-            return repr === 'f32' || repr === 'f64' ? {type: 'number'}
-                 : repr === 'i32' || repr === 'i64' ? {type: 'integer'}
-                 : {type: 'integer', minimum: 0};
+            switch (type.repr) {
+                case 'f32':
+                case 'f64':
+                    return {
+                        type: 'number',
+                        ...clearType({multipleOf, maximum, exclusiveMaximum, minimum, exclusiveMinimum}),
+                    };
+                case 'i32':
+                case 'i64':
+                    return {
+                        type: 'integer',
+                        ...clearType({multipleOf, maximum, exclusiveMaximum, minimum, exclusiveMinimum}),
+                    };
+                default:
+                    return {
+                        type: 'integer',
+                        minimum: 0,
+                    };
+            }
         case 'string':
+            const {maxLength, minLength, pattern, format} = type;
+
             return {
                 type: 'string',
+                ...clearType({maxLength, minLength, pattern, format}),
             };
         case 'boolean':
             return {
@@ -176,6 +206,16 @@ function convert(fund: Fund, type: ?Type): Schema {
             };
     }
 }
+
+const clearType = (type: {[string]: mixed}) => {
+    for(let prop in type) {
+        if (type.hasOwnProperty(prop) && type[prop] === undefined) {
+            delete type[prop];
+        }
+    }
+
+    return type;
+};
 
 export default function (fund: Fund): Schema {
     const schemas = wu(fund.takeAll()).map(type => {

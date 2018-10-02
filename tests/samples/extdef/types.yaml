@@ -1,0 +1,91 @@
+-   kind: record
+    fields:
+    -   name: a
+        value:
+            kind: literal
+            value: string
+        required: true
+    id: [extdef, A]
+-   kind: number
+    id: [extdef, B]
+    minimum: 0
+    repr: f64
+-   kind: array
+    id: [extdef, C]
+    uniqueItems: true
+    items:
+        kind: reference
+        to: [extdef, B]
+-   kind: record
+    id: [extdef, X]
+    fields:
+    -   name: a
+        required: true
+        value:
+            kind: array
+            additionalItems:
+                kind: record
+                fields:
+                 -  name: a
+                    required: true
+                    value:
+                        kind: reference
+                        to: [extdef, A]
+            contains:
+                kind: reference
+                to: [extdef, B]
+            maxItems: 10
+            minItems: 1
+            uniqueItems: false
+            items:
+                kind: reference
+                to: [extdef, A]
+    -   name: b
+        required: true
+        value:
+            kind: reference
+            to: [extdef, C]
+    -   name: c
+        required: true
+        value:
+            kind: string
+            format: email
+            maxLength: 1
+            minLength: 1
+            pattern: /[a-z]+/i
+    -   name: d
+        required: true
+        value:
+            kind: number
+            exclusiveMaximum: 10
+            exclusiveMinimum: 1
+            maximum: 10
+            minimum: 1
+            multipleOf: 1
+            repr: f64
+    -    name: e
+         required: true
+         value:
+             kind: reference
+             to: [extdef, A]
+    -    name: f
+         required: true
+         value:
+             kind: array
+             items: {kind: string}
+             maxProperties: 2
+             minProperties: 1
+    -    name: g
+         required: true
+         value:
+             kind: array
+             uniqueItems: false
+             items:
+                 kind: record
+                 maxProperties: 1
+                 fields:
+                 -   name: a
+                     required: true
+                     value:
+                         kind: literal
+                         value: string

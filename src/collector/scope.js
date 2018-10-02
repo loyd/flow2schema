@@ -183,6 +183,8 @@ function getTypeName(type: Type): string {
             return type.repr;
         case 'string':
         case 'boolean':
+        case 'array':
+        case 'record':
             return type.kind;
         case 'literal':
             return String(type.value);
