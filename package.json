@@ -1,6 +1,6 @@
 {
     "name": "flow2schema",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "description": "Generate schemas for flowtype definitions",
     "author": "Paul Loyd <pavelko95@gmail.com>",
     "license": "MIT",
