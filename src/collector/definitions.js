@@ -12,7 +12,8 @@ import type {
 } from '@babel/types';
 
 import {
-    isIdentifier, isObjectTypeProperty, isStringLiteralTypeAnnotation, isClassProperty,
+    isIdentifier, isStringLiteral, isObjectTypeProperty,
+    isStringLiteralTypeAnnotation, isClassProperty,
 } from '@babel/types';
 
 import Context from './context';
@@ -215,10 +216,12 @@ function makeField(ctx: Context, node: ObjectTypeProperty | ClassProperty): ?Fie
     // TODO: warning about computed properties.
 
     invariant(isObjectTypeProperty(node) || !node.computed);
-    invariant(isIdentifier(node.key));
+    invariant(isIdentifier(node.key) || isStringLiteral(node.key));
+
+    const name = isIdentifier(node.key) ? node.key.name : node.key.value;
 
     return {
-        name: node.key.name,
+        name,
         value: type,
         required: node.optional == null || !node.optional,
     };
