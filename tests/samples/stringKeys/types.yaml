@@ -1,0 +1,18 @@
+-   kind: record
+    fields:
+    -   name: "a b"
+        value: {kind: string}
+        required: true
+    id: [stringKeys, X]
+-   kind: record
+    fields:
+    -   name: "a b"
+        value: {kind: string}
+        required: true
+    id: [stringKeys, Y]
+-   kind: record
+    fields:
+    -   name: "a b"
+        value: {kind: string}
+        required: true
+    id: [stringKeys, Z]
