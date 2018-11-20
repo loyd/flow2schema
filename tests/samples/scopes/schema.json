@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$schema": "http://json-schema.org/draft-07/schema#",
     "definitions": {
         "scopes::2::X": {"type": "boolean"},
         "scopes::1::Z": {"type": "string"},

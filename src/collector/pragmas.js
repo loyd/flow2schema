@@ -1,35 +1,54 @@
 // @flow
 
+import {ClassProperty, isObjectTypeProperty, ObjectTypeProperty} from '@babel/types';
+
 import {invariant} from '../utils';
 
 import type {Type} from '../types';
 import {createNumber, isRepr} from '../types';
 
-export type Pragma =
-    | TypePragma
-    ;
+const PRAGMA_RE = /^\s*@(.+?)\s+{\s*(.+?)\s*}\s*$/gm;
 
-export type TypePragma = {
-    kind: 'type',
-    value: Type,
-};
-
-const PRAGMA_RE = /^\s*@repr\s+\{\s*(.+?)\s*\}\s*$/gm;
-
-export function extractPragmas(text: string): Pragma[] {
-    const pragmas = [];
+export function extractPragmas(type: ?Type, text: string): ?Type {
     let match;
 
     while ((match = PRAGMA_RE.exec(text))) {
-        const repr = match[1];
-
-        invariant(isRepr(repr));
-
-        pragmas.push({
-            kind: 'type',
-            value: createNumber(repr),
-        });
+        type = processingPragma(type, match[1], match[2]);
     }
 
-    return pragmas;
+    return type;
 }
+
+const processingPragma = (type: ?Type, name: string, value: string): ?Type => {
+    switch (name) {
+        case 'repr':
+            invariant(isRepr(value));
+
+            return createNumber(value);
+        case 'description':
+        case 'title':
+        case 'maxProperties':
+        case 'minProperties':
+        case 'patternProperties':
+        case 'maxItems':
+        case 'minItems':
+        case 'uniqueItems':
+        case 'multipleOf':
+        case 'maximum':
+        case 'exclusiveMaximum':
+        case 'minimum':
+        case 'exclusiveMinimum':
+        case 'maxLength':
+        case 'minLength':
+        case 'pattern':
+        case 'format':
+            if (type) {
+                // $FlowFixMe
+                type[name] = value;
+            }
+
+            return type;
+        default:
+            throw `Unknown pragma: ${name}`;
+    }
+};

@@ -3,15 +3,17 @@
 import Parser from './parser';
 import Collector from './collector';
 import type {Type} from './types';
-import generateJsonSchema from './generators/jsonSchema';
-import type {Schema} from './generators/jsonSchema';
+import generateJsonSchema, {type Schema} from './generators/jsonSchema';
+import type {Options} from './options';
+
+export type $$extDef<T, D> = () => T;
 
 // @see babel#6805.
 //export {Parser, Collector};
 
-function collect(path: string): {+types: Type[], +schema: Schema} {
+function collect(path: string, options?: Options): {+types: Type[], +schema: Schema} {
     const parser = new Parser;
-    const collector = new Collector(parser);
+    const collector = new Collector(parser, options);
 
     collector.collect(path);
 
@@ -19,7 +21,7 @@ function collect(path: string): {+types: Type[], +schema: Schema} {
 
     return {
         types: Array.from(fund.takeAll()),
-        schema: generateJsonSchema(fund),
+        schema: generateJsonSchema(fund, options),
     };
 }
 

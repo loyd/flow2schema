@@ -21,6 +21,8 @@ export type TypeId = string[];
 
 export type BaseType = {
     id?: TypeId,
+    title?: string,
+    description?: string,
 };
 
 export type RecordType = BaseType & {

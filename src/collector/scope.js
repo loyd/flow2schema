@@ -114,14 +114,14 @@ export default class Scope {
         this.module.addExport(name, this, reference);
     }
 
-    resolve(path: string): string {
+    resolve(path: string, extensions: ?string[]): string {
         invariant(this.module);
 
-        return this.module.resolve(path);
+        return this.module.resolve(path, extensions);
     }
 
     query(name: string, params: (?Type)[]): Query {
-        const entry = this._entries.get(name);
+        let entry = this._entries.get(name);
 
         if (entry && entry.kind === 'template') {
             const augmented = entry.params.map((p, i) => params[i] === undefined ? p.value : params[i]);
@@ -136,17 +136,15 @@ export default class Scope {
             }
         }
 
-        if (entry) {
-            return entry;
+        if (!entry && this.module) {
+            entry = this.module.query(name, params);
         }
 
-        if (this.parent) {
-            return this.parent.query(name, params);
+        if ((!entry || entry.kind === 'unknown') && this.parent) {
+            entry = this.parent.query(name, params);
         }
 
-        return {
-            kind: 'unknown',
-        };
+        return entry || {kind: 'unknown'};
     }
 }
 

@@ -5,6 +5,7 @@ import wu from 'wu';
 import {invariant, collect, partition} from '../utils';
 import type Fund from '../fund';
 import type {Type} from '../types';
+import type {Options} from '../options';
 
 export type SchemaType = 'object' | 'array' | 'boolean' | 'integer' | 'number' | 'string' | 'null';
 
@@ -44,17 +45,19 @@ export type Schema = boolean | {
     not?: Schema,
 };
 
-function convert(fund: Fund, type: ?Type): Schema {
+function convert(fund: Fund, type: ?Type, options: ?Options): Schema {
     if (!type) {
         return {
             type: 'null',
         };
     }
 
+    const {title, description} = type;
+
     switch (type.kind) {
         case 'record':
             const properties = collect(
-                wu(type.fields).map(field => [field.name, convert(fund, field.value)])
+                wu(type.fields).map(field => [field.name, convert(fund, field.value, options)])
             );
 
             const required = wu(type.fields)
@@ -63,33 +66,47 @@ function convert(fund: Fund, type: ?Type): Schema {
                 .toArray();
 
             //ToDo: support patternProperties
-            const {maxProperties, minProperties, propertyNames} = type;
-            const additionalProperties = type.additionalProperties && convert(fund, type.additionalProperties);
+            let {maxProperties, minProperties, propertyNames} = type;
+            const additionalProperties = type.additionalProperties && convert(fund, type.additionalProperties, options);
 
             return required.length > 0 ? {
                 type: 'object',
                 properties,
                 required,
-                ...clearType({maxProperties, minProperties, additionalProperties, propertyNames}),
+                ...clearType({
+                    title,
+                    description,
+                    maxProperties,
+                    minProperties,
+                    additionalProperties,
+                    propertyNames,
+                }),
             } : {
                 type: 'object',
                 properties,
-                ...clearType({maxProperties, minProperties, additionalProperties, propertyNames}),
+                ...clearType({
+                    title,
+                    description,
+                    maxProperties,
+                    minProperties,
+                    additionalProperties,
+                    propertyNames,
+                }),
             };
         case 'array':
             const {maxItems, minItems, uniqueItems} = type;
-            const additionalItems = type.additionalItems && convert(fund, type.additionalItems);
-            const contains = type.contains && convert(fund, type.contains);
+            const additionalItems = type.additionalItems && convert(fund, type.additionalItems, options);
+            const contains = type.contains && convert(fund, type.contains, options);
 
             return {
                 type: 'array',
-                items: convert(fund, type.items),
+                items: convert(fund, type.items, options),
                 ...clearType({additionalItems, contains, maxItems, minItems, uniqueItems}),
             };
         case 'tuple':
             return {
                 type: 'array',
-                items: wu(type.items).map(type => convert(fund, type)).toArray(),
+                items: wu(type.items).map(type => convert(fund, type, options)).toArray(),
             };
         case 'map':
             // TODO: invariant(type.keys.kind === 'string');
@@ -97,7 +114,7 @@ function convert(fund: Fund, type: ?Type): Schema {
 
             return {
                 type: 'object',
-                additionalProperties: convert(fund, type.values),
+                additionalProperties: convert(fund, type.values, options),
             };
         case 'union':
             const enumerate = wu(type.variants)
@@ -108,7 +125,7 @@ function convert(fund: Fund, type: ?Type): Schema {
 
             const schemas = wu(type.variants)
                 .filter(variant => variant.kind !== 'literal')
-                .map(variant => convert(fund, variant))
+                .map(variant => convert(fund, variant, options))
                 .toArray();
 
             if (schemas.length === 0) {
@@ -129,10 +146,10 @@ function convert(fund: Fund, type: ?Type): Schema {
         case 'intersection':
             const [maps, others] = partition(type.parts, type => type.kind === 'map');
 
-            const parts = wu(others).map(part => convert(fund, part)).toArray();
+            const parts = wu(others).map(part => convert(fund, part, options)).toArray();
 
             if (maps.length > 0) {
-                const keys = wu(maps).map(map => convert(fund, (map: $FlowFixMe).values)).toArray();
+                const keys = wu(maps).map(map => convert(fund, (map: $FlowFixMe).values, options)).toArray();
                 const key = keys.length === 1 ? keys[0] : {anyOf: keys};
 
                 if (parts.length === 1 && parts[0].type === 'object') {
@@ -153,23 +170,45 @@ function convert(fund: Fund, type: ?Type): Schema {
             };
         case 'maybe':
             return {
-                anyOf: [convert(fund, type.value), {type: 'null'}],
+                anyOf: [convert(fund, type.value, options), {type: 'null'}],
             };
         case 'number':
-            const {multipleOf, maximum, exclusiveMaximum, minimum, exclusiveMinimum} = type;
+            let {
+                multipleOf,
+                maximum,
+                exclusiveMaximum,
+                minimum,
+                exclusiveMinimum
+            } = type;
 
             switch (type.repr) {
                 case 'f32':
                 case 'f64':
                     return {
                         type: 'number',
-                        ...clearType({multipleOf, maximum, exclusiveMaximum, minimum, exclusiveMinimum}),
+                        ...clearType({
+                            title,
+                            description,
+                            multipleOf,
+                            maximum,
+                            exclusiveMaximum,
+                            minimum,
+                            exclusiveMinimum,
+                        }),
                     };
                 case 'i32':
                 case 'i64':
                     return {
                         type: 'integer',
-                        ...clearType({multipleOf, maximum, exclusiveMaximum, minimum, exclusiveMinimum}),
+                        ...clearType({
+                            title,
+                            description,
+                            multipleOf,
+                            maximum,
+                            exclusiveMaximum,
+                            minimum,
+                            exclusiveMinimum,
+                        }),
                     };
                 default:
                     return {
@@ -178,11 +217,18 @@ function convert(fund: Fund, type: ?Type): Schema {
                     };
             }
         case 'string':
-            const {maxLength, minLength, pattern, format} = type;
+            let {maxLength, minLength, pattern, format} = type;
 
             return {
                 type: 'string',
-                ...clearType({maxLength, minLength, pattern, format}),
+                ...clearType({
+                    title,
+                    description,
+                    maxLength,
+                    minLength,
+                    pattern,
+                    format,
+                }),
             };
         case 'boolean':
             return {
@@ -201,8 +247,10 @@ function convert(fund: Fund, type: ?Type): Schema {
             return true;
         case 'reference':
         default:
+            const separator = options && options.referenceSchemaSeparator || '::';
+
             return {
-                $ref: `#/definitions/${type.to.join('::')}`,
+                $ref: `#/definitions/${type.to.join(separator)}`,
             };
     }
 }
@@ -217,15 +265,16 @@ const clearType = (type: {[string]: mixed}) => {
     return type;
 };
 
-export default function (fund: Fund): Schema {
+export default function (fund: Fund, options: ?Options): Schema {
+    const separator = options && options.referenceSchemaSeparator || '::';
     const schemas = wu(fund.takeAll()).map(type => {
         invariant(type.id);
 
-        return [type.id.join('::'), convert(fund, type)];
+        return [type.id.join(separator), convert(fund, type, options)];
     });
 
     return {
-        $schema: 'http://json-schema.org/draft-06/schema#',
+        $schema: 'http://json-schema.org/draft-07/schema#',
         definitions: collect(schemas),
     };
 }
