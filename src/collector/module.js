@@ -47,11 +47,11 @@ export default class Module {
         return scope.query(reference, params);
     }
 
-    resolve(path: string): string {
+    resolve(path: string, extensions: ?string[]): string {
         const basedir = pathlib.dirname(this.path);
 
         // TODO: follow symlinks.
-        return resolve.sync(path, {basedir});
+        return resolve.sync(path, {basedir, extensions: (extensions || []).concat(['.js'])});
     }
 
     exports(): Iterator<[Scope, string]> {

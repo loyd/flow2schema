@@ -1,0 +1,8 @@
+-   kind: any
+    id: [call, X]
+-   kind: record
+    fields:
+    -   name: y
+        value: {kind: any}
+        required: true
+    id: [call, Y]

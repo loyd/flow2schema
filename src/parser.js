@@ -14,7 +14,7 @@ export default class Parser {
             allowSuperOutsideMethod: true,
             sourceType: 'module',
             // TODO: review other plugins.
-            plugins: ['*', 'jsx', 'flow', 'classProperties'],
+            plugins: ['*', 'jsx', 'flow', 'classProperties', 'objectRestSpread'],
         });
     }
 }

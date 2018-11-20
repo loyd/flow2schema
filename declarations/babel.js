@@ -584,6 +584,14 @@ declare module '@babel/types' {
         body: ObjectTypeAnnotation;
     }
 
+    declare class OpaqueType extends Node {
+        type: 'OpaqueType';
+        id: Identifier;
+        typeParameters: TypeParameterDeclaration | null;
+        supertype: FlowTypeAnnotation | null;
+        impltype: FlowTypeAnnotation;
+    }
+
     declare class DeclareFunction extends Node {
         type: 'DeclareFunction';
         id: Identifier;
@@ -1169,6 +1177,7 @@ declare module '@babel/types' {
     declare function isArrowFunctionExpression(node: mixed, opts: Object | void): boolean %checks (node instanceof ArrowFunctionExpression);
     declare function isClassBody(node: mixed, opts: Object | void): boolean %checks (node instanceof ClassBody);
     declare function isClassDeclaration(node: mixed, opts: Object | void): boolean %checks (node instanceof ClassDeclaration);
+    declare function isOpaqueType(node: mixed, opts: Object | void): boolean %checks (node instanceof OpaqueType);
     declare function isClassExpression(node: mixed, opts: Object | void): boolean %checks (node instanceof ClassExpression);
     declare function isExportAllDeclaration(node: mixed, opts: Object | void): boolean %checks (node instanceof ExportAllDeclaration);
     declare function isExportDefaultDeclaration(node: mixed, opts: Object | void): boolean %checks (node instanceof ExportDefaultDeclaration);

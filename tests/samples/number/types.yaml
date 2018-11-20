@@ -1,0 +1,20 @@
+-
+    kind: reference
+    to: [Number]
+    id: [number, X]
+-   kind: record
+    fields:
+    -   name: y
+        value:
+            kind: reference
+            to: [Number]
+        required: true
+    id: [number, Y]
+-   kind: record
+    fields:
+    -   name: z
+        value:
+            kind: reference
+            to: [Number]
+        required: true
+    id: [number, Z]

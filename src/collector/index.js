@@ -2,7 +2,6 @@
 
 import * as fs from 'fs';
 import * as pathlib from 'path';
-import wu from 'wu';
 import {isNode} from '@babel/types';
 import type {Node} from '@babel/types';
 
@@ -17,20 +16,21 @@ import Context from './context';
 import {invariant} from '../utils';
 import type Parser from '../parser';
 import type {Type, TypeId} from '../types';
+import type {Options} from '../options';
 import type {TemplateParam} from './query';
 
 const VISITOR = Object.assign({}, definitionGroup, declarationGroup);
 
 export default class Collector {
-    +root: string;
     +parser: Parser;
+    +options: Options;
     _fund: Fund;
     _modules: Map<string, Module>;
     _global: Scope;
 
-    constructor(parser: Parser, root: string = '.') {
-        this.root = root;
+    constructor(parser: Parser, options?: Options = {}) {
         this.parser = parser;
+        this.options = options;
         this._fund = new Fund;
         this._modules = new Map;
         this._global = Scope.global(globals);
@@ -38,21 +38,23 @@ export default class Collector {
 
     collect(path: string, internal: boolean = false) {
         // TODO: follow symlinks.
-        path = pathlib.resolve(path);
-
         let module = this._modules.get(path);
 
         if (module) {
             return;
         }
 
+        const lib = this.options.lib;
+        const libPath: string = lib && lib[path] || path;
+
         // TODO: error wrapping.
-        const code = fs.readFileSync(path, 'utf8');
+        const code = fs.readFileSync(libPath, 'utf8');
         const ast = this.parser.parse(code);
 
         // TODO: customize it.
         // XXX: replace with normal resolver and path-to-id converter.
         const id = pathToId(path.replace(/source\.js$/, ''));
+
         module = new Module(id, path);
 
         const scope = this._global.extend(module);
@@ -104,7 +106,7 @@ export default class Collector {
 
         switch (result.kind) {
             case 'external':
-                const modulePath = scope.resolve(result.info.path);
+                const modulePath = scope.resolve(result.info.path, this.options.sourceModuleExtensions);
 
                 this.collect(modulePath, true);
 
