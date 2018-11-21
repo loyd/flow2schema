@@ -15,8 +15,8 @@ function run(title) {
     // Run the collector only if the suite will be checked.
     before(() => {
         actual = collect(title + '/source.js');
-        expectedTypes = yaml.load(fs.readFileSync(title + '/types.yaml', 'utf8'));
-        expectedSchema = JSON.parse(fs.readFileSync(title + '/schema.json', 'utf8'));
+        expectedTypes = readFileAndPrepare(title + '/types.yaml', yaml.load);
+        expectedSchema = readFileAndPrepare(title + '/schema.json', JSON.parse);
     });
 
     it('should not include cycles', () => {
@@ -38,6 +38,22 @@ function run(title) {
     it('should provide expected JSON schema', () => {
         assert.deepEqual(actual.schema, expectedSchema);
     });
+}
+
+function readFileAndPrepare<R>(path: string, prepare: string => R): R | void {
+    let data;
+
+    try {
+        data = fs.readFileSync(path, 'utf8');
+    } catch (ex) {
+        if (ex.code === 'ENOENT') {
+            return undefined;
+        }
+
+        throw ex;
+    }
+
+    return prepare(data);
 }
 
 function detectCycles(obj: mixed, cycles: Set<mixed> = new Set, objs: Set<mixed> = new Set) {
