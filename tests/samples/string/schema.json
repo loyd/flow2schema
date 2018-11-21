@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "string::X": {"$ref": "#/definitions/String"},
+        "string::Y": {
+            "type": "object",
+            "properties": {
+                "y": {"$ref": "#/definitions/String"}
+            },
+            "required": ["y"]
+        },
+        "string::Z": {
+            "type": "object",
+            "properties": {
+                "z": {"$ref": "#/definitions/String"}
+            },
+            "required": ["z"]
+        }
+    }
+}

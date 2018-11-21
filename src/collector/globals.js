@@ -28,6 +28,27 @@ function array(params: (?Type)[]): ?Type {
     return t.createArray(t.clone(params[0]));
 }
 
+// Error.
+function error(params: (?Type)[]): ?Type {
+    invariant(params.length === 0);
+
+    return t.createReference(['Error']);
+}
+
+// String.
+function string(params: (?Type)[]): ?Type {
+    invariant(params.length === 0);
+
+    return t.createReference(['String']);
+}
+
+// Number.
+function number(params: (?Type)[]): ?Type {
+    invariant(params.length === 0);
+
+    return t.createReference(['Number']);
+}
+
 // $ElementType<T, K> and $PropertyType<T, k>.
 function elemType(params: (?Type)[], resolve: TypeId => Type): ?Type {
     invariant(params.length === 2);
@@ -233,10 +254,17 @@ function extDef(params: (?Type)[]): ?Type {
     return type;
 }
 
+function call(): ?Type {
+    return t.createAny();
+}
+
 export default {
     Object: object,
     Buffer: buffer,
     Array: array,
+    Error: error,
+    String: string,
+    Number: number,
     $ReadOnlyArray: array,
     $PropertyType: elemType,
     $ElementType: elemType,
@@ -250,6 +278,7 @@ export default {
     $All: all,
     $Either: either,
     $FlowFixMe: fixMe,
+    $Call: call,
 
     // Extends types
     $$extDef: extDef,

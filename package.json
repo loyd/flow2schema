@@ -1,5 +1,5 @@
 {
-    "name": "flow2schema",
+    "name": "@yandex-market/flow2schema",
     "version": "0.3.2",
     "description": "Generate schemas for flowtype definitions",
     "author": "Paul Loyd <pavelko95@gmail.com>",
@@ -53,5 +53,8 @@
         "build": "babel src/ -d lib/",
         "mocha": "nyc mocha -r @babel/register -R list tests/run.js",
         "flow": "flow"
+    },
+    "publishConfig": {
+        "registry": "http://npm.yandex-team.ru/"
     }
 }

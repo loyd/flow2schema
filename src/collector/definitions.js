@@ -8,18 +8,18 @@ import type {
     GenericTypeAnnotation, InterfaceDeclaration, IntersectionTypeAnnotation, TypeAlias,
     UnionTypeAnnotation, NullableTypeAnnotation, ObjectTypeIndexer, ObjectTypeProperty,
     StringLiteralTypeAnnotation, ObjectTypeAnnotation, AnyTypeAnnotation, MixedTypeAnnotation,
-    TupleTypeAnnotation, DeclareTypeAlias, DeclareInterface, DeclareClass,
+    TupleTypeAnnotation, DeclareTypeAlias, DeclareInterface, DeclareClass, OpaqueType,
 } from '@babel/types';
 
 import {
-    isIdentifier, isObjectTypeProperty, isStringLiteralTypeAnnotation, isClassProperty,
+    isIdentifier, isStringLiteral, isObjectTypeProperty,
+    isStringLiteralTypeAnnotation, isClassProperty,
 } from '@babel/types';
 
 import Context from './context';
 
 import type {
-    Type, RecordType, Field, ArrayType, TupleType, MapType, UnionType, IntersectionType,
-    MaybeType, NumberType, StringType, BooleanType, LiteralType, ReferenceType,
+    Type, RecordType, Field, ArrayType, TupleType, MapType, MaybeType,
 } from '../types';
 
 import * as t from '../types';
@@ -33,6 +33,16 @@ function processTypeAlias(ctx: Context, node: TypeAlias | DeclareTypeAlias) {
     const type = makeType(ctx, node.right);
 
     // TODO: support function aliases.
+    invariant(type);
+
+    ctx.define(name, type);
+}
+
+function processOpaqueType(ctx: Context, node: OpaqueType) {
+    const {name} = node.id;
+    // TODO: processing supertype annotation.
+    const type = makeType(ctx, node.impltype);
+
     invariant(type);
 
     ctx.define(name, type);
@@ -58,10 +68,17 @@ function processInterfaceDeclaration(
     for (const extend of node.extends) {
         const {name} = extend.id;
         const type = ctx.query(name);
+        let reference;
 
-        invariant(type && type.id);
+        invariant(type);
 
-        const reference = t.createReference(t.clone(type.id));
+        if (type.kind === 'reference') {
+            reference = type;
+        } else {
+            invariant(type.id);
+
+            reference = t.createReference(t.clone(type.id));
+        }
 
         parts.push(reference);
     }
@@ -137,6 +154,8 @@ function makeType(ctx: Context, node: FlowTypeAnnotation): ?Type {
             return t.createAny();
         case 'MixedTypeAnnotation':
             return t.createMixed();
+        case 'TypeofTypeAnnotation':
+            return t.createAny();
         case 'FunctionTypeAnnotation':
             return null;
         default:
@@ -189,27 +208,19 @@ function makeField(ctx: Context, node: ObjectTypeProperty | ClassProperty): ?Fie
         return null;
     }
 
-    let type = null;
+    const value = isObjectTypeProperty(node) ? node.value : node.typeAnnotation;
+
+    // TODO: no type annotation for the class property.
+    invariant(value);
+
+    let type = makeType(ctx, value);
 
     if (node.leadingComments) {
-        const pragma = (wu: $FlowIssue<4431>)(node.leadingComments)
+        type = (wu: $FlowIssue<4431>)(node.leadingComments)
             .pluck('value')
-            .map(extractPragmas)
+            .map(line => extractPragmas(type, line))
             .flatten()
-            .find(pragma => pragma.kind === 'type');
-
-        if (pragma) {
-            type = pragma.value;
-        }
-    }
-
-    if (!type) {
-        const value = isObjectTypeProperty(node) ? node.value : node.typeAnnotation;
-
-        // TODO: no type annotation for the class property.
-        invariant(value);
-
-        type = makeType(ctx, value);
+            .toArray()[0];
     }
 
     if (!type) {
@@ -219,10 +230,12 @@ function makeField(ctx: Context, node: ObjectTypeProperty | ClassProperty): ?Fie
     // TODO: warning about computed properties.
 
     invariant(isObjectTypeProperty(node) || !node.computed);
-    invariant(isIdentifier(node.key));
+    invariant(isIdentifier(node.key) || isStringLiteral(node.key));
+
+    const name = isIdentifier(node.key) ? node.key.name : node.key.value;
 
     return {
-        name: node.key.name,
+        name,
         value: type,
         required: node.optional == null || !node.optional,
     };
@@ -300,4 +313,5 @@ export default {
     DeclareInterface: processInterfaceDeclaration,
     ClassDeclaration: processClassDeclaration,
     DeclareClass: processInterfaceDeclaration,
+    OpaqueType: processOpaqueType,
 }
