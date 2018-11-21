@@ -1,0 +1,6 @@
+-   kind: record
+    fields:
+    -   name: a
+        value: {kind: number, repr: f64}
+        required: true
+    id: [selectiveImport, modules, first, A]
