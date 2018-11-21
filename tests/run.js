@@ -6,10 +6,11 @@ import * as path from 'path';
 import * as yaml from 'yaml-js';
 import wu from 'wu';
 import Ajv from 'ajv';
+import stringifyJson from 'json-stringify-pretty-compact';
 
 import collect from '../src';
 
-function run(title) {
+function run(title, generateMissing) {
     let actual, expectedTypes, expectedSchema;
 
     // Run the collector only if the suite will be checked.
@@ -24,7 +25,18 @@ function run(title) {
     });
 
     it('should provide expected types', () => {
-        assert.deepEqual(actual.types, expectedTypes);
+        if (expectedTypes === undefined && generateMissing) {
+            console.log('Generating types.yaml...');
+
+            const content = yaml.dump(actual.types, null, null, {
+                indent: 4,
+                width: 100,
+            }).trimRight();
+
+            fs.writeFileSync(title + '/types.yaml', content);
+        } else {
+            assert.deepEqual(actual.types, expectedTypes);
+        }
     });
 
     it('should generate valid JSON schema', () => {
@@ -36,7 +48,18 @@ function run(title) {
     });
 
     it('should provide expected JSON schema', () => {
-        assert.deepEqual(actual.schema, expectedSchema);
+        if (expectedSchema === undefined && generateMissing) {
+            console.log('Generating schema.json...');
+
+            const content = stringifyJson(actual.schema, {
+                indent: 4,
+                maxLength: 100,
+            });
+
+            fs.writeFileSync(title + '/schema.json', content);
+        } else {
+            assert.deepEqual(actual.schema, expectedSchema);
+        }
     });
 }
 
@@ -79,8 +102,10 @@ function detectCycles(obj: mixed, cycles: Set<mixed> = new Set, objs: Set<mixed>
 function main() {
     process.chdir(path.join(__dirname, 'samples'));
 
+    const generateMissing = process.env.GENERATE_MISSING === '1';
+
     for (const title of fs.readdirSync('.')) {
-        describe(title, () => run(title));
+        describe(title, () => run(title, generateMissing));
     }
 }
 
