@@ -1,7 +1,7 @@
 {
     "name": "@yandex-market/flow2schema",
-    "version": "0.3.3",
-    "description": "Generate schemas for flowtype definitions",
+    "version": "0.3.4",
+    "description": "Generate JSON Schemas for flowtype definitions",
     "author": "Paul Loyd <pavelko95@gmail.com>",
     "license": "MIT",
     "repository": {

@@ -1,0 +1,36 @@
+{
+  "approve_count": 2,
+  "total_reviewers": 2,
+  "notification": "telegram",
+  "github_members": {
+    "org_name": "market",
+    "slug_name": "flow2schema"
+  },
+  "startrek": {
+    "queues": ["MARKETFRONTECH"],
+    "status": {
+      "inprogress": "needCodeReview",
+      "changesneeded": "checkFailed",
+      "complete": "resolved",
+      "notstarted": "inProgress"
+    }
+  },
+  "specialReviewers": [
+    {
+      "addMembers": ["cornholio", "senz", "b-vladi"],
+      "additionalReviewers": true
+    }
+  ],
+  "setGitHubReviewStatus": false,
+  "setGitHubReviewLabels": true,
+  "setGitHubReviewAssignees": true,
+  "updateBadges": true,
+  "autoStartReview": false,
+  "autoAssignReviewers": true,
+  "achievementUnlock": true,
+  "fixReviewByAnyone": true,
+  "pingReviewByAnyone": true,
+  "stopReviewByAnyone": true,
+  "startReviewByAnyone": true,
+  "changeReviewerByAnyone": true,
+}
