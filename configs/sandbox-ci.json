@@ -1,0 +1,36 @@
+{
+    "sandbox_tasks_defaults": {
+        "type": "MARKET_FRONT_CI",
+        "owner": "MARKET",
+        "priority": {
+            "class": "SERVICE",
+            "subclass": "NORMAL"
+        },
+        "custom_fields": [{
+            "name": "node_version",
+            "value": "8"
+        }]
+    },
+    "github_event_handlers": {
+        "pull_request": [{
+            "filter": {
+                "action": [
+                    "opened",
+                    "reopened",
+                    "synchronize"
+                ]
+            },
+            "sandbox_tasks": [{
+                "custom_fields": [
+                    {"name": "github_context", "value": "flow"},
+                    {"name": "check_command", "value": "npm i && npm run ci:flow"}
+                ]
+            }, {
+                "custom_fields": [
+                    {"name": "github_context", "value": "mocha"},
+                    {"name": "check_command", "value": "npm i && npm run ci:mocha"}
+                ]
+            }]
+        }
+    ]}
+}

@@ -1,6 +1,6 @@
 {
     "name": "@yandex-market/flow2schema",
-    "version": "0.3.2",
+    "version": "0.3.3",
     "description": "Generate schemas for flowtype definitions",
     "author": "Paul Loyd <pavelko95@gmail.com>",
     "license": "MIT",
@@ -27,32 +27,40 @@
         "bin/"
     ],
     "dependencies": {
-        "@babel/types": "^7.0.0-beta.32",
-        "babylon": "^7.0.0-beta.32",
-        "json-stringify-pretty-compact": "^1.0.4",
-        "resolve": "^1.5.0",
+        "@babel/types": "^7.1.6",
+        "babylon": "^6.18.0",
+        "json-stringify-pretty-compact": "^1.2.0",
+        "resolve": "^1.8.1",
         "wu": "^2.1.0",
-        "yaml-js": "^0.2.0",
-        "yargs": "^10.0.3"
+        "yaml-js": "^0.2.3",
+        "yargs": "^12.0.5"
     },
     "devDependencies": {
-        "@babel/cli": "^7.0.0-beta.32",
-        "@babel/core": "^7.0.0-beta.32",
-        "@babel/preset-env": "^7.0.0-beta.32",
-        "@babel/preset-flow": "^7.0.0-beta.32",
-        "@babel/register": "^7.0.0-beta.32",
-        "ajv": "^5.5.1",
-        "flow-bin": "^0.77.0",
-        "jasmine": "^2.8.0",
-        "mocha": "^4.0.1",
-        "nyc": "^11.3.0"
+        "@babel/cli": "^7.1.5",
+        "@babel/core": "^7.1.6",
+        "@babel/preset-env": "^7.1.6",
+        "@babel/preset-flow": "^7.0.0",
+        "@babel/register": "^7.0.0",
+        "ajv": "^6.5.5",
+        "flow-bin": "^0.86.0",
+        "flow-copy-source": "^2.0.2",
+        "jasmine": "^3.3.0",
+        "mocha": "^5.2.0",
+        "nyc": "^13.1.0",
+        "npm-watch": "^0.4.0"
     },
     "scripts": {
         "prepare": "npm run build",
-        "test": "npm run flow && npm run mocha",
-        "build": "babel src/ -d lib/",
-        "mocha": "nyc mocha -r @babel/register -R list tests/run.js",
-        "flow": "flow"
+        "test": "npm run test:flow && npm run test:mocha",
+        "build": "npm run build:babel && npm run build:flow && npm run build:relocate",
+        "build:babel": "babel src -d lib --verbose",
+        "build:flow": "flow-copy-source src lib --verbose",
+        "build:relocate": "cp package.json lib",
+        "ci:flow": "scripts/flow.bash -r",
+        "ci:mocha": "scripts/mocha.bash -r",
+        "test:mocha": "nyc mocha -r @babel/register -R list tests/run.js",
+        "test:flow": "flow --max-warnings 0",
+        "dev:watch": "npm-watch build"
     },
     "publishConfig": {
         "registry": "http://npm.yandex-team.ru/"

@@ -1,0 +1,5 @@
+determine_repo_root() {
+    git rev-parse --show-toplevel
+}
+
+project_root="$(determine_repo_root)"

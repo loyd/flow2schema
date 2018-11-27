@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$schema": "http://json-schema.org/draft-07/schema#",
     "definitions": {
         "typeInMethod::Test": {"type": "object", "properties": {}},
         "typeInMethod::1::X": {
