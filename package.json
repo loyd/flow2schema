@@ -56,6 +56,8 @@
         "build:babel": "babel src -d lib --verbose",
         "build:flow": "flow-copy-source src lib --verbose",
         "build:relocate": "cp package.json lib",
+        "ci:flow": "scripts/flow.bash -r",
+        "ci:mocha": "scripts/mocha.bash -r",
         "test:mocha": "nyc mocha -r @babel/register -R list tests/run.js",
         "test:flow": "flow --max-warnings 0",
         "dev:watch": "npm-watch build"

@@ -23,12 +23,12 @@
             "sandbox_tasks": [{
                 "custom_fields": [
                     {"name": "github_context", "value": "flow"},
-                    {"name": "check_command", "value": "npm i && npm run test:flow"}
+                    {"name": "check_command", "value": "npm i && npm run ci:flow"}
                 ]
             }, {
                 "custom_fields": [
                     {"name": "github_context", "value": "mocha"},
-                    {"name": "check_command", "value": "npm i && npm run test:mocha"}
+                    {"name": "check_command", "value": "npm i && npm run ci:mocha"}
                 ]
             }]
         }

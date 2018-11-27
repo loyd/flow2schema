@@ -2,5 +2,6 @@ lib/
 node_modules/
 .nyc_output/
 coverage/
+txt_reports/
 npm-debug.log
 package-lock.json
