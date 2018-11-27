@@ -1,6 +1,6 @@
 {
     "name": "@yandex-market/flow2schema",
-    "version": "0.3.4",
+    "version": "0.4.0",
     "description": "Generate JSON Schemas for flowtype definitions",
     "author": "Paul Loyd <pavelko95@gmail.com>",
     "license": "MIT",
@@ -49,17 +49,32 @@
         "nyc": "^13.1.0",
         "npm-watch": "^0.4.0"
     },
+    "watch": {
+        "build": {
+            "extensions": "js,flow",
+            "patterns": [
+                "src"
+            ],
+            "ignore": [
+                "tests/"
+            ]
+        }
+    },
     "scripts": {
         "prepare": "npm run build",
         "test": "npm run test:flow && npm run test:mocha",
-        "build": "npm run build:babel && npm run build:flow && npm run build:relocate",
+        "build": "npm run build:babel && npm run build:flow",
         "build:babel": "babel src -d lib --verbose",
         "build:flow": "flow-copy-source src lib --verbose",
-        "build:relocate": "cp package.json lib",
         "ci:flow": "scripts/flow.bash -r",
         "ci:mocha": "scripts/mocha.bash -r",
         "test:mocha": "nyc mocha -r @babel/register -R list tests/run.js",
         "test:flow": "flow --max-warnings 0",
+        "clean": "rm -rf lib txt_reports .nyc_output",
+        "publish:prepare": "npm run clean && npm run test",
+        "prepublish:npm": "npm run publish:prepare",
+        "publish:npm": "npm publish --access=public",
+        "dev:bootstrap": "npm run build && cd lib && npm link && cd ..",
         "dev:watch": "npm-watch build"
     },
     "publishConfig": {

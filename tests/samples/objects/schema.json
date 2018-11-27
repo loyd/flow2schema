@@ -1,18 +1,18 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "definitions": {
-        "objects::X": {"type": "object", "additionalProperties": true},
+        "objects::X": {"type": "object", "additionalProperties": {}},
         "objects::Y": {
             "type": "object",
             "properties": {
-                "y": {"type": "object", "additionalProperties": true}
+                "y": {"type": "object", "additionalProperties": {}}
             },
             "required": ["y"]
         },
         "objects::Z": {
             "type": "object",
             "properties": {
-                "z": {"type": "object", "additionalProperties": true}
+                "z": {"type": "object", "additionalProperties": {}}
             },
             "required": ["z"]
         }

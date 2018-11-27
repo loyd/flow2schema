@@ -9,8 +9,8 @@ import type {Options} from '../options';
 
 export type SchemaType = 'object' | 'array' | 'boolean' | 'integer' | 'number' | 'string' | 'null';
 
-export type Schema = boolean | {
-    id?: string,
+export type Schema = {
+    $id?: string,
     $ref?: string,
     $schema?: string,
     title?: string,
@@ -37,12 +37,13 @@ export type Schema = boolean | {
     properties?: {[string]: Schema},
     patternProperties?: {[string]: Schema},
     dependencies?: {[string]: Schema | string[]},
-    enum?: mixed[],
+    enum?: (string | number | Schema)[],
     type?: SchemaType | SchemaType[],
     allOf?: Schema[],
     anyOf?: Schema[],
     oneOf?: Schema[],
     not?: Schema,
+    const?: string | number | boolean,
 };
 
 function convert(fund: Fund, type: ?Type, options: ?Options): Schema {
@@ -244,7 +245,7 @@ function convert(fund: Fund, type: ?Type, options: ?Options): Schema {
             };
         case 'any':
         case 'mixed':
-            return true;
+            return {};
         case 'reference':
         default:
             const separator = options && options.referenceSchemaSeparator || '::';
