@@ -5,4 +5,9 @@ type X = {
 
 type Y = $Keys<X>;
 
-export {Y};
+type Z = $Keys<{
+    a: string,
+    b: boolean,
+}>;
+
+export {Y, Z};

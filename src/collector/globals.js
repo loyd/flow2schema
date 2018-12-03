@@ -105,11 +105,11 @@ function unwrap(params: (?Type)[]): ?Type {
 function keys(params: (?Type)[], resolve: TypeId => Type): ?Type {
     invariant(params.length === 1);
 
-    const [ref] = params;
+    const [param] = params;
+    invariant(param);
+    invariant(param.kind === 'reference' || param.kind === 'record');
 
-    invariant(ref && ref.kind === 'reference');
-
-    const record = resolve(ref.to);
+    const record = param.kind === 'reference' ? resolve(param.to) : param;
 
     invariant(record.kind === 'record');
 

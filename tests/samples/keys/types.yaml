@@ -12,3 +12,8 @@
     - {kind: literal, value: a}
     - {kind: literal, value: b}
     id: [keys, Y]
+-   kind: union
+    variants:
+    - {kind: literal, value: a}
+    - {kind: literal, value: b}
+    id: [keys, Z]
