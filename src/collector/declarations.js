@@ -7,7 +7,7 @@ import type {
     Block, ClassDeclaration, ExportDefaultDeclaration, ExportNamedDeclaration, Identifier,
     ImportDeclaration, ImportDefaultSpecifier, ImportSpecifier, InterfaceDeclaration,
     Node, TypeAlias, TypeParameterDeclaration, VariableDeclaration, VariableDeclarator,
-    DeclareTypeAlias, DeclareInterface, DeclareClass,
+    DeclareTypeAlias, DeclareInterface, DeclareClass
 } from '@babel/types';
 
 import {
@@ -15,6 +15,7 @@ import {
     isExportNamedDeclaration, isIdentifier, isImportDeclaration, isImportNamespaceSpecifier,
     isImportSpecifier, isInterfaceDeclaration, isObjectPattern, isObjectProperty, isDeclareClass,
     isStringLiteral, isTypeAlias, isVariableDeclaration, isDeclareTypeAlias, isDeclareInterface,
+    isVariableDeclarator
 } from '@babel/types';
 
 import {invariant} from '../utils';
@@ -106,7 +107,23 @@ function processVariableDeclaration(ctx: Context, node: VariableDeclaration) {
 }
 
 function processVariableDeclarator(ctx: Context, node: VariableDeclarator) {
-    const path = extractRequire(node.init);
+    if (isRequireExpression(node.init)) {
+        extractExternals(ctx, node);
+    } else if (isIdentifier(node.id)) {
+        extractIdentifier(ctx, node);
+    }
+}
+
+function extractIdentifier(ctx: Context, node: VariableDeclarator) {
+    const {id} = node;
+
+    invariant(isIdentifier(id));
+
+    ctx.declare(id.name, node);
+}
+
+function extractExternals(ctx: Context, node: VariableDeclarator) {
+    const path = extractRequirePath(node.init);
 
     if (path == null) {
         return null;
@@ -125,13 +142,23 @@ function processVariableDeclarator(ctx: Context, node: VariableDeclarator) {
     }
 }
 
-function extractRequire(node: Node): ?string {
+function extractRequirePath(node: Node): ?string {
+    if (
+        // TODO: flow fails but should not
+        isRequireExpression(node) && isStringLiteral(node.arguments[0])
+    ) {
+        return String(node.arguments[0].value);
+    }
+
+    return null;
+}
+
+function isRequireExpression(node: Node): boolean %checks {
     return isCallExpression(node)
         && isIdentifier(node.callee, {name: 'require'})
         && node.arguments.length > 0
         // TODO: warning about dynamic imports.
         && isStringLiteral(node.arguments[0])
-    ? node.arguments[0].value : null;
 }
 
 function extractCommonjsDefaultExternal(node: Identifier, path: string): ExternalInfo {
@@ -162,13 +189,29 @@ function extractCommonjsNamedExternals<+T: Node>(nodes: T[], path: string): Exte
  *
  * TODO: support "export from" form.
  * TODO: support commonjs.
+ * TODO: implement ObjectPattern, ArrayPattern, RestElement for variable declaration
  */
-
 function processExportNamedDeclaration(ctx: Context, node: ExportNamedDeclaration) {
     if (isDeclaration(node.declaration)) {
         const reference = processDeclaration(ctx, node.declaration);
 
         ctx.provide(reference, reference);
+    } else if (isVariableDeclaration(node.declaration)) {
+        const {declaration} = node;
+        processVariableDeclaration(ctx, declaration);
+        const {declarations} = declaration;
+
+        if (Array.isArray(declarations)) {
+            for (const declarator of declarations) {
+                const {id} = declarator;
+
+                if (!isVariableDeclarator(declarator) || !isIdentifier(id)) {
+                    continue;
+                }
+
+                ctx.provide(id.name, id.name);
+            }
+        }
     }
 
     for (const specifier of node.specifiers) {

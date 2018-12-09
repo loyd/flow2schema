@@ -1,0 +1,91 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "variables::obj": {
+            "type": "object",
+            "properties": {"foo": {"type": "number"}},
+            "required": ["foo"]
+        },
+        "variables::O": {
+            "type": "object",
+            "properties": {"foo": {"type": "number"}},
+            "required": ["foo"]
+        },
+        "variables::obj2": {"$ref": "#/definitions/variables::O"},
+        "variables::obj3": {"$ref": "#/definitions/variables::obj"},
+        "variables::num": {"type": "number"},
+        "variables::str": {"type": "string"},
+        "variables::nil": {"type": "null"},
+        "variables::empty": true,
+        "variables::obj4": {
+            "type": "object",
+            "properties": {
+                "num": {"type": "number"},
+                "str": {"type": "string"},
+                "literal-literal": {"type": "string"},
+                "computed": {"type": "string"},
+                "null": {"type": "null"},
+                "true": {"type": "boolean"},
+                "false": {"type": "boolean"},
+                "42": {"type": "number"},
+                "array": {
+                    "type": "array",
+                    "items": {
+                        "anyOf": [
+                            {"type": "number"},
+                            {"type": "string"},
+                            {"type": "boolean"},
+                            {"enum": [null]}
+                        ]
+                    }
+                },
+                "seq": {"type": "number"}
+            },
+            "required": ["num", "str", "literal-literal", "computed", "42", "null", "true", "false", "array", "seq"]
+        },
+        "variables::obj5": {
+            "type": "object",
+            "properties": {"obj": {"$ref": "#/definitions/variables::obj"}},
+            "required": ["obj"]
+        },
+        "variables::obj6": {
+            "type": "object",
+            "properties": {
+                "num": {"type": "string"},
+                "str": {"type": "number"},
+                "literal-literal": {"type": "string"},
+                "computed": {"type": "string"},
+                "42": {"type": "number"},
+                "null": {"type": "null"},
+                "true": {"type": "boolean"},
+                "false": {"type": "boolean"},
+                "foo": {"type": "number"},
+                "array": {
+                    "type": "array",
+                    "items": {
+                        "anyOf": [
+                            {"type": "number"},
+                            {"type": "string"},
+                            {"type": "boolean"},
+                            {"enum": [null]}
+                        ]
+                    }
+                },
+                "seq": {"type": "number"}
+            },
+            "required": [
+                "num",
+                "str",
+                "literal-literal",
+                "computed",
+                "42",
+                "null",
+                "true",
+                "false",
+                "array",
+                "seq",
+                "foo"
+            ]
+        }
+    }
+}

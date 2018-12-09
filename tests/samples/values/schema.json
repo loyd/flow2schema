@@ -6,6 +6,13 @@
             "properties": {"a": {"type": "string"}, "b": {"type": "boolean"}},
             "required": ["a", "b"]
         },
-        "values::Y": {"anyOf": [{"type": "string"}, {"type": "boolean"}]}
+        "values::Y": {"anyOf": [{"type": "string"}, {"type": "boolean"}]},
+        "values::Z": {"anyOf": [{"type": "string"}, {"type": "boolean"}]},
+        "values::u": {
+            "type": "object",
+            "properties": {"a": {"type": "string"}, "b": {"type": "number"}},
+            "required": ["a", "b"]
+        },
+        "values::U": {"anyOf": [{"type": "string"}, {"type": "number"}]}
     }
 }

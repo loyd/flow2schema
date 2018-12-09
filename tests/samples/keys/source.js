@@ -10,4 +10,7 @@ type Z = $Keys<{
     b: boolean,
 }>;
 
-export {Y, Z};
+const u = {a: '', b: 42};
+type U = $Keys<typeof u>
+
+export {Y, Z, U};

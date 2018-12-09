@@ -1,0 +1,30 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "typeof::object": {
+            "type": "object",
+            "properties": {
+                "foo": {"type": "number"},
+                "bar": {"type": "string"},
+                "baz": {"type": "boolean"}
+            },
+            "required": ["foo", "bar"]
+        },
+        "typeof::A": {
+            "type": "object",
+            "properties": {
+                "foo": {"type": "number"},
+                "bar": {"type": "string"},
+                "baz": {"type": "boolean"}
+            },
+            "required": ["foo", "bar"]
+        },
+        "typeof::object2": {"$ref": "#/definitions/typeof::A"},
+        "typeof::TypeOfObject": {
+            "$ref": "#/definitions/typeof::object"
+        },
+        "typeof::TypeOfObject2": {
+            "$ref": "#/definitions/typeof::object2"
+        }
+    }
+}

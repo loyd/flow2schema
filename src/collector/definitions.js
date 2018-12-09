@@ -99,7 +99,7 @@ function processClassDeclaration(ctx: Context, node: ClassDeclaration) {
     ctx.define(name, intersection);
 }
 
-function makeType(ctx: Context, node: FlowTypeAnnotation): ?Type {
+export function makeType(ctx: Context, node: FlowTypeAnnotation): ?Type {
     // TODO: ThisTypeAnnotation
     // TODO: VoidTypeAnnotation
     // TODO: TypeofTypeAnnotation
@@ -134,6 +134,12 @@ function makeType(ctx: Context, node: FlowTypeAnnotation): ?Type {
             return t.createAny();
         case 'MixedTypeAnnotation':
             return t.createMixed();
+        case 'TypeofTypeAnnotation':
+            if (!node.argument || node.argument.type !== 'GenericTypeAnnotation') {
+                return t.createAny();
+            }
+
+            return makeType(ctx, node.argument);
         case 'FunctionTypeAnnotation':
             return null;
         default:

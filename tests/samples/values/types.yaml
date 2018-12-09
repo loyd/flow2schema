@@ -12,3 +12,22 @@
     - {kind: string}
     - {kind: boolean}
     id: [values, Y]
+-   kind: union
+    variants:
+    - {kind: string}
+    - {kind: boolean}
+    id: [values, Z]
+-   kind: record
+    fields:
+    -   name: a
+        value: {kind: string}
+        required: true
+    -   name: b
+        value: {kind: number, repr: f64}
+        required: true
+    id: [values, u]
+-   kind: union
+    variants:
+    - {kind: string}
+    - {kind: number, repr: f64}
+    id: [values, U]

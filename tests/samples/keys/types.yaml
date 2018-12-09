@@ -17,3 +17,17 @@
     - {kind: literal, value: a}
     - {kind: literal, value: b}
     id: [keys, Z]
+-   kind: record
+    fields:
+    -   name: a
+        value: {kind: string}
+        required: true
+    -   name: b
+        value: {kind: number, repr: f64}
+        required: true
+    id: [keys, u]
+-   kind: union
+    variants:
+    - {kind: literal, value: a}
+    - {kind: literal, value: b}
+    id: [keys, U]
