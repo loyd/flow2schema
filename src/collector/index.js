@@ -10,6 +10,7 @@ import traverse from './traverse';
 import globals from './globals';
 import definitionGroup from './definitions';
 import declarationGroup from './declarations';
+import variableGroup from './variables';
 import Fund from '../fund';
 import Module from './module';
 import Scope from './scope';
@@ -19,7 +20,7 @@ import type Parser from '../parser';
 import type {Type, TypeId} from '../types';
 import type {TemplateParam} from './query';
 
-const VISITOR = Object.assign({}, definitionGroup, declarationGroup);
+const VISITOR = Object.assign({}, definitionGroup, declarationGroup, variableGroup);
 
 export default class Collector {
     +root: string;

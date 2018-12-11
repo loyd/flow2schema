@@ -5,4 +5,12 @@ type X = {
 
 type Y = $Values<X>;
 
-export {Y};
+type Z = $Values<{
+    a: string,
+    b: boolean,
+}>;
+
+const u = {a: '', b: 42};
+type U = $Values<typeof u>
+
+export {Y, Z, U};

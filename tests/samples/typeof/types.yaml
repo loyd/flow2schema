@@ -1,0 +1,33 @@
+-   kind: record
+    fields:
+    -   name: foo
+        value: {kind: number, repr: f64}
+        required: true
+    -   name: bar
+        value: {kind: string}
+        required: true
+    -   name: baz
+        value: {kind: boolean}
+        required: false
+    id: [typeof, object]
+-   kind: reference
+    to: [typeof, object]
+    id: [typeof, TypeOfObject]
+-   kind: record
+    fields:
+    -   name: foo
+        value: {kind: number, repr: f64}
+        required: true
+    -   name: bar
+        value: {kind: string}
+        required: true
+    -   name: baz
+        value: {kind: boolean}
+        required: false
+    id: [typeof, A]
+-   kind: reference
+    to: [typeof, A]
+    id: [typeof, object2]
+-   kind: reference
+    to: [typeof, object2]
+    id: [typeof, TypeOfObject2]

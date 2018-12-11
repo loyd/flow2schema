@@ -1,0 +1,121 @@
+-   kind: record
+    fields:
+    -   name: foo
+        value: {kind: number, repr: f64}
+        required: true
+    id: [variables, obj]
+-   kind: record
+    fields:
+    -   name: foo
+        value: {kind: number, repr: f64}
+        required: true
+    id: [variables, O]
+-   kind: reference
+    to: [variables, O]
+    id: [variables, obj2]
+-   kind: reference
+    to: [variables, obj]
+    id: [variables, obj3]
+-   kind: number
+    repr: f64
+    id: [variables, num]
+-   kind: string
+    id: [variables, str]
+-   kind: literal
+    value: null
+    id: [variables, nil]
+-   kind: any
+    id: [variables, empty]
+-   kind: record
+    fields:
+    -   name: num
+        value: {kind: number, repr: f64}
+        required: true
+    -   name: str
+        value: {kind: string}
+        required: true
+    -   name: literal-literal
+        value: {kind: string}
+        required: true
+    -   name: computed
+        value: {kind: string}
+        required: true
+    -   name: "42"
+        value: {kind: number, repr: f64}
+        required: true
+    -   name: 'null'
+        value: {kind: literal, value: null}
+        required: true
+    -   name: 'true'
+        value: {kind: boolean}
+        required: true
+    -   name: 'false'
+        value: {kind: boolean}
+        required: true
+    -   name: array
+        required: true
+        value:
+            kind: array
+            items:
+                kind: union
+                variants:
+                - {kind: number, repr: f64}
+                - {kind: string}
+                - {kind: boolean}
+                - {kind: literal, value: null}
+    -   name: seq
+        value: {kind: number, repr: f64}
+        required: true
+    id: [variables, obj4]
+-   kind: record
+    fields:
+    -   name: obj
+        value:
+            kind: reference
+            to: [variables, obj]
+        required: true
+    id: [variables, obj5]
+-   kind: record
+    fields:
+    -   name: num
+        value: {kind: string}
+        required: true
+    -   name: str
+        value: {kind: number, repr: f64}
+        required: true
+    -   name: literal-literal
+        value: {kind: string}
+        required: true
+    -   name: computed
+        value: {kind: string}
+        required: true
+    -   name: "42"
+        value: {kind: number, repr: f64}
+        required: true
+    -   name: 'null'
+        value: {kind: literal, value: null}
+        required: true
+    -   name: 'true'
+        value: {kind: boolean}
+        required: true
+    -   name: 'false'
+        value: {kind: boolean}
+        required: true
+    -   name: array
+        required: true
+        value:
+            kind: array
+            items:
+                kind: union
+                variants:
+                - {kind: number, repr: f64}
+                - {kind: string}
+                - {kind: boolean}
+                - {kind: literal, value: null}
+    -   name: seq
+        value: {kind: number, repr: f64}
+        required: true
+    -   name: foo
+        value: {kind: number, repr: f64}
+        required: true
+    id: [variables, obj6]

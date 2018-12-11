@@ -6,6 +6,13 @@
             "properties": {"a": {"type": "string"}, "b": {"type": "boolean"}},
             "required": ["a", "b"]
         },
-        "keys::Y": {"enum": ["a", "b"]}
+        "keys::Y": {"enum": ["a", "b"]},
+        "keys::Z": {"enum": ["a", "b"]},
+        "keys::u": {
+            "type": "object",
+            "properties": {"a": {"type": "string"}, "b": {"type": "number"}},
+            "required": ["a", "b"]
+        },
+        "keys::U": {"enum": ["a", "b"]}
     }
 }

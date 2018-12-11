@@ -31,3 +31,12 @@ export function partition<T>(iter: Iterable<T>, pred: T => boolean): [T[], T[]] 
 
     return [left, right];
 }
+
+export function uniqLastBy<T, K>(iter: T[], unaryFn: T => K): T[] {
+    const map = iter.reduce(
+        (acc, value) => acc.set(unaryFn(value), value),
+        new Map()
+    );
+
+    return [...map.values()];
+}
