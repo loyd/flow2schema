@@ -550,6 +550,7 @@ declare module '@babel/types' {
 
     declare class BooleanLiteralTypeAnnotation extends Node {
         type: 'BooleanLiteralTypeAnnotation';
+        value: boolean;
     }
 
     declare class NullLiteralTypeAnnotation extends Node {
