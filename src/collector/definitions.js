@@ -31,6 +31,10 @@ import {invariant} from '../utils';
 
 function processTypeAlias(ctx: Context, node: TypeAlias | DeclareTypeAlias) {
     const {name} = node.id;
+
+    // Forward declaration for the recursive types
+    ctx.define(name, t.createAny());
+
     const type = makeType(ctx, node.right);
 
     // TODO: support function aliases.
