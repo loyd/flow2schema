@@ -141,7 +141,7 @@ function makeType(ctx: Context, node: FlowTypeAnnotation): ?Type {
         case 'MixedTypeAnnotation':
             return t.createMixed();
         case 'FunctionTypeAnnotation':
-            return null;
+            return t.createAny();
         default:
             invariant(false, `Unknown node: ${node.type}`);
     }
