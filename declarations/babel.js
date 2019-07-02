@@ -737,6 +737,11 @@ declare module '@babel/types' {
         callProperties: ObjectTypeCallProperty[];
     }
 
+    declare class ObjectTypeSpreadProperty extends Node {
+        type: 'ObjectTypeSpreadProperty';
+        argument: GenericTypeAnnotation;
+    }
+
     declare class ObjectTypeCallProperty extends Node {
         type: 'ObjectTypeCallProperty';
         value: FlowTypeAnnotation;
@@ -1219,6 +1224,7 @@ declare module '@babel/types' {
     declare function isObjectTypeCallProperty(node: mixed, opts: Object | void): boolean %checks (node instanceof ObjectTypeCallProperty);
     declare function isObjectTypeIndexer(node: mixed, opts: Object | void): boolean %checks (node instanceof ObjectTypeIndexer);
     declare function isObjectTypeProperty(node: mixed, opts: Object | void): boolean %checks (node instanceof ObjectTypeProperty);
+    declare function isObjectTypeSpreadProperty(node: mixed, opts: Object | void): boolean %checks (node instanceof ObjectTypeSpreadProperty);
     declare function isQualifiedTypeIdentifier(node: mixed, opts: Object | void): boolean %checks (node instanceof QualifiedTypeIdentifier);
     declare function isUnionTypeAnnotation(node: mixed, opts: Object | void): boolean %checks (node instanceof UnionTypeAnnotation);
     declare function isVoidTypeAnnotation(node: mixed, opts: Object | void): boolean %checks (node instanceof VoidTypeAnnotation);
