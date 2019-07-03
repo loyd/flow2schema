@@ -1,0 +1,29 @@
+-   kind: record
+    fields:
+    -   name: foo
+        value:
+            kind: string
+        required: true
+    -   name: bar
+        value:
+            kind: boolean
+        required: true
+    id: [spread, Base]
+-   kind: intersection
+    parts:
+    -   kind: reference
+        to: [spread, Base]
+    -   kind: record
+        fields:
+        -   name: baz
+            value:
+                kind: number
+                repr: f64
+            required: true
+    -   kind: record
+        fields:
+        -   name: bim
+            value:
+                kind: string
+            required: true
+    id: [spread, Type]

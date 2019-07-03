@@ -9,11 +9,12 @@ import type {
     UnionTypeAnnotation, NullableTypeAnnotation, ObjectTypeIndexer, ObjectTypeProperty,
     StringLiteralTypeAnnotation, ObjectTypeAnnotation, AnyTypeAnnotation, MixedTypeAnnotation,
     TupleTypeAnnotation, DeclareTypeAlias, DeclareInterface, DeclareClass,
+    ObjectTypeSpreadProperty,
 } from '@babel/types';
 
 import {
     isIdentifier, isStringLiteral, isObjectTypeProperty,
-    isStringLiteralTypeAnnotation, isClassProperty,
+    isStringLiteralTypeAnnotation, isClassProperty, isObjectTypeSpreadProperty,
 } from '@babel/types';
 
 import Context from './context';
@@ -157,6 +158,13 @@ function makeComplex(ctx: Context, node: ObjectTypeAnnotation): Type {
         .filter()
         .toArray();
 
+    if (node.properties.some(node => isObjectTypeSpreadProperty(node))) {
+        return t.createIntersection([
+            ...makeSpreadTypes(ctx, node.properties),
+            ...maps,
+        ])
+    }
+
     const record = makeRecord(ctx, node.properties);
 
     if (maps.length === 1 && record.fields.length === 0) {
@@ -179,6 +187,19 @@ function makeRecord<T: ObjectTypeProperty | ClassProperty>(ctx: Context, nodes: 
         .toArray();
 
     return t.createRecord(fields);
+}
+
+function makeSpreadTypes<T: ObjectTypeProperty | ClassProperty | ObjectTypeSpreadProperty>(ctx: Context, nodes: T[]): Type[] {
+    return wu(nodes)
+        .map(node => {
+            if (!isObjectTypeSpreadProperty(node)) {
+                return makeRecord(ctx, [node]);
+            }
+
+            return makeReference(ctx, node.argument);
+        })
+        .filter()
+        .toArray();
 }
 
 function makeField(ctx: Context, node: ObjectTypeProperty | ClassProperty): ?Field {
