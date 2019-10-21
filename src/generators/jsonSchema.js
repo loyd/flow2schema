@@ -12,6 +12,7 @@ export type Schema = boolean | {
     id?: string,
     $ref?: string,
     $schema?: string,
+    $comment?: string,
     title?: string,
     description?: string,
     default?: mixed,
@@ -45,6 +46,18 @@ export type Schema = boolean | {
 };
 
 function convert(fund: Fund, type: ?Type): Schema {
+    let schema = convertType(fund, type);
+    if (type && type.comment) {
+        if (schema === true) {
+            schema = { $comment: type.comment };
+        } else {
+            schema.$comment = type.comment;
+        }
+    }
+    return schema;
+}
+
+function convertType(fund: Fund, type: ?Type): Schema {
     if (!type) {
         return {
             type: 'null',

@@ -4,7 +4,7 @@ import wu from 'wu';
 
 // @see flow#5376.
 import type {
-    ArrayTypeAnnotation, ClassDeclaration, ClassProperty, Comment, FlowTypeAnnotation,
+    Node, ArrayTypeAnnotation, ClassDeclaration, ClassProperty, Comment, FlowTypeAnnotation,
     GenericTypeAnnotation, InterfaceDeclaration, IntersectionTypeAnnotation, TypeAlias,
     UnionTypeAnnotation, NullableTypeAnnotation, ObjectTypeIndexer, ObjectTypeProperty,
     StringLiteralTypeAnnotation, ObjectTypeAnnotation, AnyTypeAnnotation, MixedTypeAnnotation,
@@ -37,11 +37,21 @@ function processTypeAlias(ctx: Context, node: TypeAlias | DeclareTypeAlias) {
         ctx.define(name, t.createAny());
 
         const type = makeType(ctx, node.right);
+        addComment(node, type);
 
         // TODO: support function aliases.
         invariant(type);
 
         ctx.define(name, type);
+    }
+}
+
+function addComment(node: Node, type: Type) {
+    if (node.leadingComments) {
+        const cmt = node.leadingComments.map(c => c.value).join('\n').trim();
+        if (cmt) {
+            type.comment = cmt;
+        }
     }
 }
 
@@ -52,6 +62,7 @@ function processInterfaceDeclaration(
 ) {
     const {name} = node.id;
     const type = makeType(ctx, node.body);
+    addComment(node, type);
 
     invariant(type);
 
@@ -215,6 +226,7 @@ function makeField(ctx: Context, node: ObjectTypeProperty | ClassProperty): ?Fie
         invariant(value);
 
         type = makeType(ctx, value);
+        addComment(node, type);
     }
 
     if (!type) {
@@ -238,12 +250,14 @@ function makeField(ctx: Context, node: ObjectTypeProperty | ClassProperty): ?Fie
 function makeMap(ctx: Context, node: ObjectTypeIndexer): ?MapType {
     const keys = makeType(ctx, node.key);
     const values = makeType(ctx, node.value);
+    addComment(node, values);
 
     return keys && values ? t.createMap(keys, values) : null;
 }
 
 function makeArray(ctx: Context, node: ArrayTypeAnnotation): ?ArrayType {
     const items = makeType(ctx, node.elementType);
+    addComment(node, items);
 
     return items != null ? t.createArray(items) : null;
 }
