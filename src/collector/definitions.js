@@ -32,15 +32,17 @@ import {invariant} from '../utils';
 function processTypeAlias(ctx: Context, node: TypeAlias | DeclareTypeAlias) {
     const {name} = node.id;
 
-    // Forward declaration for the recursive types
-    ctx.define(name, t.createAny());
+    if (name != 'integer') {
+        // Forward declaration for the recursive types
+        ctx.define(name, t.createAny());
 
-    const type = makeType(ctx, node.right);
+        const type = makeType(ctx, node.right);
 
-    // TODO: support function aliases.
-    invariant(type);
+        // TODO: support function aliases.
+        invariant(type);
 
-    ctx.define(name, type);
+        ctx.define(name, type);
+    }
 }
 
 // TODO: type params.
@@ -282,6 +284,9 @@ function makeIntersection(ctx: Context, node: IntersectionTypeAnnotation): ?Type
 
 function makeReference(ctx: Context, node: GenericTypeAnnotation): ?Type {
     const {name} = node.id;
+    if (name == 'integer') {
+        return t.createNumber('i64');
+    }
     const params = node.typeParameters
         && wu(node.typeParameters.params).map(n => makeType(ctx, n)).toArray();
 
