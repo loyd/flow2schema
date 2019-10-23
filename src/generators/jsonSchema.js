@@ -103,13 +103,13 @@ function convertType(fund: Fund, type: ?Type): Schema {
             };
         case 'union':
             const enumerate = wu(type.variants)
-                .filter(variant => variant.kind === 'literal')
+                .filter(variant => variant.kind === 'literal' && variant.value !== null)
                 .map(literal => (literal: $FlowFixMe).value)
                 .tap(value => invariant(value !== undefined))
                 .toArray();
 
             const schemas = wu(type.variants)
-                .filter(variant => variant.kind !== 'literal')
+                .filter(variant => variant.kind !== 'literal' || variant.value === null)
                 .map(variant => convert(fund, variant))
                 .toArray();
 
