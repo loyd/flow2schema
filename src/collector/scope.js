@@ -84,7 +84,7 @@ export default class Scope {
 
         if (declared) {
             invariant(decl);
-            invariant(decl.kind === 'declaration');
+            invariant(decl.kind === 'declaration' || decl.kind === 'definition');
         } else {
             invariant(!decl);
         }

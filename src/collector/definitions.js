@@ -4,7 +4,7 @@ import wu from 'wu';
 
 // @see flow#5376.
 import type {
-    ArrayTypeAnnotation, ClassDeclaration, ClassProperty, Comment, FlowTypeAnnotation,
+    Node, ArrayTypeAnnotation, ClassDeclaration, ClassProperty, Comment, FlowTypeAnnotation,
     GenericTypeAnnotation, InterfaceDeclaration, IntersectionTypeAnnotation, TypeAlias,
     UnionTypeAnnotation, NullableTypeAnnotation, ObjectTypeIndexer, ObjectTypeProperty,
     StringLiteralTypeAnnotation, ObjectTypeAnnotation, AnyTypeAnnotation, MixedTypeAnnotation,
@@ -31,12 +31,28 @@ import {invariant} from '../utils';
 
 function processTypeAlias(ctx: Context, node: TypeAlias | DeclareTypeAlias) {
     const {name} = node.id;
-    const type = makeType(ctx, node.right);
 
-    // TODO: support function aliases.
-    invariant(type);
+    if (name != 'integer') {
+        // Forward declaration for the recursive types
+        ctx.define(name, t.createAny());
 
-    ctx.define(name, type);
+        const type = makeType(ctx, node.right);
+        addComment(node, type);
+
+        // TODO: support function aliases.
+        invariant(type);
+
+        ctx.define(name, type);
+    }
+}
+
+function addComment(node: Node, type: Type) {
+    if (node.leadingComments) {
+        const cmt = node.leadingComments.map(c => c.value).join('\n').trim();
+        if (cmt) {
+            type.comment = cmt;
+        }
+    }
 }
 
 // TODO: type params.
@@ -46,6 +62,7 @@ function processInterfaceDeclaration(
 ) {
     const {name} = node.id;
     const type = makeType(ctx, node.body);
+    addComment(node, type);
 
     invariant(type);
 
@@ -108,6 +125,8 @@ function makeType(ctx: Context, node: FlowTypeAnnotation): ?Type {
             return t.createLiteral(null);
         case 'BooleanTypeAnnotation':
             return t.createBoolean();
+        case 'BooleanLiteralTypeAnnotation':
+            return t.createLiteral(node.value);
         case 'NumberTypeAnnotation':
             return t.createNumber('f64');
         case 'StringTypeAnnotation':
@@ -135,7 +154,7 @@ function makeType(ctx: Context, node: FlowTypeAnnotation): ?Type {
         case 'MixedTypeAnnotation':
             return t.createMixed();
         case 'FunctionTypeAnnotation':
-            return null;
+            return t.createAny();
         default:
             invariant(false, `Unknown node: ${node.type}`);
     }
@@ -207,6 +226,7 @@ function makeField(ctx: Context, node: ObjectTypeProperty | ClassProperty): ?Fie
         invariant(value);
 
         type = makeType(ctx, value);
+        addComment(node, type);
     }
 
     if (!type) {
@@ -230,12 +250,14 @@ function makeField(ctx: Context, node: ObjectTypeProperty | ClassProperty): ?Fie
 function makeMap(ctx: Context, node: ObjectTypeIndexer): ?MapType {
     const keys = makeType(ctx, node.key);
     const values = makeType(ctx, node.value);
+    addComment(node, values);
 
     return keys && values ? t.createMap(keys, values) : null;
 }
 
 function makeArray(ctx: Context, node: ArrayTypeAnnotation): ?ArrayType {
     const items = makeType(ctx, node.elementType);
+    addComment(node, items);
 
     return items != null ? t.createArray(items) : null;
 }
@@ -276,6 +298,9 @@ function makeIntersection(ctx: Context, node: IntersectionTypeAnnotation): ?Type
 
 function makeReference(ctx: Context, node: GenericTypeAnnotation): ?Type {
     const {name} = node.id;
+    if (name == 'integer') {
+        return t.createNumber('i64');
+    }
     const params = node.typeParameters
         && wu(node.typeParameters.params).map(n => makeType(ctx, n)).toArray();
 

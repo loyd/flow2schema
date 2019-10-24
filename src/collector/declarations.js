@@ -166,8 +166,8 @@ function extractCommonjsNamedExternals<+T: Node>(nodes: T[], path: string): Exte
 
 function processExportNamedDeclaration(ctx: Context, node: ExportNamedDeclaration) {
     if (isDeclaration(node.declaration)) {
+        node.declaration.leadingComments = node.leadingComments;
         const reference = processDeclaration(ctx, node.declaration);
-
         ctx.provide(reference, reference);
     }
 
